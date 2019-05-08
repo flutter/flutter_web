@@ -2,3 +2,9 @@
 .dart_tool/
 .packages
 pubspec.lock
+
+# Build output
+build
+
+# IDE files
+.vscode
