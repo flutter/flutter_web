@@ -97,20 +97,6 @@ and how to select the right one for your needs.
 
 Clone this repository locally.
 
-### Install the flutter_web build tools
-
-To install the
-[`webdev` package](https://pub.dartlang.org/packages/webdev),
-which provides the build tools for Flutter for web, run the following:
-
-```console
-$ flutter packages pub global activate webdev
-```
-
-Ensure that the `$HOME/.pub-cache/bin` directory
-[is in your path](https://www.dartlang.org/tools/pub/cmd/pub-global#running-a-script-from-your-path),
-and then you may use the `webdev` command directly from your terminal.
-
 ### Run the hello_world example
 
 1. The example exists at `examples/hello_world` in the repository.
@@ -119,7 +105,22 @@ and then you may use the `webdev` command directly from your terminal.
     $ cd examples/hello_world/
     ```
 
-2. Update packages.
+2. Install [`webdev` package](https://pub.dartlang.org/packages/webdev)
+
+    webdev package,
+    which provides the build tools for Flutter for web, run the following:
+
+    ```console
+    $ pub global activate webdev
+    # or
+    $ flutter packages pub global activate webde
+    ```
+
+    Ensure that the `$HOME/.pub-cache/bin` directory
+    [is in your path](https://www.dartlang.org/tools/pub/cmd/pub-global#running-a-script-from-your-path),
+    and then you may use the `webdev` command directly from your terminal.
+
+3. Update packages.
 
     ```console
     $ flutter packages upgrade
@@ -130,7 +131,7 @@ and then you may use the `webdev` command directly from your terminal.
 
     If that succeeds, you're ready to run it!
 
-3. Build and serve the example locally.
+4. Build and serve the example locally.
 
     ```console
     $ webdev serve
