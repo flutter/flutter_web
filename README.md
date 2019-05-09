@@ -115,8 +115,6 @@ Clone this repository locally.
     which provides the build tools for Flutter for web, run the following:
 
     ```console
-    $ pub global activate webdev
-    # or
     $ flutter packages pub global activate webdev
     ```
 
