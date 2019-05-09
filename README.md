@@ -129,9 +129,14 @@ Clone this repository locally.
     Running "flutter packages upgrade" in hello_world...                5.0s
     ```
 
-    If that succeeds, you're ready to run it!
+4. Add `~/flutter/bin/cache/dart-sdk/bin` to your `$PATH`
 
-4. Build and serve the example locally.
+   ```console
+   $ echo 'export PATH=$PATH:$HOME/flutter/bin/cache/dart-sdk/bin' >> ~/.bash_profile
+   $ source ~/.bash_profile
+   ```
+
+5. Build and serve the example locally.
 
     ```console
     $ webdev serve
