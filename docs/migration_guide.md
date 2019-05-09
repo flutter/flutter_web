@@ -26,6 +26,7 @@ dependencies:
   #flutter:
   #  sdk: flutter
   flutter_web: any
+  flutter_web_ui: any
 
 dev_dependencies:
   ## REPLACE
