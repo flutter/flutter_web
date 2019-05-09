@@ -113,7 +113,7 @@ Clone this repository locally.
     ```console
     $ pub global activate webdev
     # or
-    $ flutter packages pub global activate webde
+    $ flutter packages pub global activate webdev
     ```
 
     Ensure that the `$HOME/.pub-cache/bin` directory
