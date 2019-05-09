@@ -82,6 +82,10 @@ not yet ready to accept GitHub pull requests at this time. However,
 
 [issue tracker]: https://goo.gle/flutter_web_issue
 
+## Samples
+
+Check out [flutter.github.io/samples](https://flutter.github.io/samples/).
+
 ## Getting started
 
 Flutter 1.5 and above enable support for targeting the web with Flutter,
@@ -119,6 +123,9 @@ Clone this repository locally.
     Ensure that the `$HOME/.pub-cache/bin` directory
     [is in your path](https://www.dartlang.org/tools/pub/cmd/pub-global#running-a-script-from-your-path),
     and then you may use the `webdev` command directly from your terminal.
+
+    > Note: if you have problems configuring `webdev` to run directly, try:<br>
+      `flutter packages pub global run webdev [command]`.
 
 3. Update packages.
 
@@ -287,3 +294,8 @@ targets:
 
 > Note: the `-O4` option enables a number of advanced optimizations that may
   cause runtime errors in code that has not been thoroughly tested.
+
+## Migrating existing code
+
+If you'd like to migrate existing Flutter code to run on the web preview, read
+[the migration guide](https://github.com/flutter/flutter_web/blob/master/docs/migration_guide.md).
