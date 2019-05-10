@@ -166,8 +166,7 @@ the [Flutter extension](https://dartcode.org/).
   "Debug -> Start Debugging"
 - VS Code will use the `webdev` command-line tool to build and run your app; a
   new Chrome window should open, showing your running app
-- In VS Code type 'f1' you can find `Flutter: New Web Project` in your command pallete 
-  just click on it, your project will be created. 
+- After update your Flutter and Dart packages and plugins In VS Code type 'f1' you can find `Flutter: New Web Project` in your command     pallete just click on it, your project will be created. 
 
 ### Using from IntelliJ
 
