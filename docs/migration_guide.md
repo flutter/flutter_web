@@ -73,7 +73,7 @@ dependency_overrides:
 Change imports of `package:flutter` to `package:flutter_web` throughout
 your application code.
 
-Change imports of `dart:ui` to `package:flutter_ui/ui.dart`.
+Change imports of `dart:ui` to `package:flutter_web_ui/ui.dart`.
 
 <!-- TODO: asset references -->
 <!-- TODO: flutter plugin imports -->
