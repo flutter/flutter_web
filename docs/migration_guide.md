@@ -66,6 +66,10 @@ dependency_overrides:
     git:
       url: https://github.com/flutter/flutter_web
       path: packages/flutter_web_ui
+  flutter_web_test:
+    git:
+      url: https://github.com/flutter/flutter_web
+      path: packages/flutter_web_test
 ```
 
 # `lib/`
