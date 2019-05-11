@@ -108,7 +108,7 @@ To install the
 which provides the build tools for Flutter for web, run the following:
 
 ```console
-$ flutter packages pub global activate webdev
+$ flutter pub global activate webdev
 ```
 
 Ensure that the `$HOME/.pub-cache/bin` directory
@@ -116,7 +116,7 @@ Ensure that the `$HOME/.pub-cache/bin` directory
 and then you may use the `webdev` command directly from your terminal.
 
 > Note: if you have problems configuring `webdev` to run directly, try:<br>
-  `flutter packages pub global run webdev [command]`.
+  `flutter pub global run webdev [command]`.
 
 ### Run the hello_world example
 
