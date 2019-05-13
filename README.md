@@ -2,7 +2,7 @@
 
 Welcome to the code repository for [Flutter for web](https://flutter.dev/web).
 
-For quick answers check out our [FAQ](https://github.com/flutter/flutter_web/blob/master/oss/docs/faq.md).
+For quick answers check out our [FAQ](https://github.com/flutter/flutter_web/blob/master/docs/faq.md).
 
 This repository contains the source code for a fork of
 [Flutter](https://flutter.dev/) that targets the web. Our goal is to add web
