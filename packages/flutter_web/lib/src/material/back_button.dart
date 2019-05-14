@@ -118,8 +118,7 @@ class CloseButton extends StatelessWidget {
       icon: const Icon(Icons.close),
       tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
       onPressed: () {
-        // TODO(ferhat): wire up once Navigator is moved in
-        // Navigator.maybePop(context);
+        Navigator.maybePop(context);
       },
     );
   }
