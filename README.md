@@ -72,7 +72,7 @@ and we'd appreciate your feedback on feature gaps or suitability for these
 scenarios, as well as other scenarios for which you find Flutter useful on the
 web.
 
-In addition, we'd love to see repros that demonstrate crashes, rendering
+In addition, we'd love to see repos that demonstrate crashes, rendering
 fidelity issues or extreme performance issues. We'd also love general feedback
 on the quality of the release and the developer experience.
 
