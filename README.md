@@ -132,10 +132,10 @@ and then you may use the `webdev` command directly from your terminal.
 2. Update packages.
 
     ```console
-    $ flutter packages upgrade
+    $ flutter pub upgrade
     ! flutter_web 0.0.0 from path ../../flutter_web
     ! flutter_web_ui 0.0.0 from path ../../flutter_web_ui
-    Running "flutter packages upgrade" in hello_world...                5.0s
+    Running "flutter pub upgrade" in hello_world...                5.0s
     ```
 
     If that succeeds, you're ready to run it!
