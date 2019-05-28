@@ -19,6 +19,8 @@ import 'src/engine.dart' as engine;
 
 import 'package:meta/meta.dart';
 
+import 'package:vector_math/vector_math_64.dart';
+
 part 'src/ui/canvas.dart';
 part 'src/ui/compositing.dart';
 part 'src/ui/debug_canvas_reuse_overlay.dart';
