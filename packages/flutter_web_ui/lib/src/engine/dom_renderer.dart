@@ -112,18 +112,6 @@ class DomRenderer {
   html.Element get glassPaneElement => _glassPaneElement;
   html.Element _glassPaneElement;
 
-  bool get debugIsInWidgetTest => _debugIsInWidgetTest;
-  set debugIsInWidgetTest(bool value) {
-    _debugIsInWidgetTest = value;
-    if (_debugIsInWidgetTest) {
-      const ui.Size logicalSize = ui.Size(800.0, 600.0);
-      window.webOnlyDebugPhysicalSizeOverride =
-          logicalSize * ui.window.devicePixelRatio;
-    }
-  }
-
-  bool _debugIsInWidgetTest = false;
-
   final html.Element rootElement = html.document.body;
 
   void addElementClass(html.Element element, String className) {

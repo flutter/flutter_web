@@ -1,6 +1,7 @@
 // Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// Synced 2019-06-04T10:01:02.519354.
 
 import 'dart:math' as math;
 
@@ -47,11 +48,11 @@ class FrictionSimulation extends Simulation {
         startVelocity.sign == endVelocity.sign);
     assert(startVelocity.abs() >= endVelocity.abs());
     assert((endPosition - startPosition).sign == startVelocity.sign);
-    return new FrictionSimulation(
+    return FrictionSimulation(
       _dragFor(startPosition, endPosition, startVelocity, endVelocity),
       startPosition,
       startVelocity,
-      tolerance: new Tolerance(velocity: endVelocity.abs()),
+      tolerance: Tolerance(velocity: endVelocity.abs()),
     );
   }
 
@@ -60,16 +61,13 @@ class FrictionSimulation extends Simulation {
   final double _x;
   final double _v;
 
-  // Return the drag value for a FrictionSimulation whose x() and dx() values
-  // pass through the specified start and end position/velocity values.
+  // Return the drag value for a FrictionSimulation whose x() and dx() values pass
+  // through the specified start and end position/velocity values.
   //
-  // Total time to reach endVelocity is just:
-  // (log(endVelocity) / log(startVelocity)) / log(_drag)
-  // or (log(v1) - log(v0)) / log(D), given v = v0 * D^t per the dx() function
-  // below.
+  // Total time to reach endVelocity is just: (log(endVelocity) / log(startVelocity)) / log(_drag)
+  // or (log(v1) - log(v0)) / log(D), given v = v0 * D^t per the dx() function below.
   // Solving for D given x(time) is trickier. Algebra courtesy of Wolfram Alpha:
-  // x1 = x0 + (v0 * D^((log(v1) - log(v0)) / log(D))) / log(D) - v0 / log(D),
-  // find D
+  // x1 = x0 + (v0 * D^((log(v1) - log(v0)) / log(D))) / log(D) - v0 / log(D), find D
   static double _dragFor(double startPosition, double endPosition,
       double startVelocity, double endVelocity) {
     return math.pow(
@@ -111,8 +109,12 @@ class BoundedFrictionSimulation extends FrictionSimulation {
   /// in the same units as the initial position, and the initial position must
   /// be within the given range.
   BoundedFrictionSimulation(
-      double drag, double position, double velocity, this._minX, this._maxX)
-      : assert(position.clamp(_minX, _maxX) == position),
+    double drag,
+    double position,
+    double velocity,
+    this._minX,
+    this._maxX,
+  )   : assert(position.clamp(_minX, _maxX) == position),
         super(drag, position, velocity);
 
   final double _minX;

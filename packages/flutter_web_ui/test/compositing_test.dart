@@ -95,6 +95,19 @@ void main() {
         return '''<s><pshape><clip-i></clip-i></pshape></s>''';
       });
     });
+
+    test('pushBackdropFilter implements surface lifecycle', () {
+      testLayerLifeCycle((SceneBuilder sceneBuilder, Object paintedBy) {
+        return sceneBuilder.pushBackdropFilter(
+            ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
+            webOnlyPaintedBy: paintedBy);
+      }, () {
+        return '<s><flt-backdrop>'
+            '<flt-backdrop-filter></flt-backdrop-filter>'
+            '<flt-backdrop-interior></flt-backdrop-interior>'
+            '</flt-backdrop></s>';
+      });
+    });
   });
 
   group('parent child lifecycle', () {

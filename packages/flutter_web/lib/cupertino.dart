@@ -7,9 +7,9 @@
 /// To use, import `package:flutter_web/cupertino.dart`.
 library cupertino;
 
-// export 'src/cupertino/action_sheet.dart';
+export 'src/cupertino/action_sheet.dart';
 export 'src/cupertino/activity_indicator.dart';
-// export 'src/cupertino/app.dart';
+export 'src/cupertino/app.dart';
 // export 'src/cupertino/bottom_tab_bar.dart';
 export 'src/cupertino/button.dart';
 export 'src/cupertino/colors.dart';

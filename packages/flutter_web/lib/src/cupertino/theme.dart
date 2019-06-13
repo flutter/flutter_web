@@ -1,6 +1,7 @@
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// Synced 2019-06-05T16:17:57.694324.
 
 import 'package:flutter_web/foundation.dart';
 import 'package:flutter_web/services.dart';
@@ -24,39 +25,69 @@ const Color _kDefaultBarDarkBackgroundColor = Color(0xB7212121);
 /// [CupertinoTheme.of]. An [InheritedWidget] dependency is created when
 /// an ancestor [CupertinoThemeData] is retrieved via [CupertinoTheme.of].
 ///
+/// The [CupertinoTheme] widget implies an [IconTheme] widget, whose
+/// [IconTheme.data] has the same color as [CupertinoThemeData.primaryColor]
+///
 /// See also:
 ///
 ///  * [CupertinoThemeData], specifies the theme's visual styling.
 ///  * [CupertinoApp], which will automatically add a [CupertinoTheme].
 ///  * [Theme], a Material theme which will automatically add a [CupertinoTheme]
 ///    with a [CupertinoThemeData] derived from the Material [ThemeData].
-class CupertinoTheme extends InheritedWidget {
+class CupertinoTheme extends StatelessWidget {
   /// Creates a [CupertinoTheme] to change descendant Cupertino widgets' styling.
   ///
   /// The [data] and [child] parameters must not be null.
   const CupertinoTheme({
     Key key,
     @required this.data,
-    @required Widget child,
+    @required this.child,
   })  : assert(child != null),
         assert(data != null),
-        super(key: key, child: child);
+        super(key: key);
 
   /// The [CupertinoThemeData] styling for this theme.
   final CupertinoThemeData data;
-
-  @override
-  bool updateShouldNotify(CupertinoTheme oldWidget) => data != oldWidget.data;
 
   /// Retrieve the [CupertinoThemeData] from an ancestor [CupertinoTheme] widget.
   ///
   /// Returns a default [CupertinoThemeData] if no [CupertinoTheme] widgets
   /// exist in the ancestry tree.
   static CupertinoThemeData of(BuildContext context) {
-    final CupertinoTheme theme =
-        context.inheritFromWidgetOfExactType(CupertinoTheme);
-    return theme?.data ?? const CupertinoThemeData();
+    final _InheritedCupertinoTheme inheritedTheme =
+        context.inheritFromWidgetOfExactType(_InheritedCupertinoTheme);
+    return inheritedTheme?.theme?.data ?? const CupertinoThemeData();
   }
+
+  /// The widget below this widget in the tree.
+  ///
+  /// {@macro flutter.widgets.child}
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return _InheritedCupertinoTheme(
+        theme: this,
+        child: IconTheme(
+          data: IconThemeData(color: data.primaryColor),
+          child: child,
+        ));
+  }
+}
+
+class _InheritedCupertinoTheme extends InheritedWidget {
+  const _InheritedCupertinoTheme({
+    Key key,
+    @required this.theme,
+    @required Widget child,
+  })  : assert(theme != null),
+        super(key: key, child: child);
+
+  final CupertinoTheme theme;
+
+  @override
+  bool updateShouldNotify(_InheritedCupertinoTheme old) =>
+      theme.data != old.theme.data;
 }
 
 /// Styling specifications for a [CupertinoTheme].

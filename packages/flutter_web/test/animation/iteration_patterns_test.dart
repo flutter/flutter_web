@@ -9,7 +9,7 @@ import 'package:flutter_web_ui/ui.dart' as ui;
 
 void main() {
   setUp(() {
-    ui.window.webOnlyScheduleFrameCallback ??= () {};
+    ui.webOnlyScheduleFrameCallback ??= () {};
     WidgetsFlutterBinding.ensureInitialized();
     WidgetsBinding.instance.resetEpoch();
   });

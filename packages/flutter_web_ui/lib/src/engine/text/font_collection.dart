@@ -62,7 +62,7 @@ class FontCollection {
       final List<dynamic> fontAssets = fontFamily['fonts'];
 
       for (dynamic fontAssetItem in fontAssets) {
-        Map<String, dynamic> fontAsset = fontAssetItem;
+        final Map<String, dynamic> fontAsset = fontAssetItem;
         final String asset = fontAsset['asset'];
         final Map<String, String> descriptors = <String, String>{};
         for (String descriptor in fontAsset.keys) {

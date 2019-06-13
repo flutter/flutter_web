@@ -533,7 +533,7 @@ class TextStyle {
     if (engine.assertionsEnabled) {
       // In widget tests we use a predictable-size font "Ahem". This makes
       // widget tests predictable and less flaky.
-      if (engine.domRenderer.debugIsInWidgetTest) {
+      if (debugEmulateFlutterTesterEnvironment) {
         return 'Ahem';
       }
     }
@@ -719,7 +719,7 @@ class ParagraphStyle {
     if (engine.assertionsEnabled) {
       // In widget tests we use a predictable-size font "Ahem". This makes
       // widget tests predictable and less flaky.
-      if (engine.domRenderer.debugIsInWidgetTest) {
+      if (debugEmulateFlutterTesterEnvironment) {
         return 'Ahem';
       }
     }

@@ -360,48 +360,54 @@ void main() {
       expect(result.maxIntrinsicWidth, 120);
     });
 
-    // TODO(mdebbar): The canvas-based measurement doesn't handle this yet.
-    test('respects text overflow', () {
-      final TextMeasurementService instance =
-          TextMeasurementService.domInstance;
+    testMeasurements(
+      'respects text overflow',
+      (TextMeasurementService instance) {
+        final ui.ParagraphStyle overflowStyle = ui.ParagraphStyle(
+          fontFamily: 'ahem',
+          fontSize: 10,
+          ellipsis: '...',
+        );
 
-      final ui.ParagraphStyle overflowStyle = ui.ParagraphStyle(
-        fontFamily: 'ahem',
-        fontSize: 10,
-        ellipsis: '...',
-      );
+        MeasurementResult result;
 
-      MeasurementResult result;
+        // The text shouldn't be broken into multiple lines, so the height should
+        // be equal to a height of a single line.
+        final ui.Paragraph longText = build(
+          overflowStyle,
+          'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+        );
+        result = instance.measure(longText, constraints);
+        expect(result.minIntrinsicWidth, 480);
+        expect(result.maxIntrinsicWidth, 480);
+        expect(result.height, 10);
 
-      // The text shouldn't be broken into multiple lines, so the height should
-      // be equal to a height of a single line.
-      final ui.Paragraph longText = build(
-        overflowStyle,
-        'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-      );
-      result = instance.measure(longText, constraints);
-      expect(result.height, 10);
+        // The short prefix should make the text break into two lines, but the
+        // second line should remain unbroken.
+        final ui.Paragraph longTextShortPrefix = build(
+          overflowStyle,
+          'AAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+        );
+        result = instance.measure(longTextShortPrefix, constraints);
+        expect(result.minIntrinsicWidth, 450);
+        expect(result.maxIntrinsicWidth, 450);
+        expect(result.height, 20);
 
-      // The short prefix should make the text break into two lines, but the
-      // second line should remain unbroken.
-      final ui.Paragraph longTextShortPrefix = build(
-        overflowStyle,
-        'AAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-      );
-      result = instance.measure(longTextShortPrefix, constraints);
-      expect(result.height, 20);
-
-      // This can only be done correctly in the canvas-based implementation.
-      // TODO(flutter_web): https://github.com/flutter/flutter/issues/33223
-      // The first line is overflowing so we should stop the measurement there
-      // and there should be no second line (the short suffix shouldn't be rendered).
-      // final longTextShortSuffix = build(
-      //   overflowStyle,
-      //   'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAA',
-      // );
-      // result = instance.measure(longTextShortSuffix, constraints);
-      // expect(result.height, 10);
-    });
+        // The first line is overflowing so we should stop the measurement there
+        // and there should be no second line (the short suffix shouldn't be rendered).
+        final ui.Paragraph longTextShortSuffix = build(
+          overflowStyle,
+          'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAA',
+        );
+        result = instance.measure(longTextShortSuffix, constraints);
+        expect(result.minIntrinsicWidth, 450);
+        expect(result.maxIntrinsicWidth, 450);
+        // This can only be done correctly in the canvas-based implementation.
+        if (instance is CanvasTextMeasurementService) {
+          expect(result.height, 10);
+        }
+      },
+    );
 
     testMeasurements('respects max lines', (TextMeasurementService instance) {
       final ui.ParagraphStyle maxlinesStyle = ui.ParagraphStyle(

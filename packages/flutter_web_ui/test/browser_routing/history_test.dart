@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:flutter_web/material.dart';
 import 'package:flutter_web/src/widgets/web_navigator.dart';
 import 'package:flutter_web_ui/src/engine.dart' hide MethodCall;
+import 'package:flutter_web_ui/ui.dart' as ui;
 import 'package:flutter_web_test/flutter_web_test.dart';
 
 const Key tap1 = Key('tap1');
@@ -79,6 +80,7 @@ void main() {
       final List<MethodCall> log = <MethodCall>[];
       SystemChannels.platform.setMockMethodCallHandler((MethodCall methodCall) {
         log.add(methodCall);
+        return null;
       });
 
       await tester.pumpWidget(MyApp());
@@ -100,6 +102,7 @@ void main() {
       final List<MethodCall> log = <MethodCall>[];
       SystemChannels.platform.setMockMethodCallHandler((MethodCall methodCall) {
         log.add(methodCall);
+        return null;
       });
 
       // Start on page1.
@@ -150,9 +153,14 @@ void main() {
     });
 
     testWidgets('SystemNavigator.pop exits', (WidgetTester tester) async {
-      await tester.pumpWidget(MyApp());
-      await tester.runAsync(() => SystemNavigator.pop());
-      expect(_strategy.withinAppHistory, isFalse);
+      ui.debugEmulateFlutterTesterEnvironment = false;
+      try {
+        await tester.pumpWidget(MyApp());
+        await tester.runAsync(() => SystemNavigator.pop());
+        expect(_strategy.withinAppHistory, isFalse);
+      } finally {
+        ui.debugEmulateFlutterTesterEnvironment = true;
+      }
     });
 
     testWidgets('handle user-provided url', (WidgetTester tester) async {

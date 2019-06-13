@@ -90,6 +90,10 @@ class EngineWindow extends ui.Window {
     ByteData data,
     ui.PlatformMessageResponseCallback callback,
   ) {
+    // In widget tests we want to bypass processing of platform messages.
+    if (assertionsEnabled && ui.debugEmulateFlutterTesterEnvironment) {
+      return;
+    }
     if (_debugPrintPlatformMessages) {
       print('Sent platform message on channel: "$name"');
     }
@@ -129,6 +133,11 @@ class EngineWindow extends ui.Window {
 
       case 'flutter/textinput':
         textEditing.handleTextInput(data);
+        break;
+
+      case 'flutter/accessibility':
+        // In widget tests we want to bypass processing of platform messages.
+        accessibilityAnnouncements.handleMessage(data);
         break;
     }
 

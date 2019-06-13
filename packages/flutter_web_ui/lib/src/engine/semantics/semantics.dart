@@ -156,6 +156,14 @@ enum Role {
 
   /// Visual only element.
   image,
+
+  /// Contains a region whose changes will be announced to the screen reader
+  /// without having to be in focus.
+  ///
+  /// These regions can be a snackbar or a text field error. Once identified
+  /// with this role, they will be able to get the assistive technology's
+  /// attention right away.
+  liveRegion,
 }
 
 /// A function that creates a [RoleManager] for a [SemanticsObject].
@@ -169,6 +177,7 @@ final Map<Role, RoleManagerFactory> _roleFactories = <Role, RoleManagerFactory>{
   Role.textField: (SemanticsObject object) => TextField(object),
   Role.checkable: (SemanticsObject object) => Checkable(object),
   Role.image: (SemanticsObject object) => ImageRoleManager(object),
+  Role.liveRegion: (SemanticsObject object) => LiveRegion(object),
 };
 
 /// Provides the functionality associated with the role of the given
@@ -576,6 +585,11 @@ class SemanticsObject {
   /// Whether this object represents an editable text field.
   bool get isTextField => hasFlag(ui.SemanticsFlag.isTextField);
 
+  /// Whether this object needs screen readers attention right away.
+  bool get isLiveRegion =>
+      hasFlag(ui.SemanticsFlag.isLiveRegion) &&
+      !hasFlag(ui.SemanticsFlag.isHidden);
+
   /// Whether this object represents an image with no tappable functionality.
   bool get isVisualOnly =>
       hasFlag(ui.SemanticsFlag.isImage) &&
@@ -746,6 +760,7 @@ class SemanticsObject {
         isVerticalScrollContainer || isHorizontalScrollContainer);
     _updateRole(Role.checkable, hasFlag(ui.SemanticsFlag.hasCheckedState));
     _updateRole(Role.image, isVisualOnly);
+    _updateRole(Role.liveRegion, isLiveRegion);
   }
 
   void _updateRole(Role role, bool enabled) {

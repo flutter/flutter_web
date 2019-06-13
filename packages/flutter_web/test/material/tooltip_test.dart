@@ -738,6 +738,7 @@ void main() {
     final List<dynamic> semanticEvents = <dynamic>[];
     SystemChannels.accessibility.setMockMessageHandler((dynamic message) {
       semanticEvents.add(message);
+      return null;
     });
     final SemanticsTester semantics = new SemanticsTester(tester);
 

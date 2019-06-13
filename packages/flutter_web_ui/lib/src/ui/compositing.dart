@@ -199,7 +199,8 @@ class SceneBuilder {
   /// See [pop] for details about the operation stack.
   EngineLayer pushBackdropFilter(ImageFilter filter,
       {Object webOnlyPaintedBy}) {
-    throw UnimplementedError();
+    return _pushSurface(
+        engine.PersistedBackdropFilter(webOnlyPaintedBy, filter));
   }
 
   /// Pushes a shader mask operation onto the operation stack.

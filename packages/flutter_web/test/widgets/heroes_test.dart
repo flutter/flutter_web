@@ -1,8 +1,10 @@
 // Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// Synced 2019-06-05T16:17:58.564203.
 
 import 'package:flutter_web_test/flutter_web_test.dart';
+import 'package:flutter_web/cupertino.dart';
 import 'package:flutter_web/material.dart';
 import 'package:flutter_web/rendering.dart';
 
@@ -1268,6 +1270,144 @@ void main() {
     expect(tester.getCenter(find.byKey(firstKey)), const Offset(50.0, 50.0));
   });
 
+  testWidgets('Hero createRectTween for Navigator that is not full screen',
+      (WidgetTester tester) async {
+    // Regression test for https://github.com/flutter/flutter/issues/25272
+
+    RectTween createRectTween(Rect begin, Rect end) {
+      return RectTween(begin: begin, end: end);
+    }
+
+    final Map<String, WidgetBuilder> createRectTweenHeroRoutes =
+        <String, WidgetBuilder>{
+      '/': (BuildContext context) => Material(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Hero(
+                  tag: 'a',
+                  createRectTween: createRectTween,
+                  child: Container(height: 100.0, width: 100.0, key: firstKey),
+                ),
+                FlatButton(
+                  child: const Text('two'),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/two');
+                  },
+                ),
+              ],
+            ),
+          ),
+      '/two': (BuildContext context) => Material(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: 200.0,
+                  child: FlatButton(
+                    child: const Text('pop'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                Hero(
+                  tag: 'a',
+                  createRectTween: createRectTween,
+                  child: Container(height: 200.0, width: 100.0, key: secondKey),
+                ),
+              ],
+            ),
+          ),
+    };
+
+    const double leftPadding = 10.0;
+
+    // MaterialApp and its Navigator are offset from the left
+    await tester.pumpWidget(Padding(
+      padding: const EdgeInsets.only(left: leftPadding),
+      child: MaterialApp(routes: createRectTweenHeroRoutes),
+    ));
+    expect(tester.getCenter(find.byKey(firstKey)),
+        const Offset(leftPadding + 50.0, 50.0));
+
+    const double epsilon = 0.001;
+    const Duration duration = Duration(milliseconds: 300);
+    const Curve curve = Curves.fastOutSlowIn;
+    final RectTween pushRectTween = RectTween(
+      begin: const Rect.fromLTWH(leftPadding, 0.0, 100.0, 100.0),
+      end: const Rect.fromLTWH(350.0 + leftPadding / 2, 200.0, 100.0, 200.0),
+    );
+
+    await tester.tap(find.text('two'));
+    await tester.pump(); // begin navigation
+
+    // Verify that the rect of the secondKey Hero transforms as the
+    // pushRectTween rect for the push /two flight.
+
+    await tester.pump();
+    expect(tester.getCenter(find.byKey(secondKey)),
+        const Offset(50.0 + leftPadding, 50.0));
+
+    await tester.pump(duration * 0.25);
+    Rect actualHeroRect = tester.getRect(find.byKey(secondKey));
+    Rect predictedHeroRect = pushRectTween.lerp(curve.transform(0.25));
+    expect(actualHeroRect,
+        within<Rect>(distance: epsilon, from: predictedHeroRect));
+
+    await tester.pump(duration * 0.25);
+    actualHeroRect = tester.getRect(find.byKey(secondKey));
+    predictedHeroRect = pushRectTween.lerp(curve.transform(0.5));
+    expect(actualHeroRect,
+        within<Rect>(distance: epsilon, from: predictedHeroRect));
+
+    await tester.pump(duration * 0.25);
+    actualHeroRect = tester.getRect(find.byKey(secondKey));
+    predictedHeroRect = pushRectTween.lerp(curve.transform(0.75));
+    expect(actualHeroRect,
+        within<Rect>(distance: epsilon, from: predictedHeroRect));
+
+    await tester.pumpAndSettle();
+    expect(tester.getCenter(find.byKey(secondKey)),
+        const Offset(400.0 + leftPadding / 2, 300.0));
+
+    // Verify that the rect of the firstKey Hero transforms as the
+    // pushRectTween rect for the pop /two flight.
+
+    await tester.tap(find.text('pop'));
+    await tester.pump(); // begin navigation
+
+    final RectTween popRectTween = RectTween(
+      begin: const Rect.fromLTWH(350.0 + leftPadding / 2, 200.0, 100.0, 200.0),
+      end: const Rect.fromLTWH(leftPadding, 0.0, 100.0, 100.0),
+    );
+    await tester.pump();
+    expect(tester.getCenter(find.byKey(firstKey)),
+        const Offset(400.0 + leftPadding / 2, 300.0));
+
+    await tester.pump(duration * 0.25);
+    actualHeroRect = tester.getRect(find.byKey(firstKey));
+    predictedHeroRect = popRectTween.lerp(curve.flipped.transform(0.25));
+    expect(actualHeroRect,
+        within<Rect>(distance: epsilon, from: predictedHeroRect));
+
+    await tester.pump(duration * 0.25);
+    actualHeroRect = tester.getRect(find.byKey(firstKey));
+    predictedHeroRect = popRectTween.lerp(curve.flipped.transform(0.5));
+    expect(actualHeroRect,
+        within<Rect>(distance: epsilon, from: predictedHeroRect));
+
+    await tester.pump(duration * 0.25);
+    actualHeroRect = tester.getRect(find.byKey(firstKey));
+    predictedHeroRect = popRectTween.lerp(curve.flipped.transform(0.75));
+    expect(actualHeroRect,
+        within<Rect>(distance: epsilon, from: predictedHeroRect));
+
+    await tester.pumpAndSettle();
+    expect(tester.getCenter(find.byKey(firstKey)),
+        const Offset(50.0 + leftPadding, 50.0));
+  });
+
   testWidgets('Pop interrupts push, reverses flight',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(routes: routes));
@@ -1488,7 +1628,7 @@ void main() {
 
     await tester.pump();
 
-    // Both Heros exist and seated in their normal parents.
+    // Both Heroes exist and are seated in their normal parents.
     expect(find.byKey(firstKey), isOnstage);
     expect(find.byKey(firstKey), isInCard);
     expect(find.byKey(secondKey), isOnstage);
@@ -1557,5 +1697,398 @@ void main() {
       initialRoute: '/two',
     ));
     expect(find.text('two'), findsOneWidget);
+  });
+
+  testWidgets(
+      'Can push/pop on outer Navigator if nested Navigator contains Heroes',
+      (WidgetTester tester) async {
+    // Regression test for https://github.com/flutter/flutter/issues/28042.
+
+    const String heroTag = 'You are my hero!';
+    final GlobalKey<NavigatorState> rootNavigator = GlobalKey();
+    final GlobalKey<NavigatorState> nestedNavigator = GlobalKey();
+    final Key nestedRouteHeroBottom = UniqueKey();
+    final Key nestedRouteHeroTop = UniqueKey();
+
+    await tester.pumpWidget(MaterialApp(
+      navigatorKey: rootNavigator,
+      home: Navigator(
+        key: nestedNavigator,
+        onGenerateRoute: (RouteSettings settings) {
+          return MaterialPageRoute<void>(builder: (BuildContext context) {
+            return Hero(
+              tag: heroTag,
+              child: Placeholder(
+                key: nestedRouteHeroBottom,
+              ),
+            );
+          });
+        },
+      ),
+    ));
+
+    nestedNavigator.currentState.push(MaterialPageRoute<void>(
+      builder: (BuildContext context) {
+        return Hero(
+          tag: heroTag,
+          child: Placeholder(
+            key: nestedRouteHeroTop,
+          ),
+        );
+      },
+    ));
+    await tester.pumpAndSettle();
+
+    // Both heroes are in the tree, one is offstage
+    expect(find.byKey(nestedRouteHeroTop), findsOneWidget);
+    expect(find.byKey(nestedRouteHeroBottom), findsNothing);
+    expect(
+        find.byKey(nestedRouteHeroBottom, skipOffstage: false), findsOneWidget);
+
+    rootNavigator.currentState.push(MaterialPageRoute<void>(
+      builder: (BuildContext context) {
+        return const Text('Foo');
+      },
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Foo'), findsOneWidget);
+    // Both heroes are still in the tree, both are offstage.
+    expect(find.byKey(nestedRouteHeroBottom), findsNothing);
+    expect(find.byKey(nestedRouteHeroTop), findsNothing);
+    expect(
+        find.byKey(nestedRouteHeroBottom, skipOffstage: false), findsOneWidget);
+    expect(find.byKey(nestedRouteHeroTop, skipOffstage: false), findsOneWidget);
+
+    // Doesn't crash.
+    expect(tester.takeException(), isNull);
+
+    rootNavigator.currentState.pop();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Foo'), findsNothing);
+    // Both heroes are in the tree, one is offstage
+    expect(find.byKey(nestedRouteHeroTop), findsOneWidget);
+    expect(find.byKey(nestedRouteHeroBottom), findsNothing);
+    expect(
+        find.byKey(nestedRouteHeroBottom, skipOffstage: false), findsOneWidget);
+  });
+
+  testWidgets(
+      'Can hero from route in root Navigator to route in nested Navigator',
+      (WidgetTester tester) async {
+    const String heroTag = 'foo';
+    final GlobalKey<NavigatorState> rootNavigator = GlobalKey();
+    final Key smallContainer = UniqueKey();
+    final Key largeContainer = UniqueKey();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        navigatorKey: rootNavigator,
+        home: Center(
+          child: Card(
+            child: Hero(
+              tag: heroTag,
+              child: Container(
+                key: largeContainer,
+                color: Colors.red,
+                height: 200.0,
+                width: 200.0,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // The initial setup.
+    expect(find.byKey(largeContainer), isOnstage);
+    expect(find.byKey(largeContainer), isInCard);
+    expect(find.byKey(smallContainer, skipOffstage: false), findsNothing);
+
+    rootNavigator.currentState.push(
+      MaterialPageRoute<void>(builder: (BuildContext context) {
+        return Center(
+          child: Card(
+            child: Hero(
+              tag: heroTag,
+              child: Container(
+                key: smallContainer,
+                color: Colors.red,
+                height: 100.0,
+                width: 100.0,
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+    await tester.pump();
+
+    // The second route exists offstage.
+    expect(find.byKey(largeContainer), isOnstage);
+    expect(find.byKey(largeContainer), isInCard);
+    expect(find.byKey(smallContainer, skipOffstage: false), isOffstage);
+    expect(find.byKey(smallContainer, skipOffstage: false), isInCard);
+
+    await tester.pump();
+
+    // The hero started flying.
+    expect(find.byKey(largeContainer), findsNothing);
+    expect(find.byKey(smallContainer), isOnstage);
+    expect(find.byKey(smallContainer), isNotInCard);
+
+    await tester.pump(const Duration(milliseconds: 100));
+
+    // The hero is in-flight.
+    expect(find.byKey(largeContainer), findsNothing);
+    expect(find.byKey(smallContainer), isOnstage);
+    expect(find.byKey(smallContainer), isNotInCard);
+    final Size size = tester.getSize(find.byKey(smallContainer));
+    expect(size.height, greaterThan(100));
+    expect(size.width, greaterThan(100));
+    expect(size.height, lessThan(200));
+    expect(size.width, lessThan(200));
+
+    await tester.pumpAndSettle();
+
+    // The transition has ended.
+    expect(find.byKey(largeContainer), findsNothing);
+    expect(find.byKey(smallContainer), isOnstage);
+    expect(find.byKey(smallContainer), isInCard);
+    expect(tester.getSize(find.byKey(smallContainer)), const Size(100, 100));
+  });
+
+  testWidgets('Hero within a Hero, throws', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Material(
+          child: Hero(
+            tag: 'a',
+            child: Hero(
+              tag: 'b',
+              child: Text('Child of a Hero'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isAssertionError);
+  });
+
+  testWidgets('Hero within a Hero subtree, throws',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: Container(
+            child: const Hero(
+              tag: 'a',
+              child: Hero(
+                tag: 'b',
+                child: Text('Child of a Hero'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isAssertionError);
+  });
+
+  testWidgets('Hero within a Hero subtree with Builder, throws',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: Hero(
+            tag: 'a',
+            child: Builder(
+              builder: (BuildContext context) {
+                return const Hero(
+                  tag: 'b',
+                  child: Text('Child of a Hero'),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isAssertionError);
+  });
+
+  testWidgets('Hero within a Hero subtree with LayoutBuilder, throws',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: Hero(
+            tag: 'a',
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return const Hero(
+                  tag: 'b',
+                  child: Text('Child of a Hero'),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isAssertionError);
+  });
+
+  testWidgets('Heroes fly on pushReplacement', (WidgetTester tester) async {
+    // Regression test for https://github.com/flutter/flutter/issues/28041.
+
+    const String heroTag = 'foo';
+    final GlobalKey<NavigatorState> navigator = GlobalKey();
+    final Key smallContainer = UniqueKey();
+    final Key largeContainer = UniqueKey();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        navigatorKey: navigator,
+        home: Center(
+          child: Card(
+            child: Hero(
+              tag: heroTag,
+              child: Container(
+                key: largeContainer,
+                color: Colors.red,
+                height: 200.0,
+                width: 200.0,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // The initial setup.
+    expect(find.byKey(largeContainer), isOnstage);
+    expect(find.byKey(largeContainer), isInCard);
+    expect(find.byKey(smallContainer, skipOffstage: false), findsNothing);
+
+    navigator.currentState.pushReplacement(
+      MaterialPageRoute<void>(builder: (BuildContext context) {
+        return Center(
+          child: Card(
+            child: Hero(
+              tag: heroTag,
+              child: Container(
+                key: smallContainer,
+                color: Colors.red,
+                height: 100.0,
+                width: 100.0,
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+    await tester.pump();
+
+    // The second route exists offstage.
+    expect(find.byKey(largeContainer), isOnstage);
+    expect(find.byKey(largeContainer), isInCard);
+    expect(find.byKey(smallContainer, skipOffstage: false), isOffstage);
+    expect(find.byKey(smallContainer, skipOffstage: false), isInCard);
+
+    await tester.pump();
+
+    // The hero started flying.
+    expect(find.byKey(largeContainer), findsNothing);
+    expect(find.byKey(smallContainer), isOnstage);
+    expect(find.byKey(smallContainer), isNotInCard);
+
+    await tester.pump(const Duration(milliseconds: 100));
+
+    // The hero is in-flight.
+    expect(find.byKey(largeContainer), findsNothing);
+    expect(find.byKey(smallContainer), isOnstage);
+    expect(find.byKey(smallContainer), isNotInCard);
+    final Size size = tester.getSize(find.byKey(smallContainer));
+    expect(size.height, greaterThan(100));
+    expect(size.width, greaterThan(100));
+    expect(size.height, lessThan(200));
+    expect(size.width, lessThan(200));
+
+    await tester.pumpAndSettle();
+
+    // The transition has ended.
+    expect(find.byKey(largeContainer), findsNothing);
+    expect(find.byKey(smallContainer), isOnstage);
+    expect(find.byKey(smallContainer), isInCard);
+    expect(tester.getSize(find.byKey(smallContainer)), const Size(100, 100));
+  });
+
+  testWidgets(
+      'On an iOS back swipe and snap, only a single flight should take place',
+      (WidgetTester tester) async {
+    int shuttlesBuilt = 0;
+    final HeroFlightShuttleBuilder shuttleBuilder = (
+      BuildContext flightContext,
+      Animation<double> animation,
+      HeroFlightDirection flightDirection,
+      BuildContext fromHeroContext,
+      BuildContext toHeroContext,
+    ) {
+      shuttlesBuilt += 1;
+      return const Text("I'm flying in a jetplane");
+    };
+
+    final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+    await tester.pumpWidget(
+      CupertinoApp(
+        navigatorKey: navigatorKey,
+        home: Hero(
+            tag: navigatorKey,
+            // Since we're popping, only the destination route's builder is used.
+            flightShuttleBuilder: shuttleBuilder,
+            transitionOnUserGestures: true,
+            child: const Text('1')),
+      ),
+    );
+
+    final CupertinoPageRoute<void> route2 =
+        CupertinoPageRoute<void>(builder: (BuildContext context) {
+      return CupertinoPageScaffold(
+        child: Hero(
+            tag: navigatorKey,
+            transitionOnUserGestures: true,
+            child: const Text('2')),
+      );
+    });
+
+    navigatorKey.currentState.push(route2);
+    await tester.pumpAndSettle();
+
+    expect(shuttlesBuilt, 1);
+
+    final TestGesture gesture =
+        await tester.startGesture(const Offset(5.0, 200.0));
+    await gesture.moveBy(const Offset(500.0, 0.0));
+    await tester.pump();
+    // Starting the back swipe creates a new hero shuttle.
+    expect(shuttlesBuilt, 2);
+
+    await gesture.up();
+    await tester.pump();
+    // After the lift, no additional shuttles should be created since it's the
+    // same hero flight.
+    expect(shuttlesBuilt, 2);
+
+    // Did go far enough to snap out of this route.
+    await tester.pump(const Duration(milliseconds: 301));
+    expect(find.text('2'), findsNothing);
+    // Still one shuttle.
+    expect(shuttlesBuilt, 2);
   });
 }

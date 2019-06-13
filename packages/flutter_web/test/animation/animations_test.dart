@@ -14,7 +14,7 @@ class BogusCurve extends Curve {
 
 void main() {
   setUp(() {
-    ui.window.webOnlyScheduleFrameCallback ??= () {};
+    ui.webOnlyScheduleFrameCallback ??= () {};
     WidgetsFlutterBinding.ensureInitialized();
     WidgetsBinding.instance.resetEpoch();
   });

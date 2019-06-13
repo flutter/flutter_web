@@ -14,7 +14,7 @@ import '../rendering/mock_canvas.dart';
 import '../rendering/rendering_tester.dart';
 
 void main() {
-  ui.window.webOnlyScheduleFrameCallback = () {};
+  ui.webOnlyScheduleFrameCallback = () {};
   TestRenderingFlutterBinding(); // initializes the imageCache
 
   test('ShapeDecoration constructor', () {

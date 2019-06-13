@@ -49,7 +49,7 @@ class TestRenderingFlutterBinding extends BindingBase
 
 TestRenderingFlutterBinding _renderer;
 TestRenderingFlutterBinding get renderer {
-  ui.window.webOnlyScheduleFrameCallback ??= () {};
+  ui.webOnlyScheduleFrameCallback ??= () {};
   _renderer ??= TestRenderingFlutterBinding();
   return _renderer;
 }

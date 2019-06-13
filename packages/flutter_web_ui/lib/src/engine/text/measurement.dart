@@ -15,13 +15,12 @@ const bool _experimentalEnableCanvasImplementation = false;
 const double _baselineRatioHack = 1.1662499904632568;
 
 /// Signature of a function that takes a character and returns true or false.
-typedef CharPredicate = bool Function(String letter);
+typedef CharPredicate = bool Function(int char);
 
-final RegExp _whitespace = RegExp(r'\s');
-bool _excludeWhitespace(String letter) => _whitespace.hasMatch(letter);
-
-final RegExp _newline = RegExp(r'\n');
-bool _excludeNewlines(String letter) => _newline.hasMatch(letter);
+bool _whitespacePredicate(int char) =>
+    char == CharCode.space || char == CharCode.tab || _newlinePredicate(char);
+bool _newlinePredicate(int char) =>
+    char == CharCode.cr || char == CharCode.lf || char == CharCode.nl;
 
 /// Manages [ParagraphRuler] instances and caches them per unique
 /// [ParagraphGeometricStyle].
@@ -268,7 +267,7 @@ abstract class TextMeasurementService {
   ///
   /// [MeasurementResult.width] is set to the same value of [constraints.width].
   ///
-  /// It also optionally computes [MeasurementResult.lineBreaks] in the given
+  /// It also optionally computes [MeasurementResult.lines] in the given
   /// paragraph. When that's available, it can be used by a canvas to render
   /// the text line.
   MeasurementResult _doMeasure(
@@ -368,7 +367,7 @@ class DomTextMeasurementService extends TextMeasurementService {
       maxIntrinsicWidth: maxIntrinsicWidth,
       alphabeticBaseline: alphabeticBaseline,
       ideographicBaseline: ideographicBaseline,
-      lineBreaks: null,
+      lines: null,
     );
   }
 
@@ -414,7 +413,7 @@ class DomTextMeasurementService extends TextMeasurementService {
       maxIntrinsicWidth: maxIntrinsicWidth,
       alphabeticBaseline: alphabeticBaseline,
       ideographicBaseline: ideographicBaseline,
-      lineBreaks: null,
+      lines: null,
     );
   }
 
@@ -471,55 +470,137 @@ class CanvasTextMeasurementService extends TextMeasurementService {
     // TODO(mdebbar): Check if the whole text can fit in a single-line. Then avoid all this ceremony.
     _canvasContext.font = style.cssFontString;
 
-    final List<int> breaks = <int>[];
+    final double maxWidth = constraints.width;
+    final bool hasEllipsis = style.ellipsis != null;
+
+    final List<String> lines = <String>[];
     int lineStart = 0;
-    int lastMandatoryBreak = 0;
-    // The greatest chunk width (without trailing whitespace).
-    double widestChunk = 0;
-    // Without taking any optional line breaks, what's the widest line?
-    double widestContinuousLine = 0;
+
+    // Indicates whether we've reached the end of text or not. Even if the index
+    // [i] reaches the end of text, we don't want to stop looping until we hit
+    // [LineBreakType.endOfText] because there could be a "\n" at the end of the
+    // string and that would mess things up.
+    bool reachedEndOfText = false;
+
+    // The maximum number of lines to be measured and displayed. This value may
+    // change throughout the loop below. Specifically, when [style.maxLines] is
+    // null, the value of [lineCountLimit] will be updated during the loop when we
+    // find the line we should stop at.
+    int lineCountLimit = style.maxLines ?? double.infinity;
+    bool unlimitedLines() => lineCountLimit == double.infinity;
+
+    // TODO(mdebbar): Avoid these closures. They generate bad JS code.
+    void addLineBreak(int index) {
+      if (lines.length < lineCountLimit) {
+        lines.add(text.substring(lineStart, index));
+      }
+      lineStart = index;
+    }
+
+    double ellipsisWidth;
+    double getEllipsisWidth() {
+      // Cache the width of the ellipsis to avoid computing it multiple times in
+      // the loop below.
+      return ellipsisWidth ??=
+          _roundWidth(_canvasContext.measureText(style.ellipsis).width);
+    }
+
+    // The index marking the end of the last unbreakable chunk of text.
+    int lastChunkEnd = 0;
+    double minIntrinsicWidth = 0;
+
+    void processMinIntrinsicWidth(int chunkEnd, int chunkEndWithoutSpace) {
+      final double width =
+          _measureSubstring(text, lastChunkEnd, chunkEndWithoutSpace);
+      if (width > minIntrinsicWidth) {
+        minIntrinsicWidth = width;
+      }
+      lastChunkEnd = chunkEnd;
+    }
+
+    // The index marking the end of the last hard line break.
+    int lastHardLineEnd = 0;
+    double maxIntrinsicWidth = 0;
+
+    void processMaxIntrinsicWidth(int hardLineEnd) {
+      // The continuous line is the chunk of text since the last mandatory
+      // line break.
+      final int continuousLineEnd = _excludeTrailing(
+        text,
+        lastHardLineEnd,
+        hardLineEnd,
+        _newlinePredicate,
+      );
+      final double continuousLineWidth =
+          _measureSubstring(text, lastHardLineEnd, continuousLineEnd);
+      if (continuousLineWidth > maxIntrinsicWidth) {
+        maxIntrinsicWidth = continuousLineWidth;
+      }
+      lastHardLineEnd = hardLineEnd;
+    }
 
     // TODO(flutter_web): Chrome & Safari return more info from [canvasContext.measureText].
     int i = 0;
-    while (i < text.length) {
+    while (!reachedEndOfText) {
       final LineBreakResult brk = nextLineBreak(text, i);
-      final double lineWidth = _measureSubstring(text, lineStart, brk.index);
+      final int chunkEnd = brk.index;
+      final int chunkEndWithoutSpace =
+          _excludeTrailing(text, i, brk.index, _whitespacePredicate);
+      final double lineWidth =
+          _measureSubstring(text, lineStart, chunkEndWithoutSpace);
 
-      if (lineWidth > constraints.width) {
-        breaks.add(i);
-        lineStart = i;
+      if (lineWidth > maxWidth) {
+        // If the current chunk starts at the beginning of the line and exceeds
+        // [maxWidth], then we will need to force-break it.
+        final bool isSingleChunk = i == lineStart;
+        // When ellipsis is set, and maxLines is null, we stop at the first line
+        // that exceeds [maxWidth].
+        final bool isLastLine = (hasEllipsis && unlimitedLines()) ||
+            lines.length == lineCountLimit - 1;
+
+        if (isSingleChunk || isLastLine) {
+          // When ellipsis is set, show it on the last line of text.
+          if (isLastLine) {
+            // Truncate text to leave enough space for the ellipsis then pretty
+            // much stop everything at this point.
+            final double availableWidth = maxWidth - getEllipsisWidth();
+            final int breakingPoint = _forceBreak(
+                availableWidth, text, lineStart, chunkEndWithoutSpace);
+            lines.add(text.substring(i, breakingPoint) + style.ellipsis);
+            // Set [lineCountLimit] to the current number of lines to prevent
+            // adding any more lines since we already reached a line that
+            // overflows.
+            lineCountLimit = lines.length;
+          } else {
+            final int breakingPoint =
+                _forceBreak(maxWidth, text, lineStart, chunkEndWithoutSpace);
+            addLineBreak(breakingPoint);
+            // Skip the remainder of the loop since this was a forced line
+            // break that doesn't affect min/maxIntrinsicWidth.
+            i = breakingPoint;
+            continue;
+          }
+        } else {
+          // The control case of current line reaching [maxWidth], we break the
+          // line.
+          addLineBreak(i);
+        }
       }
 
-      final double chunkWidth = _measureSubstring(text, i, brk.index);
-      if (chunkWidth > widestChunk) {
-        widestChunk = chunkWidth;
-      }
+      processMinIntrinsicWidth(chunkEnd, chunkEndWithoutSpace);
 
       if (brk.type == LineBreakType.mandatory ||
           brk.type == LineBreakType.endOfText) {
-        // The continuous line is the chunk of text since the last mandatory
-        // line break.
-        final double continuousLineWidth = _measureSubstring(
-          text,
-          lastMandatoryBreak,
-          brk.index,
-          excludeTrailing: _excludeNewlines,
-        );
-        if (continuousLineWidth > widestContinuousLine) {
-          widestContinuousLine = continuousLineWidth;
-        }
-        lastMandatoryBreak = brk.index;
-        lineStart = brk.index;
-
-        // Don't insert the last line-break at the end of the text.
-        if (brk.type != LineBreakType.endOfText) {
-          breaks.add(brk.index);
+        processMaxIntrinsicWidth(brk.index);
+        addLineBreak(brk.index);
+        if (brk.type == LineBreakType.endOfText) {
+          reachedEndOfText = true;
         }
       }
       i = brk.index;
     }
 
-    final int lineCount = breaks.length + 1;
+    final int lineCount = lines.length;
     final double lineHeight = ruler.lineHeightDimensions.height;
     final double naturalHeight = lineCount * lineHeight;
 
@@ -528,7 +609,7 @@ class CanvasTextMeasurementService extends TextMeasurementService {
         : math.min(lineCount, style.maxLines) * lineHeight;
 
     final MeasurementResult result = MeasurementResult(
-      constraints.width,
+      maxWidth,
       isSingleLine: lineCount == 1,
       alphabeticBaseline: ruler.alphabeticBaseline,
       ideographicBaseline: ruler.alphabeticBaseline * _baselineRatioHack,
@@ -536,67 +617,49 @@ class CanvasTextMeasurementService extends TextMeasurementService {
       naturalHeight: naturalHeight,
       // `minIntrinsicWidth` is the greatest width of text that can't
       // be broken down into multiple lines.
-      minIntrinsicWidth: widestChunk,
+      minIntrinsicWidth: minIntrinsicWidth,
       // `maxIntrinsicWidth` is the width of the widest piece of text
       // that doesn't contain mandatory line breaks.
-      maxIntrinsicWidth: widestContinuousLine,
-      width: constraints.width,
-      // TODO(flutter_web): Consider passing the actual strings instead of just
-      // indexes.
-      lineBreaks: breaks,
+      maxIntrinsicWidth: maxIntrinsicWidth,
+      width: maxWidth,
+      lines: lines,
     );
     return result;
   }
 
   @override
   double measureSubstringWidth(ui.Paragraph paragraph, int start, int end) {
-    final String text = paragraph.webOnlyGetPlainText().substring(start, end);
+    final String text = paragraph.webOnlyGetPlainText();
     final ParagraphGeometricStyle style =
         paragraph.webOnlyGetParagraphGeometricStyle();
     _canvasContext.font = style.cssFontString;
-    return _canvasContext.measureText(text).width;
+    return _measureSubstring(text, start, end);
   }
+
+  int _lastStart;
+  int _lastEnd;
+  String _lastText;
+  double _lastWidth;
 
   /// Measures the width of the substring of [text] starting from the index
   /// [start] (inclusive) to [end] (exclusive).
   ///
-  /// As a convenience, an [excludeTrailing] function can be passed to exclude
-  /// certain characters from the end of the substring. If omitted, the default
-  /// is to exclude trailing whitespace.
-  ///
-  /// For example:
-  /// ```
-  /// // The substring here would be "foo     ". By default, trailing whitespace
-  /// // is trimmed, so it returns the width of "foo".
-  /// _measureSubstring("foo     bar", 0, 8);
-  ///
-  /// // The substring here is "foo   \n". Only trailing new lines are trimmed
-  /// // here, so it returns the width of "foo   ".
-  /// _measureSubstring(
-  ///   "foo   \nbar", 0, 7,
-  ///   excludeTrailing: (char) => char == '\n',
-  /// );
-  /// ```
-  ///
   /// This method assumes that the correct font has already been set on
   /// [_canvasContext].
-  double _measureSubstring(
-    String text,
-    int start,
-    int end, {
-    CharPredicate excludeTrailing = _excludeWhitespace,
-  }) {
-    assert(start >= 0 && start < text.length);
-    assert(end >= 0 && end <= text.length);
+  double _measureSubstring(String text, int start, int end) {
+    // 0 <= start <= end <= text.length
+    assert(0 <= start && start <= end && end <= text.length);
 
-    if (excludeTrailing != null) {
-      while (start < end && excludeTrailing(text[end - 1])) {
-        end--;
-      }
-    }
     if (start == end) {
       return 0;
     }
+
+    if (start == _lastStart && end == _lastEnd && text == _lastText) {
+      return _lastWidth;
+    }
+    _lastStart = start;
+    _lastEnd = end;
+    _lastText = text;
 
     final String sub = text.substring(start, end);
     final double width = _canvasContext.measureText(sub).width;
@@ -605,6 +668,50 @@ class CanvasTextMeasurementService extends TextMeasurementService {
     // point. So 39.999423 becomes 40, and 11.243982 becomes 11.24.
     // The reason we are doing this is because we noticed that canvas API has a
     // ±0.001 error margin.
-    return (width * 100).round() / 100;
+    return _lastWidth = _roundWidth(width);
   }
+
+  /// In a continuous block of text, finds the point where text can be broken to
+  /// fit in the given constraint [maxWidth].
+  ///
+  /// This always returns at least one character even if there isn't enough
+  /// space for it.
+  int _forceBreak(double maxWidth, String text, int start, int end) {
+    assert(0 <= start && start < end && end <= text.length);
+
+    int low = start;
+    int high = end;
+    do {
+      final int mid = (low + high) ~/ 2;
+      final double width = _measureSubstring(text, start, mid);
+      if (width < maxWidth) {
+        low = mid;
+      } else if (width > maxWidth) {
+        high = mid;
+      } else {
+        low = high = mid;
+      }
+    } while (high - low > 1);
+
+    // The breaking point should be at least one character away from [start].
+    return math.max(low, start + 1);
+  }
+}
+
+double _roundWidth(double width) {
+  return (width * 100).round() / 100;
+}
+
+/// From the substring defined by [text], [start] (inclusive) and [end]
+/// (exclusive), exclude trailing characters that satisfy the given [predicate].
+///
+/// The return value is the new end of the substring after excluding the
+/// trailing characters.
+int _excludeTrailing(String text, int start, int end, CharPredicate predicate) {
+  assert(0 <= start && start <= end && end <= text.length);
+
+  while (start < end && predicate(text.codeUnitAt(end - 1))) {
+    end--;
+  }
+  return end;
 }

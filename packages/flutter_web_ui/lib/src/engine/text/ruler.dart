@@ -43,7 +43,7 @@ class ParagraphGeometricStyle {
     if (assertionsEnabled) {
       // In widget tests we use a predictable-size font "Ahem". This makes
       // widget tests predictable and less flaky.
-      if (domRenderer.debugIsInWidgetTest) {
+      if (ui.debugEmulateFlutterTesterEnvironment) {
         return 'Ahem';
       }
     }
@@ -754,18 +754,9 @@ class MeasurementResult {
   /// {@macro dart.ui.paragraph.ideographicBaseline}
   final double ideographicBaseline;
 
-  /// Indices that indicate where the text should wrap to satisfy
-  /// [constraintWidth].
-  ///
-  /// For the string "foobarbaz", if [lineBreaks] contains `[3, 6]` then the
-  /// text should be broken as:
-  ///
-  /// '''
-  /// foo
-  /// bar
-  /// baz
-  /// '''
-  final List<int> lineBreaks;
+  /// Substrings that represent how the text should wrap into multiple lines to
+  /// satisfy [constraintWidth],
+  final List<String> lines;
 
   MeasurementResult(
     this.constraintWidth, {
@@ -777,7 +768,7 @@ class MeasurementResult {
     @required this.maxIntrinsicWidth,
     @required this.alphabeticBaseline,
     @required this.ideographicBaseline,
-    @required this.lineBreaks,
+    @required this.lines,
   })  : assert(constraintWidth != null),
         assert(isSingleLine != null),
         assert(width != null),

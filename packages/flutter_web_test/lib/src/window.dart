@@ -4,7 +4,9 @@
 // Synced 2019-05-30T14:20:57.825725.
 
 import 'dart:typed_data' show ByteData;
-import 'package:flutter_web_ui/ui.dart' hide window;
+import 'package:flutter_web_ui/ui.dart'
+    hide window, webOnlyScheduleFrameCallback;
+import 'package:flutter_web_ui/ui.dart' as ui;
 
 import 'package:meta/meta.dart';
 
@@ -53,13 +55,6 @@ class TestWindow implements Window {
 
   /// The [Window] that is wrapped by this [TestWindow].
   final Window _window;
-
-  @override
-  VoidCallback get webOnlyScheduleFrameCallback =>
-      _window.webOnlyScheduleFrameCallback;
-  set webOnlyScheduleFrameCallback(VoidCallback callback) {
-    _window.webOnlyScheduleFrameCallback = callback;
-  }
 
   @override
   double get devicePixelRatio => _devicePixelRatio ?? _window.devicePixelRatio;
@@ -389,4 +384,10 @@ class TestWindow implements Window {
     clearTextScaleFactorTestValue();
     clearViewInsetsTestValue();
   }
+}
+
+VoidCallback get webOnlyScheduleFrameCallback =>
+    ui.webOnlyScheduleFrameCallback;
+set webOnlyScheduleFrameCallback(VoidCallback callback) {
+  ui.webOnlyScheduleFrameCallback = callback;
 }

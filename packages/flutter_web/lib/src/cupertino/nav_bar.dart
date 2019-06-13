@@ -2236,4 +2236,5 @@ final HeroFlightShuttleBuilder _navBarHeroFlightShuttleBuilder = (
         topNavBar: fromNavBar,
       );
   }
+  throw ArgumentError.value(flightDirection, 'flightDirection');
 };

@@ -13,8 +13,9 @@ void main() {
       await tester.pumpWidget(
         new WidgetsApp(
           color: _black,
-          pageRouteBuilder: (RouteSettings settings, WidgetBuilder builder) =>
-              MaterialPageRoute<dynamic>(settings: settings, builder: builder),
+          pageRouteBuilder:
+              <T>(RouteSettings settings, WidgetBuilder builder) =>
+                  MaterialPageRoute<T>(settings: settings, builder: builder),
           builder: (_, __) => new Text('no direction'),
         ),
       );
@@ -29,8 +30,9 @@ void main() {
         new WidgetsApp(
           color: _black,
           textStyle: new TextStyle(fontFamily: 'FakeFont'),
-          pageRouteBuilder: (RouteSettings settings, WidgetBuilder builder) =>
-              MaterialPageRoute<dynamic>(settings: settings, builder: builder),
+          pageRouteBuilder:
+              <T>(RouteSettings settings, WidgetBuilder builder) =>
+                  MaterialPageRoute<T>(settings: settings, builder: builder),
           builder: (_, __) => new Text('hello'),
         ),
       );

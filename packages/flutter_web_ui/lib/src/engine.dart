@@ -14,6 +14,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:meta/meta.dart';
+import 'package:typed_data/typed_buffers.dart' show Uint8Buffer;
 
 import '../ui.dart' as ui;
 
@@ -44,17 +45,21 @@ part 'engine/onscreen_logging.dart';
 part 'engine/path_to_svg.dart';
 part 'engine/pointer_binding.dart';
 part 'engine/recording_canvas.dart';
+part 'engine/semantics/accessibility.dart';
 part 'engine/semantics/checkable.dart';
 part 'engine/semantics/image.dart';
 part 'engine/semantics/incrementable.dart';
 part 'engine/semantics/label_and_value.dart';
+part 'engine/semantics/live_region.dart';
 part 'engine/semantics/scrollable.dart';
 part 'engine/semantics/semantics.dart';
 part 'engine/semantics/tappable.dart';
 part 'engine/semantics/text_field.dart';
 part 'engine/services/message_codec.dart';
 part 'engine/services/message_codecs.dart';
+part 'engine/services/serialization.dart';
 part 'engine/shadow.dart';
+part 'engine/surface/backdrop_filter.dart';
 part 'engine/surface/clip.dart';
 part 'engine/surface/debug_canvas_reuse_overlay.dart';
 part 'engine/surface/offset.dart';
@@ -120,7 +125,7 @@ void webOnlyInitializeEngine() {
   domRenderer;
 
   bool waitingForAnimation = false;
-  ui.window.webOnlyScheduleFrameCallback = () {
+  ui.webOnlyScheduleFrameCallback = () {
     // We're asked to schedule a frame and call `frameHandler` when the frame
     // fires.
     if (!waitingForAnimation) {

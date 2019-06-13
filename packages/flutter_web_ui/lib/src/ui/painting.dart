@@ -1651,12 +1651,24 @@ enum FilterQuality {
 ///    this class.
 class ImageFilter {
   /// Creates an image filter that applies a Gaussian blur.
-  ImageFilter.blur({double sigmaX = 0.0, double sigmaY = 0.0}) {
-    _initBlur(sigmaX, sigmaY);
+  ImageFilter.blur({this.sigmaX = 0.0, this.sigmaY = 0.0})
+      : matrix4 = null,
+        filterQuality = FilterQuality.low;
+
+  ImageFilter.matrix(this.matrix4, {this.filterQuality = FilterQuality.low})
+      : sigmaX = 0.0,
+        sigmaY = 0.0 {
+    // TODO(flutter_web): add implementation.
+    throw UnimplementedError(
+        'ImageFilter.matrix not implemented for web platform.');
+    //    if (matrix4.length != 16)
+    //      throw ArgumentError('"matrix4" must have 16 entries.');
   }
-  void _initBlur(double sigmaX, double sigmaY) {
-    // TODO(b/128318717): Implement me.
-  }
+
+  final Float64List matrix4;
+  final FilterQuality filterQuality;
+  final double sigmaX;
+  final double sigmaY;
 }
 
 /// The format in which image bytes should be returned when using

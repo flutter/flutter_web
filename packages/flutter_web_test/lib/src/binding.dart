@@ -238,7 +238,7 @@ abstract class TestWidgetsFlutterBinding extends BindingBase
     Duration additionalTime = const Duration(milliseconds: 1000),
   });
 
-  /// Artificially calls dispatchLocaleChanged on the Widget binding,
+  /// Artificially calls dispatchLocalesChanged on the Widget binding,
   /// then flushes microtasks.
   ///
   /// Passes only one single Locale. Use [setLocales] to pass a full preferred
@@ -248,7 +248,7 @@ abstract class TestWidgetsFlutterBinding extends BindingBase
       assert(inTest);
       final Locale locale =
           Locale(languageCode, countryCode == '' ? null : countryCode);
-      dispatchLocaleChanged(locale);
+      dispatchLocalesChanged(<Locale>[locale]);
     });
   }
 
@@ -257,8 +257,7 @@ abstract class TestWidgetsFlutterBinding extends BindingBase
   Future<void> setLocales(List<Locale> locales) {
     return TestAsyncUtils.guard<void>(() async {
       assert(inTest);
-      // TODO(flutter_web): Sync `dispatchLocalesChanged`.
-      // dispatchLocalesChanged(locales);
+      dispatchLocalesChanged(locales);
     });
   }
 

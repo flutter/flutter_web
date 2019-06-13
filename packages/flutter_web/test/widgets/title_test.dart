@@ -5,39 +5,72 @@
 import 'package:flutter_web/material.dart';
 import 'package:flutter_web_test/flutter_web_test.dart';
 
-import 'dart:html' show document;
-
 void main() {
-  group('$Title', () {
-    testWidgets('sets title and theme color', (WidgetTester tester) async {
-      await tester.pumpWidget(Directionality(
-        textDirection: TextDirection.ltr,
-        child: Title(
-          title: 'Title Test',
-          color: Color.fromARGB(255, 255, 0, 255),
-          child: Text('Hello'),
-        ),
-      ));
-      expect(find.text('Hello'), findsOneWidget);
+  testWidgets('toString control test', (WidgetTester tester) async {
+    final Widget widget = Title(
+      color: const Color(0xFF00FF00),
+      title: 'Awesome app',
+      child: Container(),
+    );
+    expect(widget.toString, isNot(throwsException));
+  });
 
-      expect(document.title, 'Title Test');
+  testWidgets('should handle having no title', (WidgetTester tester) async {
+    final Title widget = Title(
+      child: Container(),
+      color: const Color(0xFF00FF00),
+    );
+    expect(widget.toString, isNot(throwsException));
+    expect(widget.title, equals(''));
+    expect(widget.color, equals(const Color(0xFF00FF00)));
+  });
 
-      var theme = document.querySelector('#flutterweb-theme');
-      expect(theme.attributes['name'], 'theme-color');
-      expect(theme.attributes['content'], '#ff00ff');
+  testWidgets('should not allow null title or color',
+      (WidgetTester tester) async {
+    expect(
+        () => Title(
+              title: null,
+              color: const Color(0xFF00FF00),
+              child: Container(),
+            ),
+        throwsAssertionError);
+    expect(
+        () => Title(
+              color: null,
+              child: Container(),
+            ),
+        throwsAssertionError);
+  });
 
-      await tester.pumpWidget(Directionality(
-        textDirection: TextDirection.ltr,
-        child: Title(
-          title: 'Different title',
-          color: Color.fromARGB(255, 0, 0, 0),
-          child: Text('See ya!'),
-        ),
-      ));
-      expect(find.text('See ya!'), findsOneWidget);
+  testWidgets('should not allow non-opaque color', (WidgetTester tester) async {
+    expect(
+        () => Title(
+              color: const Color(0),
+              child: Container(),
+            ),
+        throwsAssertionError);
+  });
 
-      expect(document.title, 'Different title');
-      expect(theme.attributes['content'], '#000000');
+  testWidgets('should not pass "null" to setApplicationSwitcherDescription',
+      (WidgetTester tester) async {
+    final List<MethodCall> log = <MethodCall>[];
+
+    SystemChannels.platform
+        .setMockMethodCallHandler((MethodCall methodCall) async {
+      log.add(methodCall);
     });
+
+    await tester.pumpWidget(Title(
+      child: Container(),
+      color: const Color(0xFF00FF00),
+    ));
+
+    expect(log, hasLength(1));
+    expect(
+        log.single,
+        isMethodCall(
+          'SystemChrome.setApplicationSwitcherDescription',
+          arguments: <String, dynamic>{'label': '', 'primaryColor': 4278255360},
+        ));
   });
 }

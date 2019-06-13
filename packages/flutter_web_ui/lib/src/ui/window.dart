@@ -699,8 +699,6 @@ abstract class Window {
     _onLocaleChanged = callback;
   }
 
-  VoidCallback webOnlyScheduleFrameCallback;
-
   /// Requests that, at the next appropriate opportunity, the [onBeginFrame]
   /// and [onDrawFrame] callbacks be invoked.
   ///
@@ -945,6 +943,8 @@ abstract class Window {
 
   void setIsolateDebugName(String name) {}
 }
+
+VoidCallback webOnlyScheduleFrameCallback;
 
 /// Additional accessibility features that may be enabled by the platform.
 ///

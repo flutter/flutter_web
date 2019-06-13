@@ -13,7 +13,7 @@ import '../rendering/rendering_tester.dart';
 main() {
   test('$RendererBinding flushes layout on every frame', () async {
     int callCount = 0;
-    ui.window.webOnlyScheduleFrameCallback = () {
+    ui.webOnlyScheduleFrameCallback = () {
       callCount++;
     };
 

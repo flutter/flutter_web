@@ -1,8 +1,9 @@
 // Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// Synced. * Contains Web DELTA *
+// Synced 2019-06-05T16:17:57.814629.
 
+import 'package:flutter_web/cupertino.dart';
 import 'package:flutter_web/widgets.dart';
 
 import 'page_transitions_theme.dart';
@@ -68,17 +69,15 @@ class MaterialPageRoute<T> extends PageRoute<T> {
 
   @override
   bool canTransitionFrom(TransitionRoute<dynamic> previousRoute) {
-    return previousRoute is MaterialPageRoute;
-    // TODO(flutter_web): enable after implementing cupertino.
-    //    || previousRoute is CupertinoPageRoute;
+    return previousRoute is MaterialPageRoute ||
+        previousRoute is CupertinoPageRoute;
   }
 
   @override
   bool canTransitionTo(TransitionRoute<dynamic> nextRoute) {
     // Don't perform outgoing animation if the next route is a fullscreen dialog.
-    return (nextRoute is MaterialPageRoute && !nextRoute.fullscreenDialog);
-    // TODO(flutter_web): enable after implementing cupertino.
-    //    || (nextRoute is CupertinoPageRoute && !nextRoute.fullscreenDialog);
+    return (nextRoute is MaterialPageRoute && !nextRoute.fullscreenDialog) ||
+        (nextRoute is CupertinoPageRoute && !nextRoute.fullscreenDialog);
   }
 
   @override

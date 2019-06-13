@@ -1,6 +1,7 @@
 // Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// Synced 2019-06-04T10:01:02.507286.
 
 import 'simulation.dart';
 
@@ -20,12 +21,13 @@ class ClampedSimulation extends Simulation {
   ///
   /// The named arguments specify the ranges for the clamping behavior, as
   /// applied to [x] and [dx].
-  ClampedSimulation(this.simulation,
-      {this.xMin = double.negativeInfinity,
-      this.xMax = double.infinity,
-      this.dxMin = double.negativeInfinity,
-      this.dxMax = double.infinity})
-      : assert(simulation != null),
+  ClampedSimulation(
+    this.simulation, {
+    this.xMin = double.negativeInfinity,
+    this.xMax = double.infinity,
+    this.dxMin = double.negativeInfinity,
+    this.dxMax = double.infinity,
+  })  : assert(simulation != null),
         assert(xMax >= xMin),
         assert(dxMax >= dxMin);
 

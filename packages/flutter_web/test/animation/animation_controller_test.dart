@@ -13,7 +13,7 @@ import '../scheduler/scheduler_tester.dart';
 
 void main() {
   setUp(() {
-    ui.window.webOnlyScheduleFrameCallback ??= () {};
+    ui.webOnlyScheduleFrameCallback ??= () {};
     WidgetsFlutterBinding.ensureInitialized();
     WidgetsBinding.instance.resetEpoch();
     ui.window.onBeginFrame = null;

@@ -1,6 +1,7 @@
 // Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// Synced. * Contains Web DELTA *
 
 import 'package:flutter_web/cupertino.dart';
 import 'package:flutter_web/rendering.dart';
@@ -414,10 +415,10 @@ class _MaterialAppState extends State<MaterialApp> {
           key: GlobalObjectKey(this),
           navigatorKey: widget.navigatorKey,
           navigatorObservers: _navigatorObservers,
-          // TODO(dnfield): when https://github.com/dart-lang/sdk/issues/34572 is resolved
           // this can use type arguments again
-          pageRouteBuilder: (RouteSettings settings, WidgetBuilder builder) =>
-              MaterialPageRoute<dynamic>(settings: settings, builder: builder),
+          pageRouteBuilder:
+              <T>(RouteSettings settings, WidgetBuilder builder) =>
+                  MaterialPageRoute<T>(settings: settings, builder: builder),
           home: widget.home,
           routes: widget.routes,
           initialRoute: widget.initialRoute,

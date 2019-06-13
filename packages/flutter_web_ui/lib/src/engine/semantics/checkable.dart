@@ -50,6 +50,10 @@ class Checkable extends RoleManager {
           break;
       }
 
+      /// Adding disabled and aria-disabled attribute to notify the assistive
+      /// technologies of disabled checkboxes and radio buttons.
+      _updateDisabledAttribute();
+
       semanticsObject.element.setAttribute(
         'aria-checked',
         semanticsObject.hasFlag(ui.SemanticsFlag.isChecked) ? 'true' : 'false',
@@ -67,5 +71,22 @@ class Checkable extends RoleManager {
         semanticsObject.setAriaRole('radio', false);
         break;
     }
+    _removeDisabledAttribute();
+  }
+
+  void _updateDisabledAttribute() {
+    if (!semanticsObject.hasFlag(ui.SemanticsFlag.isEnabled)) {
+      final html.Element element = semanticsObject.element;
+      element
+        ..setAttribute('aria-disabled', 'true')
+        ..setAttribute('disabled', 'true');
+    } else {
+      _removeDisabledAttribute();
+    }
+  }
+
+  void _removeDisabledAttribute() {
+    final html.Element element = semanticsObject.element;
+    element..removeAttribute('aria-disabled')..removeAttribute('disabled');
   }
 }

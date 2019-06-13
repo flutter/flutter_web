@@ -262,6 +262,16 @@ abstract class RawKeyEvent {
           modifiers: message['modifiers'] ?? 0,
         );
         break;
+      case 'android':
+        data = RawKeyEventDataAndroid(
+          flags: message['flags'] ?? 0,
+          codePoint: message['codePoint'] ?? 0,
+          keyCode: message['keyCode'] ?? 0,
+          plainCodePoint: message['plainCodePoint'] ?? 0,
+          scanCode: message['scanCode'] ?? 0,
+          metaState: message['metaState'] ?? 0,
+        );
+        break;
       default:
         // We don't yet implement raw key events on iOS or other platforms, but
         // we don't hit this exception because the engine never sends us these
@@ -272,16 +282,6 @@ abstract class RawKeyEvent {
     // TODO(flutter_web): upstream.
     if (!ui.isWeb) {
       switch (keymap) {
-        case 'android':
-          data = RawKeyEventDataAndroid(
-            flags: message['flags'] ?? 0,
-            codePoint: message['codePoint'] ?? 0,
-            keyCode: message['keyCode'] ?? 0,
-            plainCodePoint: message['plainCodePoint'] ?? 0,
-            scanCode: message['scanCode'] ?? 0,
-            metaState: message['metaState'] ?? 0,
-          );
-          break;
         case 'macos':
           data = RawKeyEventDataMacOs(
               characters: message['characters'] ?? '',
