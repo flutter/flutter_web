@@ -36,8 +36,8 @@ dev_dependencies:
 
   ## ADD
   ## Add these dependencies to enable the Dart web build system
-  build_runner: ^1.2.2
-  build_web_compilers: ^1.1.0
+  build_runner: ^1.4.0
+  build_web_compilers: ^2.0.0
 
   test: ^1.3.4
 
