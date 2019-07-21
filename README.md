@@ -207,9 +207,9 @@ dependencies:
 
 dev_dependencies:
   # Enables the `pub run build_runner` command
-  build_runner: ^1.1.2
+  build_runner: ^1.4.0
   # Includes the JavaScript compilers
-  build_web_compilers: ^1.0.0
+  build_web_compilers: ^2.0.0
 
 # flutter_web packages are not published to pub.dartlang.org
 # These overrides tell the package tools to get them from GitHub
