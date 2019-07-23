@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -140,12 +140,17 @@ class ScrollableTabsDemoState extends State<ScrollableTabsDemo>
             itemBuilder: (BuildContext context) =>
                 <PopupMenuItem<TabsDemoStyle>>[
               const PopupMenuItem<TabsDemoStyle>(
-                  value: TabsDemoStyle.iconsAndText,
-                  child: Text('Icons and text')),
+                value: TabsDemoStyle.iconsAndText,
+                child: Text('Icons and text'),
+              ),
               const PopupMenuItem<TabsDemoStyle>(
-                  value: TabsDemoStyle.iconsOnly, child: Text('Icons only')),
+                value: TabsDemoStyle.iconsOnly,
+                child: Text('Icons only'),
+              ),
               const PopupMenuItem<TabsDemoStyle>(
-                  value: TabsDemoStyle.textOnly, child: Text('Text only')),
+                value: TabsDemoStyle.textOnly,
+                child: Text('Text only'),
+              ),
             ],
           ),
         ],
@@ -168,27 +173,28 @@ class ScrollableTabsDemoState extends State<ScrollableTabsDemo>
         ),
       ),
       body: TabBarView(
-          controller: _controller,
-          children: _allPages.map<Widget>((_Page page) {
-            return SafeArea(
-              top: false,
-              bottom: false,
-              child: Container(
-                key: ObjectKey(page.icon),
-                padding: const EdgeInsets.all(12.0),
-                child: Card(
-                  child: Center(
-                    child: Icon(
-                      page.icon,
-                      color: iconColor,
-                      size: 128.0,
-                      semanticLabel: 'Placeholder for ${page.text} tab',
-                    ),
+        controller: _controller,
+        children: _allPages.map<Widget>((_Page page) {
+          return SafeArea(
+            top: false,
+            bottom: false,
+            child: Container(
+              key: ObjectKey(page.icon),
+              padding: const EdgeInsets.all(12.0),
+              child: Card(
+                child: Center(
+                  child: Icon(
+                    page.icon,
+                    color: iconColor,
+                    size: 128.0,
+                    semanticLabel: 'Placeholder for ${page.text} tab',
                   ),
                 ),
               ),
-            );
-          }).toList()),
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }

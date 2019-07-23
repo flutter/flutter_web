@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -58,15 +58,17 @@ class IconsDemoState extends State<IconsDemo> {
         child: SafeArea(
           top: false,
           bottom: false,
-          child: ListView(
-            padding: const EdgeInsets.all(24.0),
-            children: <Widget>[
-              _IconsDemoCard(
-                  handleIconButtonPress, Icons.face), // direction-agnostic icon
-              const SizedBox(height: 24.0),
-              _IconsDemoCard(handleIconButtonPress,
-                  Icons.battery_unknown), // direction-aware icon
-            ],
+          child: Scrollbar(
+            child: ListView(
+              padding: const EdgeInsets.all(24.0),
+              children: <Widget>[
+                _IconsDemoCard(handleIconButtonPress,
+                    Icons.face), // direction-agnostic icon
+                const SizedBox(height: 24.0),
+                _IconsDemoCard(handleIconButtonPress,
+                    Icons.battery_unknown), // direction-aware icon
+              ],
+            ),
           ),
         ),
       ),
@@ -82,10 +84,11 @@ class _IconsDemoCard extends StatelessWidget {
 
   Widget _buildIconButton(double iconSize, IconData icon, bool enabled) {
     return IconButton(
-        icon: Icon(icon),
-        iconSize: iconSize,
-        tooltip: "${enabled ? 'Enabled' : 'Disabled'} icon button",
-        onPressed: enabled ? handleIconButtonPress : null);
+      icon: Icon(icon),
+      iconSize: iconSize,
+      tooltip: "${enabled ? 'Enabled' : 'Disabled'} icon button",
+      onPressed: enabled ? handleIconButtonPress : null,
+    );
   }
 
   Widget _centeredText(String label) => Padding(

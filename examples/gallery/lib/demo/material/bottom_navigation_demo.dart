@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -92,12 +92,13 @@ class CustomInactiveIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final IconThemeData iconTheme = IconTheme.of(context);
     return Container(
-        margin: const EdgeInsets.all(4.0),
-        width: iconTheme.size - 8.0,
-        height: iconTheme.size - 8.0,
-        decoration: BoxDecoration(
-          border: Border.all(color: iconTheme.color, width: 2.0),
-        ));
+      margin: const EdgeInsets.all(4.0),
+      width: iconTheme.size - 8.0,
+      height: iconTheme.size - 8.0,
+      decoration: BoxDecoration(
+        border: Border.all(color: iconTheme.color, width: 2.0),
+      ),
+    );
   }
 }
 
@@ -150,11 +151,8 @@ class _BottomNavigationDemoState extends State<BottomNavigationDemo>
         title: 'Event',
         color: Colors.pink,
         vsync: this,
-      )
+      ),
     ];
-
-    for (NavigationIconView view in _navigationViews)
-      view.controller.addListener(_rebuild);
 
     _navigationViews[_currentIndex].controller.value = 1.0;
   }
@@ -163,12 +161,6 @@ class _BottomNavigationDemoState extends State<BottomNavigationDemo>
   void dispose() {
     for (NavigationIconView view in _navigationViews) view.controller.dispose();
     super.dispose();
-  }
-
-  void _rebuild() {
-    setState(() {
-      // Rebuild in order to animate views.
-    });
   }
 
   Widget _buildTransitionsStack() {
@@ -227,12 +219,14 @@ class _BottomNavigationDemoState extends State<BottomNavigationDemo>
               const PopupMenuItem<BottomNavigationBarType>(
                 value: BottomNavigationBarType.shifting,
                 child: Text('Shifting'),
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
-      body: Center(child: _buildTransitionsStack()),
+      body: Center(
+        child: _buildTransitionsStack(),
+      ),
       bottomNavigationBar: botNavBar,
     );
   }

@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -99,26 +99,27 @@ class DessertDataSource extends DataTableSource {
     if (index >= _desserts.length) return null;
     final Dessert dessert = _desserts[index];
     return DataRow.byIndex(
-        index: index,
-        selected: dessert.selected,
-        onSelectChanged: (bool value) {
-          if (dessert.selected != value) {
-            _selectedCount += value ? 1 : -1;
-            assert(_selectedCount >= 0);
-            dessert.selected = value;
-            notifyListeners();
-          }
-        },
-        cells: <DataCell>[
-          DataCell(Text('${dessert.name}')),
-          DataCell(Text('${dessert.calories}')),
-          DataCell(Text('${dessert.fat.toStringAsFixed(1)}')),
-          DataCell(Text('${dessert.carbs}')),
-          DataCell(Text('${dessert.protein.toStringAsFixed(1)}')),
-          DataCell(Text('${dessert.sodium}')),
-          DataCell(Text('${dessert.calcium}%')),
-          DataCell(Text('${dessert.iron}%')),
-        ]);
+      index: index,
+      selected: dessert.selected,
+      onSelectChanged: (bool value) {
+        if (dessert.selected != value) {
+          _selectedCount += value ? 1 : -1;
+          assert(_selectedCount >= 0);
+          dessert.selected = value;
+          notifyListeners();
+        }
+      },
+      cells: <DataCell>[
+        DataCell(Text('${dessert.name}')),
+        DataCell(Text('${dessert.calories}')),
+        DataCell(Text('${dessert.fat.toStringAsFixed(1)}')),
+        DataCell(Text('${dessert.carbs}')),
+        DataCell(Text('${dessert.protein.toStringAsFixed(1)}')),
+        DataCell(Text('${dessert.sodium}')),
+        DataCell(Text('${dessert.calcium}%')),
+        DataCell(Text('${dessert.iron}%')),
+      ],
+    );
   }
 
   @override
@@ -162,14 +163,17 @@ class _DataTableDemoState extends State<DataTableDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Data tables'),
-          actions: <Widget>[
-            MaterialDemoDocumentationButton(DataTableDemo.routeName),
-          ],
-        ),
-        body: ListView(padding: const EdgeInsets.all(20.0), children: <Widget>[
-          PaginatedDataTable(
+      appBar: AppBar(
+        title: const Text('Data tables'),
+        actions: <Widget>[
+          MaterialDemoDocumentationButton(DataTableDemo.routeName),
+        ],
+      ),
+      body: Scrollbar(
+        child: ListView(
+          padding: const EdgeInsets.all(20.0),
+          children: <Widget>[
+            PaginatedDataTable(
               header: const Text('Nutrition'),
               rowsPerPage: _rowsPerPage,
               onRowsPerPageChanged: (int value) {
@@ -182,50 +186,62 @@ class _DataTableDemoState extends State<DataTableDemo> {
               onSelectAll: _dessertsDataSource._selectAll,
               columns: <DataColumn>[
                 DataColumn(
-                    label: const Text('Dessert (100g serving)'),
-                    onSort: (int columnIndex, bool ascending) => _sort<String>(
-                        (Dessert d) => d.name, columnIndex, ascending)),
+                  label: const Text('Dessert (100g serving)'),
+                  onSort: (int columnIndex, bool ascending) => _sort<String>(
+                      (Dessert d) => d.name, columnIndex, ascending),
+                ),
                 DataColumn(
-                    label: const Text('Calories'),
-                    tooltip:
-                        'The total amount of food energy in the given serving size.',
-                    numeric: true,
-                    onSort: (int columnIndex, bool ascending) => _sort<num>(
-                        (Dessert d) => d.calories, columnIndex, ascending)),
+                  label: const Text('Calories'),
+                  tooltip:
+                      'The total amount of food energy in the given serving size.',
+                  numeric: true,
+                  onSort: (int columnIndex, bool ascending) => _sort<num>(
+                      (Dessert d) => d.calories, columnIndex, ascending),
+                ),
                 DataColumn(
-                    label: const Text('Fat (g)'),
-                    numeric: true,
-                    onSort: (int columnIndex, bool ascending) => _sort<num>(
-                        (Dessert d) => d.fat, columnIndex, ascending)),
+                  label: const Text('Fat (g)'),
+                  numeric: true,
+                  onSort: (int columnIndex, bool ascending) =>
+                      _sort<num>((Dessert d) => d.fat, columnIndex, ascending),
+                ),
                 DataColumn(
-                    label: const Text('Carbs (g)'),
-                    numeric: true,
-                    onSort: (int columnIndex, bool ascending) => _sort<num>(
-                        (Dessert d) => d.carbs, columnIndex, ascending)),
+                  label: const Text('Carbs (g)'),
+                  numeric: true,
+                  onSort: (int columnIndex, bool ascending) => _sort<num>(
+                      (Dessert d) => d.carbs, columnIndex, ascending),
+                ),
                 DataColumn(
-                    label: const Text('Protein (g)'),
-                    numeric: true,
-                    onSort: (int columnIndex, bool ascending) => _sort<num>(
-                        (Dessert d) => d.protein, columnIndex, ascending)),
+                  label: const Text('Protein (g)'),
+                  numeric: true,
+                  onSort: (int columnIndex, bool ascending) => _sort<num>(
+                      (Dessert d) => d.protein, columnIndex, ascending),
+                ),
                 DataColumn(
-                    label: const Text('Sodium (mg)'),
-                    numeric: true,
-                    onSort: (int columnIndex, bool ascending) => _sort<num>(
-                        (Dessert d) => d.sodium, columnIndex, ascending)),
+                  label: const Text('Sodium (mg)'),
+                  numeric: true,
+                  onSort: (int columnIndex, bool ascending) => _sort<num>(
+                      (Dessert d) => d.sodium, columnIndex, ascending),
+                ),
                 DataColumn(
-                    label: const Text('Calcium (%)'),
-                    tooltip:
-                        'The amount of calcium as a percentage of the recommended daily amount.',
-                    numeric: true,
-                    onSort: (int columnIndex, bool ascending) => _sort<num>(
-                        (Dessert d) => d.calcium, columnIndex, ascending)),
+                  label: const Text('Calcium (%)'),
+                  tooltip:
+                      'The amount of calcium as a percentage of the recommended daily amount.',
+                  numeric: true,
+                  onSort: (int columnIndex, bool ascending) => _sort<num>(
+                      (Dessert d) => d.calcium, columnIndex, ascending),
+                ),
                 DataColumn(
-                    label: const Text('Iron (%)'),
-                    numeric: true,
-                    onSort: (int columnIndex, bool ascending) => _sort<num>(
-                        (Dessert d) => d.iron, columnIndex, ascending)),
+                  label: const Text('Iron (%)'),
+                  numeric: true,
+                  onSort: (int columnIndex, bool ascending) =>
+                      _sort<num>((Dessert d) => d.iron, columnIndex, ascending),
+                ),
               ],
-              source: _dessertsDataSource)
-        ]));
+              source: _dessertsDataSource,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

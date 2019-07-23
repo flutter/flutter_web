@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -32,17 +32,12 @@ class SectionCard extends StatelessWidget {
             ],
           ),
         ),
-        // TODO(b:119312219): Remove Opacity layer when Image Color Filter
-        // is implemented in paintImage.
-        child: Opacity(
-          opacity: 0.075,
-          child: Image.asset(
-            section.backgroundAsset,
-            package: section.backgroundAssetPackage,
-            color: const Color.fromRGBO(255, 255, 255, 0.075),
-            colorBlendMode: BlendMode.modulate,
-            fit: BoxFit.cover,
-          ),
+        child: Image.asset(
+          section.backgroundAsset,
+          package: section.backgroundAssetPackage,
+          color: const Color.fromRGBO(255, 255, 255, 0.075),
+          colorBlendMode: BlendMode.modulate,
+          fit: BoxFit.cover,
         ),
       ),
     );

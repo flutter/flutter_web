@@ -92,7 +92,7 @@ class _SearchDemoState extends State<SearchDemo> {
               ),
             ),
             const SizedBox(height: 64.0),
-            Text('Last selected integer: ${_lastIntegerSelected ?? 'NONE'}.')
+            Text('Last selected integer: ${_lastIntegerSelected ?? 'NONE'}.'),
           ],
         ),
       ),
@@ -113,6 +113,7 @@ class _SearchDemoState extends State<SearchDemo> {
               currentAccountPicture: CircleAvatar(
                 backgroundImage: AssetImage(
                   'people/square/peter.png',
+                  package: 'flutter_gallery_assets',
                 ),
               ),
               margin: EdgeInsets.zero,
@@ -219,7 +220,7 @@ class _SearchDemoSearchDelegate extends SearchDelegate<int> {
                 query = '';
                 showSuggestions(context);
               },
-            )
+            ),
     ];
   }
 }

@@ -2,14 +2,18 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:math' as math;
+import 'dart:async';
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:flutter_web/material.dart';
+import 'package:flutter_web/services.dart';
+import 'package:flutter_web/gestures.dart' show DragStartBehavior;
 
 import 'backdrop.dart';
 import 'demos.dart';
 
+const String _kGalleryAssetsPackage = 'flutter_gallery_assets';
 const Color _kFlutterBlue = Color(0xFF003D75);
 const double _kDemoItemHeight = 64.0;
 const Duration _kFrontLayerSwitchDuration = Duration(milliseconds: 300);
@@ -27,7 +31,7 @@ class _FlutterLogo extends StatelessWidget {
           image: DecorationImage(
             image: AssetImage(
               'logos/flutter_white/logo.png',
-              //package: _kGalleryAssetsPackage,
+              package: _kGalleryAssetsPackage,
             ),
           ),
         ),
@@ -56,6 +60,7 @@ class _CategoryItem extends StatelessWidget {
     return RepaintBoundary(
       child: RawMaterialButton(
         padding: EdgeInsets.zero,
+        hoverColor: theme.primaryColor.withOpacity(0.05),
         splashColor: theme.primaryColor.withOpacity(0.12),
         highlightColor: Colors.transparent,
         onPressed: onTap,
@@ -260,6 +265,7 @@ class _DemosPage extends StatelessWidget {
         label: category.name,
         explicitChildNodes: true,
         child: ListView(
+          dragStartBehavior: DragStartBehavior.down,
           key: PageStorageKey<String>(category.name),
           padding: EdgeInsets.only(top: 8.0, bottom: windowBottomPadding),
           children:
@@ -370,7 +376,7 @@ class _GalleryHomeState extends State<GalleryHome>
             frontTitle: AnimatedSwitcher(
               duration: _kFrontLayerSwitchDuration,
               child: _category == null
-                  ? const Text('Flutter web gallery')
+                  ? const Text('Flutter gallery')
                   : Text(_category.name),
             ),
             frontHeading: widget.testMode ? null : Container(height: 24.0),
@@ -399,19 +405,25 @@ class _GalleryHomeState extends State<GalleryHome>
     }());
 
     if (GalleryHome.showPreviewBanner) {
-      home = Stack(fit: StackFit.expand, children: <Widget>[
-        home,
-        FadeTransition(
+      home = Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          home,
+          FadeTransition(
             opacity:
                 CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
             child: const Banner(
               message: 'PREVIEW',
               location: BannerLocation.topEnd,
-            )),
-      ]);
+            ),
+          ),
+        ],
+      );
     }
     home = AnnotatedRegion<SystemUiOverlayStyle>(
-        child: home, value: SystemUiOverlayStyle.light);
+      child: home,
+      value: SystemUiOverlayStyle.light,
+    );
 
     return home;
   }

@@ -13,7 +13,7 @@ void main() {
     final Finder submitButton = find.widgetWithText(RaisedButton, 'SUBMIT');
     expect(submitButton, findsOneWidget);
 
-    final Finder nameField = find.widgetWithText(TextFormField, 'Name * ');
+    final Finder nameField = find.widgetWithText(TextFormField, 'Name *');
     expect(nameField, findsOneWidget);
 
     final Finder passwordField =

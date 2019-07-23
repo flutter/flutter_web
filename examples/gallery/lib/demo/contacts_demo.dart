@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -27,10 +27,11 @@ class _ContactCategory extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                  padding: const EdgeInsets.symmetric(vertical: 24.0),
-                  width: 72.0,
-                  child: Icon(icon, color: themeData.primaryColor)),
-              Expanded(child: Column(children: children))
+                padding: const EdgeInsets.symmetric(vertical: 24.0),
+                width: 72.0,
+                child: Icon(icon, color: themeData.primaryColor),
+              ),
+              Expanded(child: Column(children: children)),
             ],
           ),
         ),
@@ -40,7 +41,8 @@ class _ContactCategory extends StatelessWidget {
 }
 
 class _ContactItem extends StatelessWidget {
-  _ContactItem({Key key, this.icon, this.lines, this.tooltip, this.onPressed})
+  const _ContactItem(
+      {Key key, this.icon, this.lines, this.tooltip, this.onPressed})
       : assert(lines.length > 1),
         super(key: key);
 
@@ -60,24 +62,30 @@ class _ContactItem extends StatelessWidget {
 
     final List<Widget> rowChildren = <Widget>[
       Expanded(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: columnChildren))
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: columnChildren,
+        ),
+      ),
     ];
     if (icon != null) {
       rowChildren.add(SizedBox(
-          width: 72.0,
-          child: IconButton(
-              icon: Icon(icon),
-              color: themeData.primaryColor,
-              onPressed: onPressed)));
+        width: 72.0,
+        child: IconButton(
+          icon: Icon(icon),
+          color: themeData.primaryColor,
+          onPressed: onPressed,
+        ),
+      ));
     }
     return MergeSemantics(
       child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: rowChildren)),
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: rowChildren,
+        ),
+      ),
     );
   }
 }
@@ -122,8 +130,8 @@ class ContactsDemoState extends State<ContactsDemo> {
                   tooltip: 'Edit',
                   onPressed: () {
                     _scaffoldKey.currentState.showSnackBar(const SnackBar(
-                        content:
-                            Text("Editing isn't supported in this screen.")));
+                      content: Text("Editing isn't supported in this screen."),
+                    ));
                   },
                 ),
                 PopupMenuButton<AppBarBehavior>(
@@ -135,17 +143,21 @@ class ContactsDemoState extends State<ContactsDemo> {
                   itemBuilder: (BuildContext context) =>
                       <PopupMenuItem<AppBarBehavior>>[
                     const PopupMenuItem<AppBarBehavior>(
-                        value: AppBarBehavior.normal,
-                        child: Text('App bar scrolls away')),
+                      value: AppBarBehavior.normal,
+                      child: Text('App bar scrolls away'),
+                    ),
                     const PopupMenuItem<AppBarBehavior>(
-                        value: AppBarBehavior.pinned,
-                        child: Text('App bar stays put')),
+                      value: AppBarBehavior.pinned,
+                      child: Text('App bar stays put'),
+                    ),
                     const PopupMenuItem<AppBarBehavior>(
-                        value: AppBarBehavior.floating,
-                        child: Text('App bar floats')),
+                      value: AppBarBehavior.floating,
+                      child: Text('App bar floats'),
+                    ),
                     const PopupMenuItem<AppBarBehavior>(
-                        value: AppBarBehavior.snapping,
-                        child: Text('App bar snaps')),
+                      value: AppBarBehavior.snapping,
+                      child: Text('App bar snaps'),
+                    ),
                   ],
                 ),
               ],
@@ -156,7 +168,7 @@ class ContactsDemoState extends State<ContactsDemo> {
                   children: <Widget>[
                     Image.asset(
                       'people/ali_landscape.png',
-                      // package: 'flutter_gallery_assets',
+                      package: 'flutter_gallery_assets',
                       fit: BoxFit.cover,
                       height: _appBarHeight,
                     ),
@@ -187,8 +199,9 @@ class ContactsDemoState extends State<ContactsDemo> {
                         tooltip: 'Send message',
                         onPressed: () {
                           _scaffoldKey.currentState.showSnackBar(const SnackBar(
-                              content: Text(
-                                  'Pretend that this opened your SMS application.')));
+                            content: Text(
+                                'Pretend that this opened your SMS application.'),
+                          ));
                         },
                         lines: const <String>[
                           '(650) 555-1234',
@@ -200,7 +213,8 @@ class ContactsDemoState extends State<ContactsDemo> {
                         tooltip: 'Send message',
                         onPressed: () {
                           _scaffoldKey.currentState.showSnackBar(const SnackBar(
-                              content: Text('A messaging app appears.')));
+                            content: Text('A messaging app appears.'),
+                          ));
                         },
                         lines: const <String>[
                           '(323) 555-6789',
@@ -212,8 +226,9 @@ class ContactsDemoState extends State<ContactsDemo> {
                         tooltip: 'Send message',
                         onPressed: () {
                           _scaffoldKey.currentState.showSnackBar(const SnackBar(
-                              content: Text(
-                                  'Imagine if you will, a messaging application.')));
+                            content: Text(
+                                'Imagine if you will, a messaging application.'),
+                          ));
                         },
                         lines: const <String>[
                           '(650) 555-6789',
@@ -231,8 +246,9 @@ class ContactsDemoState extends State<ContactsDemo> {
                       tooltip: 'Send personal e-mail',
                       onPressed: () {
                         _scaffoldKey.currentState.showSnackBar(const SnackBar(
-                            content: Text(
-                                'Here, your e-mail application would open.')));
+                          content:
+                              Text('Here, your e-mail application would open.'),
+                        ));
                       },
                       lines: const <String>[
                         'ali_connors@example.com',
@@ -244,8 +260,9 @@ class ContactsDemoState extends State<ContactsDemo> {
                       tooltip: 'Send work e-mail',
                       onPressed: () {
                         _scaffoldKey.currentState.showSnackBar(const SnackBar(
-                            content: Text(
-                                'Summon your favorite e-mail application here.')));
+                          content: Text(
+                              'Summon your favorite e-mail application here.'),
+                        ));
                       },
                       lines: const <String>[
                         'aliconnors@example.com',
@@ -262,8 +279,9 @@ class ContactsDemoState extends State<ContactsDemo> {
                       tooltip: 'Open map',
                       onPressed: () {
                         _scaffoldKey.currentState.showSnackBar(const SnackBar(
-                            content: Text(
-                                'This would show a map of San Francisco.')));
+                          content:
+                              Text('This would show a map of San Francisco.'),
+                        ));
                       },
                       lines: const <String>[
                         '2000 Main Street',
@@ -276,8 +294,9 @@ class ContactsDemoState extends State<ContactsDemo> {
                       tooltip: 'Open map',
                       onPressed: () {
                         _scaffoldKey.currentState.showSnackBar(const SnackBar(
-                            content: Text(
-                                'This would show a map of Mountain View.')));
+                          content:
+                              Text('This would show a map of Mountain View.'),
+                        ));
                       },
                       lines: const <String>[
                         '1600 Amphitheater Parkway',
@@ -290,8 +309,9 @@ class ContactsDemoState extends State<ContactsDemo> {
                       tooltip: 'Open map',
                       onPressed: () {
                         _scaffoldKey.currentState.showSnackBar(const SnackBar(
-                            content: Text(
-                                'This would also show a map, if this was not a demo.')));
+                          content: Text(
+                              'This would also show a map, if this was not a demo.'),
+                        ));
                       },
                       lines: const <String>[
                         '126 Severyns Ave',

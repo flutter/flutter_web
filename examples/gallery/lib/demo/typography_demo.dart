@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -25,13 +25,20 @@ class TextStyleItem extends StatelessWidget {
     final TextStyle nameStyle =
         theme.textTheme.caption.copyWith(color: theme.textTheme.caption.color);
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
-        child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(width: 72.0, child: Text(name, style: nameStyle)),
-              Expanded(child: Text(text, style: style.copyWith(height: 1.0)))
-            ]));
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(
+            width: 72.0,
+            child: Text(name, style: nameStyle),
+          ),
+          Expanded(
+            child: Text(text, style: style.copyWith(height: 1.0)),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -69,9 +76,10 @@ class TypographyDemo extends StatelessWidget {
       styleItems.insert(
           0,
           TextStyleItem(
-              name: 'Display 4',
-              style: textTheme.display4,
-              text: 'Light 112sp'));
+            name: 'Display 4',
+            style: textTheme.display4,
+            text: 'Light 112sp',
+          ));
     }
 
     return Scaffold(
@@ -79,7 +87,7 @@ class TypographyDemo extends StatelessWidget {
       body: SafeArea(
         top: false,
         bottom: false,
-        child: ListView(children: styleItems),
+        child: Scrollbar(child: ListView(children: styleItems)),
       ),
     );
   }

@@ -102,7 +102,8 @@ class CategoryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return ListView(
+    return Scrollbar(
+        child: ListView(
       key: PageStorageKey<Category>(category),
       padding: const EdgeInsets.symmetric(
         vertical: 16.0,
@@ -119,7 +120,8 @@ class CategoryView extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     Image.asset(
-                      '$asset',
+                      asset,
+                      package: 'flutter_gallery_assets',
                       fit: BoxFit.contain,
                     ),
                     Container(
@@ -138,7 +140,7 @@ class CategoryView extends StatelessWidget {
           ],
         );
       }).toList(),
-    );
+    ));
   }
 }
 

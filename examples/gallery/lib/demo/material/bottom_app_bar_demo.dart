@@ -165,31 +165,33 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.only(bottom: 88.0),
-        children: <Widget>[
-          const _Heading('FAB Shape'),
-          _RadioItem<Widget>(kCircularFab, _fabShape, _onFabShapeChanged),
-          _RadioItem<Widget>(kDiamondFab, _fabShape, _onFabShapeChanged),
-          _RadioItem<Widget>(kNoFab, _fabShape, _onFabShapeChanged),
-          const Divider(),
-          const _Heading('Notch'),
-          _RadioItem<bool>(kShowNotchTrue, _showNotch, _onShowNotchChanged),
-          _RadioItem<bool>(kShowNotchFalse, _showNotch, _onShowNotchChanged),
-          const Divider(),
-          const _Heading('FAB Position'),
-          _RadioItem<FloatingActionButtonLocation>(
-              kFabEndDocked, _fabLocation, _onFabLocationChanged),
-          _RadioItem<FloatingActionButtonLocation>(
-              kFabCenterDocked, _fabLocation, _onFabLocationChanged),
-          _RadioItem<FloatingActionButtonLocation>(
-              kFabEndFloat, _fabLocation, _onFabLocationChanged),
-          _RadioItem<FloatingActionButtonLocation>(
-              kFabCenterFloat, _fabLocation, _onFabLocationChanged),
-          const Divider(),
-          const _Heading('App bar color'),
-          _ColorsItem(kBabColors, _babColor, _onBabColorChanged),
-        ],
+      body: Scrollbar(
+        child: ListView(
+          padding: const EdgeInsets.only(bottom: 88.0),
+          children: <Widget>[
+            const _Heading('FAB Shape'),
+            _RadioItem<Widget>(kCircularFab, _fabShape, _onFabShapeChanged),
+            _RadioItem<Widget>(kDiamondFab, _fabShape, _onFabShapeChanged),
+            _RadioItem<Widget>(kNoFab, _fabShape, _onFabShapeChanged),
+            const Divider(),
+            const _Heading('Notch'),
+            _RadioItem<bool>(kShowNotchTrue, _showNotch, _onShowNotchChanged),
+            _RadioItem<bool>(kShowNotchFalse, _showNotch, _onShowNotchChanged),
+            const Divider(),
+            const _Heading('FAB Position'),
+            _RadioItem<FloatingActionButtonLocation>(
+                kFabEndDocked, _fabLocation, _onFabLocationChanged),
+            _RadioItem<FloatingActionButtonLocation>(
+                kFabCenterDocked, _fabLocation, _onFabLocationChanged),
+            _RadioItem<FloatingActionButtonLocation>(
+                kFabEndFloat, _fabLocation, _onFabLocationChanged),
+            _RadioItem<FloatingActionButtonLocation>(
+                kFabCenterFloat, _fabLocation, _onFabLocationChanged),
+            const Divider(),
+            const _Heading('App bar color'),
+            _ColorsItem(kBabColors, _babColor, _onBabColorChanged),
+          ],
+        ),
       ),
       floatingActionButton: _fabShape.value,
       floatingActionButtonLocation: _fabLocation.value,
@@ -235,30 +237,32 @@ class _RadioItem<T> extends StatelessWidget {
       padding: const EdgeInsetsDirectional.only(start: 16.0),
       alignment: AlignmentDirectional.centerStart,
       child: MergeSemantics(
-        child: Row(children: <Widget>[
-          Radio<_ChoiceValue<T>>(
-            value: value,
-            groupValue: groupValue,
-            onChanged: onChanged,
-          ),
-          Expanded(
-            child: Semantics(
-              container: true,
-              button: true,
-              label: value.label,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  onChanged(value);
-                },
-                child: Text(
-                  value.title,
-                  style: theme.textTheme.subhead,
+        child: Row(
+          children: <Widget>[
+            Radio<_ChoiceValue<T>>(
+              value: value,
+              groupValue: groupValue,
+              onChanged: onChanged,
+            ),
+            Expanded(
+              child: Semantics(
+                container: true,
+                button: true,
+                label: value.label,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    onChanged(value);
+                  },
+                  child: Text(
+                    value.title,
+                    style: theme.textTheme.subhead,
+                  ),
                 ),
               ),
             ),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }
@@ -333,7 +337,11 @@ class _Heading extends StatelessWidget {
 }
 
 class _DemoBottomAppBar extends StatelessWidget {
-  const _DemoBottomAppBar({this.color, this.fabLocation, this.shape});
+  const _DemoBottomAppBar({
+    this.color,
+    this.fabLocation,
+    this.shape,
+  });
 
   final Color color;
   final FloatingActionButtonLocation fabLocation;
@@ -347,55 +355,46 @@ class _DemoBottomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> rowContents = <Widget>[
-      IconButton(
-        icon: const Icon(Icons.menu, semanticLabel: 'Show bottom sheet'),
-        onPressed: () {
-          showModalBottomSheet<void>(
-            context: context,
-            builder: (BuildContext context) => const _DemoDrawer(),
-          );
-        },
-      ),
-    ];
-
-    if (kCenterLocations.contains(fabLocation)) {
-      rowContents.add(
-        const Expanded(child: SizedBox()),
-      );
-    }
-
-    rowContents.addAll(<Widget>[
-      IconButton(
-        icon: const Icon(
-          Icons.search,
-          semanticLabel: 'show search action',
-        ),
-        onPressed: () {
-          Scaffold.of(context).showSnackBar(
-            const SnackBar(content: Text('This is a dummy search action.')),
-          );
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Theme.of(context).platform == TargetPlatform.iOS
-              ? Icons.more_horiz
-              : Icons.more_vert,
-          semanticLabel: 'Show menu actions',
-        ),
-        onPressed: () {
-          Scaffold.of(context).showSnackBar(
-            const SnackBar(content: Text('This is a dummy menu action.')),
-          );
-        },
-      ),
-    ]);
-
     return BottomAppBar(
       color: color,
-      child: Row(children: rowContents),
       shape: shape,
+      child: Row(children: <Widget>[
+        IconButton(
+          icon: const Icon(Icons.menu, semanticLabel: 'Show bottom sheet'),
+          onPressed: () {
+            showModalBottomSheet<void>(
+              context: context,
+              builder: (BuildContext context) => const _DemoDrawer(),
+            );
+          },
+        ),
+        if (kCenterLocations.contains(fabLocation))
+          const Expanded(child: SizedBox()),
+        IconButton(
+          icon: const Icon(
+            Icons.search,
+            semanticLabel: 'show search action',
+          ),
+          onPressed: () {
+            Scaffold.of(context).showSnackBar(
+              const SnackBar(content: Text('This is a dummy search action.')),
+            );
+          },
+        ),
+        IconButton(
+          icon: Icon(
+            Theme.of(context).platform == TargetPlatform.iOS
+                ? Icons.more_horiz
+                : Icons.more_vert,
+            semanticLabel: 'Show menu actions',
+          ),
+          onPressed: () {
+            Scaffold.of(context).showSnackBar(
+              const SnackBar(content: Text('This is a dummy menu action.')),
+            );
+          },
+        ),
+      ]),
     );
   }
 }

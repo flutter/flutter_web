@@ -1,6 +1,8 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
+// Raw data for the animation demo.
 
 import 'package:flutter_web/material.dart';
 
@@ -9,7 +11,7 @@ const Color _mediumPurple = Color(0xFF8266D4);
 const Color _tomato = Color(0xFFF95B57);
 const Color _mySin = Color(0xFFF3A646);
 
-const String _kGalleryAssetsPackage = null;
+const String _kGalleryAssetsPackage = 'flutter_gallery_assets';
 
 class SectionDetail {
   const SectionDetail({

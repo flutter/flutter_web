@@ -289,11 +289,12 @@ class _BackdropState extends State<Backdrop>
             ),
           ),
           Expanded(
-              child: Visibility(
-            child: widget.backLayer,
-            visible: _controller.status != AnimationStatus.completed,
-            maintainState: true,
-          )),
+            child: Visibility(
+              child: widget.backLayer,
+              visible: _controller.status != AnimationStatus.completed,
+              maintainState: true,
+            ),
+          ),
         ],
       ),
       // Front layer
@@ -306,12 +307,10 @@ class _BackdropState extends State<Backdrop>
               elevation: 12.0,
               color: Theme.of(context).canvasColor,
               clipper: ShapeBorderClipper(
-                shape: RoundedRectangleBorder(
-                    borderRadius:
-                        _kFrontHeadingBevelRadius.transform(_controller.value)),
-//                BeveledRectangleBorder(
-//                  borderRadius: _kFrontHeadingBevelRadius.transform(_controller.value),
-//                ),
+                shape: BeveledRectangleBorder(
+                  borderRadius:
+                      _kFrontHeadingBevelRadius.transform(_controller.value),
+                ),
               ),
               clipBehavior: Clip.antiAlias,
               child: child,

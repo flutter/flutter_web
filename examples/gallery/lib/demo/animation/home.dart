@@ -1,6 +1,9 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
+// Based on https://material.uplabs.com/posts/google-newsstand-navigation-pattern
+// See also: https://material-motion.github.io/material-motion/documentation/
 
 import 'dart:math' as math;
 
@@ -513,8 +516,8 @@ class _AnimationDemoHomeState extends State<AnimationDemoHome> {
     if (notification.depth == 0 && notification is ScrollUpdateNotification) {
       selectedIndex.value = leader.page;
       if (follower.page != leader.page)
-        // ignore: deprecated_member_use
-        follower.position.jumpToWithoutSettling(leader.position.pixels);
+        follower.position.jumpToWithoutSettling(
+            leader.position.pixels); // ignore: deprecated_member_use
     }
     return false;
   }
@@ -533,14 +536,15 @@ class _AnimationDemoHomeState extends State<AnimationDemoHome> {
       sectionCards.add(LayoutId(
         id: 'card$index',
         child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            child: SectionCard(section: allSections[index]),
-            onTapUp: (TapUpDetails details) {
-              final double xOffset = details.globalPosition.dx;
-              setState(() {
-                _maybeScroll(midScrollOffset, index, xOffset);
-              });
-            }),
+          behavior: HitTestBehavior.opaque,
+          child: SectionCard(section: allSections[index]),
+          onTapUp: (TapUpDetails details) {
+            final double xOffset = details.globalPosition.dx;
+            setState(() {
+              _maybeScroll(midScrollOffset, index, xOffset);
+            });
+          },
+        ),
       ));
     }
 
@@ -645,11 +649,12 @@ class _AnimationDemoHomeState extends State<AnimationDemoHome> {
                 top: false,
                 bottom: false,
                 child: IconButton(
-                    icon: const BackButtonIcon(),
-                    tooltip: 'Back',
-                    onPressed: () {
-                      _handleBackButton(appBarMidScrollOffset);
-                    }),
+                  icon: const BackButtonIcon(),
+                  tooltip: 'Back',
+                  onPressed: () {
+                    _handleBackButton(appBarMidScrollOffset);
+                  },
+                ),
               ),
             ),
           ),

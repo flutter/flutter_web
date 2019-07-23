@@ -57,7 +57,20 @@ class SkPath implements ui.Path {
 
   @override
   void addPolygon(List<ui.Offset> points, bool close) {
-    throw 'addPolygon';
+    // TODO(het): Use `addPoly` once CanvasKit makes it available.
+    assert(points != null);
+    if (points.isEmpty) {
+      return;
+    }
+
+    moveTo(points.first.dx, points.first.dy);
+    for (int i = 1; i < points.length; i++) {
+      final ui.Offset point = points[i];
+      lineTo(point.dx, point.dy);
+    }
+    if (close) {
+      this.close();
+    }
   }
 
   @override

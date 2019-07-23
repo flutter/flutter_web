@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -15,12 +15,13 @@ class PestoDemo extends StatelessWidget {
 }
 
 const String _kSmallLogoImage = 'logos/pesto/logo_small.png';
+const String _kGalleryAssetsPackage = 'flutter_gallery_assets';
 const double _kAppBarHeight = 128.0;
 const double _kFabHalfSize =
     28.0; // TODO(mpcomplete): needs to adapt to screen size
 const double _kRecipePageMaxWidth = 500.0;
 
-final Set<Recipe> _favoriteRecipes = Set<Recipe>();
+final Set<Recipe> _favoriteRecipes = <Recipe>{};
 
 final ThemeData _kTheme = ThemeData(
   brightness: Brightness.light,
@@ -130,7 +131,8 @@ class _RecipeGridPageState extends State<RecipeGridPage> {
               bottom: extraPadding,
             ),
             child: Center(
-                child: PestoLogo(height: logoHeight, t: t.clamp(0.0, 1.0))),
+              child: PestoLogo(height: logoHeight, t: t.clamp(0.0, 1.0)),
+            ),
           );
         },
       ),
@@ -140,10 +142,11 @@ class _RecipeGridPageState extends State<RecipeGridPage> {
   Widget _buildBody(BuildContext context, double statusBarHeight) {
     final EdgeInsets mediaPadding = MediaQuery.of(context).padding;
     final EdgeInsets padding = EdgeInsets.only(
-        top: 8.0,
-        left: 8.0 + mediaPadding.left,
-        right: 8.0 + mediaPadding.right,
-        bottom: 8.0);
+      top: 8.0,
+      left: 8.0 + mediaPadding.left,
+      right: 8.0 + mediaPadding.right,
+      bottom: 8.0,
+    );
     return SliverPadding(
       padding: padding,
       sliver: SliverGrid(
@@ -214,12 +217,13 @@ class _PestoLogoState extends State<PestoLogo> {
       color: Colors.white,
       letterSpacing: 3.0);
   final RectTween _textRectTween = RectTween(
-      begin: Rect.fromLTWH(0.0, kLogoHeight, kLogoWidth, kTextHeight),
-      end: Rect.fromLTWH(0.0, kImageHeight, kLogoWidth, kTextHeight));
+    begin: const Rect.fromLTWH(0.0, kLogoHeight, kLogoWidth, kTextHeight),
+    end: const Rect.fromLTWH(0.0, kImageHeight, kLogoWidth, kTextHeight),
+  );
   final Curve _textOpacity = const Interval(0.4, 1.0, curve: Curves.easeInOut);
   final RectTween _imageRectTween = RectTween(
-    begin: Rect.fromLTWH(0.0, 0.0, kLogoWidth, kLogoHeight),
-    end: Rect.fromLTWH(0.0, 0.0, kLogoWidth, kImageHeight),
+    begin: const Rect.fromLTWH(0.0, 0.0, kLogoWidth, kLogoHeight),
+    end: const Rect.fromLTWH(0.0, 0.0, kLogoWidth, kImageHeight),
   );
 
   @override
@@ -237,7 +241,8 @@ class _PestoLogoState extends State<PestoLogo> {
               Positioned.fromRect(
                 rect: _imageRectTween.lerp(widget.t),
                 child: Image.asset(
-                  '$_kSmallLogoImage',
+                  _kSmallLogoImage,
+                  package: _kGalleryAssetsPackage,
                   fit: BoxFit.contain,
                 ),
               ),
@@ -278,11 +283,11 @@ class RecipeCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Hero(
-              tag: '${recipe.imagePath}',
+              tag: 'packages/$_kGalleryAssetsPackage/${recipe.imagePath}',
               child: AspectRatio(
                 aspectRatio: 4.0 / 3.0,
                 child: Image.asset(
-                  '${recipe.imagePath}',
+                  recipe.imagePath,
                   package: recipe.imagePackage,
                   fit: BoxFit.cover,
                   semanticLabel: recipe.name,
@@ -295,7 +300,7 @@ class RecipeCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Image.asset(
-                      '${recipe.ingredientsImagePath}',
+                      recipe.ingredientsImagePath,
                       package: recipe.ingredientsImagePackage,
                       width: 48.0,
                       height: 48.0,
@@ -361,9 +366,10 @@ class _RecipePageState extends State<RecipePage> {
             right: 0.0,
             height: appBarHeight + _kFabHalfSize,
             child: Hero(
-              tag: '${widget.recipe.imagePath}',
+              tag:
+                  'packages/$_kGalleryAssetsPackage/${widget.recipe.imagePath}',
               child: Image.asset(
-                '${widget.recipe.imagePath}',
+                widget.recipe.imagePath,
                 package: widget.recipe.imagePackage,
                 fit: fullWidth ? BoxFit.fitWidth : BoxFit.cover,
               ),
@@ -399,23 +405,25 @@ class _RecipePageState extends State<RecipePage> {
                 ),
               ),
               SliverToBoxAdapter(
-                  child: Stack(
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(top: _kFabHalfSize),
-                    width: fullWidth ? null : _kRecipePageMaxWidth,
-                    child: RecipeSheet(recipe: widget.recipe),
-                  ),
-                  Positioned(
-                    right: 16.0,
-                    child: FloatingActionButton(
-                      child: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border),
-                      onPressed: _toggleFavorite,
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.only(top: _kFabHalfSize),
+                      width: fullWidth ? null : _kRecipePageMaxWidth,
+                      child: RecipeSheet(recipe: widget.recipe),
                     ),
-                  ),
-                ],
-              )),
+                    Positioned(
+                      right: 16.0,
+                      child: FloatingActionButton(
+                        child: Icon(isFavorite
+                            ? Icons.favorite
+                            : Icons.favorite_border),
+                        onPressed: _toggleFavorite,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ],
@@ -428,8 +436,9 @@ class _RecipePageState extends State<RecipePage> {
       child: Row(
         children: <Widget>[
           Padding(
-              padding: const EdgeInsets.only(right: 24.0),
-              child: Icon(icon, color: Colors.black54)),
+            padding: const EdgeInsets.only(right: 24.0),
+            child: Icon(icon, color: Colors.black54),
+          ),
           Text(label, style: menuItemStyle),
         ],
       ),
@@ -472,48 +481,55 @@ class RecipeSheet extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 40.0),
           child: Table(
             columnWidths: const <int, TableColumnWidth>{
-              0: FixedColumnWidth(64.0)
+              0: FixedColumnWidth(64.0),
             },
             children: <TableRow>[
               TableRow(children: <Widget>[
                 TableCell(
-                    verticalAlignment: TableCellVerticalAlignment.middle,
-                    child: Image.asset('${recipe.ingredientsImagePath}',
-                        package: recipe.ingredientsImagePackage,
-                        width: 32.0,
-                        height: 32.0,
-                        alignment: Alignment.centerLeft,
-                        fit: BoxFit.scaleDown)),
+                  verticalAlignment: TableCellVerticalAlignment.middle,
+                  child: Image.asset(
+                    recipe.ingredientsImagePath,
+                    package: recipe.ingredientsImagePackage,
+                    width: 32.0,
+                    height: 32.0,
+                    alignment: Alignment.centerLeft,
+                    fit: BoxFit.scaleDown,
+                  ),
+                ),
                 TableCell(
-                    verticalAlignment: TableCellVerticalAlignment.middle,
-                    child: Text(recipe.name, style: titleStyle)),
+                  verticalAlignment: TableCellVerticalAlignment.middle,
+                  child: Text(recipe.name, style: titleStyle),
+                ),
               ]),
               TableRow(children: <Widget>[
                 const SizedBox(),
                 Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
-                    child: Text(recipe.description, style: descriptionStyle)),
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                  child: Text(recipe.description, style: descriptionStyle),
+                ),
               ]),
               TableRow(children: <Widget>[
                 const SizedBox(),
                 Padding(
-                    padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
-                    child: Text('Ingredients', style: headingStyle)),
+                  padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
+                  child: Text('Ingredients', style: headingStyle),
+                ),
               ]),
-            ]
-              ..addAll(recipe.ingredients
+              ...recipe.ingredients
                   .map<TableRow>((RecipeIngredient ingredient) {
                 return _buildItemRow(ingredient.amount, ingredient.description);
-              }))
-              ..add(TableRow(children: <Widget>[
+              }),
+              TableRow(children: <Widget>[
                 const SizedBox(),
                 Padding(
-                    padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
-                    child: Text('Steps', style: headingStyle)),
-              ]))
-              ..addAll(recipe.steps.map<TableRow>((RecipeStep step) {
+                  padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
+                  child: Text('Steps', style: headingStyle),
+                ),
+              ]),
+              ...recipe.steps.map<TableRow>((RecipeStep step) {
                 return _buildItemRow(step.duration ?? '', step.description);
-              })),
+              }),
+            ],
           ),
         ),
       ),
@@ -537,16 +553,17 @@ class RecipeSheet extends StatelessWidget {
 }
 
 class Recipe {
-  const Recipe(
-      {this.name,
-      this.author,
-      this.description,
-      this.imagePath,
-      this.imagePackage,
-      this.ingredientsImagePath,
-      this.ingredientsImagePackage,
-      this.ingredients,
-      this.steps});
+  const Recipe({
+    this.name,
+    this.author,
+    this.description,
+    this.imagePath,
+    this.imagePackage,
+    this.ingredientsImagePath,
+    this.ingredientsImagePackage,
+    this.ingredients,
+    this.steps,
+  });
 
   final String name;
   final String author;
@@ -578,9 +595,11 @@ const List<Recipe> kPestoRecipes = <Recipe>[
     name: 'Roasted Chicken',
     author: 'Peter Carlsson',
     ingredientsImagePath: 'food/icons/main.png',
+    ingredientsImagePackage: _kGalleryAssetsPackage,
     description:
         'The perfect dish to welcome your family and friends with on a crisp autumn night. Pair with roasted veggies to truly impress them.',
     imagePath: 'food/roasted_chicken.png',
+    imagePackage: _kGalleryAssetsPackage,
     ingredients: <RecipeIngredient>[
       RecipeIngredient(amount: '1 whole', description: 'Chicken'),
       RecipeIngredient(amount: '1/2 cup', description: 'Butter'),
@@ -597,9 +616,11 @@ const List<Recipe> kPestoRecipes = <Recipe>[
     name: 'Chopped Beet Leaves',
     author: 'Trevor Hansen',
     ingredientsImagePath: 'food/icons/veggie.png',
+    ingredientsImagePackage: _kGalleryAssetsPackage,
     description:
         'This vegetable has more to offer than just its root. Beet greens can be tossed into a salad to add some variety or sauteed on its own with some oil and garlic.',
     imagePath: 'food/chopped_beet_leaves.png',
+    imagePackage: _kGalleryAssetsPackage,
     ingredients: <RecipeIngredient>[
       RecipeIngredient(amount: '3 cups', description: 'Beet greens'),
     ],
@@ -611,9 +632,11 @@ const List<Recipe> kPestoRecipes = <Recipe>[
     name: 'Pesto Pasta',
     author: 'Ali Connors',
     ingredientsImagePath: 'food/icons/main.png',
+    ingredientsImagePackage: _kGalleryAssetsPackage,
     description:
         'With this pesto recipe, you can quickly whip up a meal to satisfy your savory needs. And if you\'re feeling festive, you can add bacon to taste.',
     imagePath: 'food/pesto_pasta.png',
+    imagePackage: _kGalleryAssetsPackage,
     ingredients: <RecipeIngredient>[
       RecipeIngredient(amount: '1/4 cup ', description: 'Pasta'),
       RecipeIngredient(amount: '2 cups', description: 'Fresh basil leaves'),
@@ -635,9 +658,11 @@ const List<Recipe> kPestoRecipes = <Recipe>[
     name: 'Cherry Pie',
     author: 'Sandra Adams',
     ingredientsImagePath: 'food/icons/main.png',
+    ingredientsImagePackage: _kGalleryAssetsPackage,
     description:
         'Sometimes when you\'re craving some cheer in your life you can jumpstart your day with some cherry pie. Dessert for breakfast is perfectly acceptable.',
     imagePath: 'food/cherry_pie.png',
+    imagePackage: _kGalleryAssetsPackage,
     ingredients: <RecipeIngredient>[
       RecipeIngredient(amount: '1', description: 'Pie crust'),
       RecipeIngredient(
@@ -655,9 +680,11 @@ const List<Recipe> kPestoRecipes = <Recipe>[
     name: 'Spinach Salad',
     author: 'Peter Carlsson',
     ingredientsImagePath: 'food/icons/spicy.png',
+    ingredientsImagePackage: _kGalleryAssetsPackage,
     description:
         'Everyone\'s favorite leafy green is back. Paired with fresh sliced onion, it\'s ready to tackle any dish, whether it be a salad or an egg scramble.',
     imagePath: 'food/spinach_onion_salad.png',
+    imagePackage: _kGalleryAssetsPackage,
     ingredients: <RecipeIngredient>[
       RecipeIngredient(amount: '4 cups', description: 'Spinach'),
       RecipeIngredient(amount: '1 cup', description: 'Sliced onion'),
@@ -670,9 +697,11 @@ const List<Recipe> kPestoRecipes = <Recipe>[
     name: 'Butternut Squash Soup',
     author: 'Ali Connors',
     ingredientsImagePath: 'food/icons/healthy.png',
+    ingredientsImagePackage: _kGalleryAssetsPackage,
     description:
         'This creamy butternut squash soup will warm you on the chilliest of winter nights and bring a delightful pop of orange to the dinner table.',
     imagePath: 'food/butternut_squash_soup.png',
+    imagePackage: _kGalleryAssetsPackage,
     ingredients: <RecipeIngredient>[
       RecipeIngredient(amount: '1', description: 'Butternut squash'),
       RecipeIngredient(amount: '4 cups', description: 'Chicken stock'),
@@ -686,16 +715,18 @@ const List<Recipe> kPestoRecipes = <Recipe>[
     steps: <RecipeStep>[
       RecipeStep(duration: '10 min', description: 'Prep vegetables'),
       RecipeStep(duration: '5 min', description: 'Stir'),
-      RecipeStep(duration: '1 hr 10 min', description: 'Cook')
+      RecipeStep(duration: '1 hr 10 min', description: 'Cook'),
     ],
   ),
   Recipe(
     name: 'Spanakopita',
     author: 'Trevor Hansen',
     ingredientsImagePath: 'food/icons/quick.png',
+    ingredientsImagePackage: _kGalleryAssetsPackage,
     description:
         'You \'feta\' believe this is a crowd-pleaser! Flaky phyllo pastry surrounds a delicious mixture of spinach and cheeses to create the perfect appetizer.',
     imagePath: 'food/spanakopita.png',
+    imagePackage: _kGalleryAssetsPackage,
     ingredients: <RecipeIngredient>[
       RecipeIngredient(amount: '1 lb', description: 'Spinach'),
       RecipeIngredient(amount: '½ cup', description: 'Feta cheese'),
@@ -712,7 +743,7 @@ const List<Recipe> kPestoRecipes = <Recipe>[
       RecipeStep(
           duration: '10 min',
           description: 'Fill phyllo squares half-full with filling and fold.'),
-      RecipeStep(duration: '40 min', description: 'Bake')
+      RecipeStep(duration: '40 min', description: 'Bake'),
     ],
   ),
 ];

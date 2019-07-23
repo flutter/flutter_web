@@ -7,13 +7,13 @@ import 'package:flutter_web/material.dart';
 import '../demo/all.dart';
 import 'icons.dart';
 
-// TODO: As Demos are added and complete, uncomment _buildGalleryDemos sections.
-
 class GalleryDemoCategory {
-  const GalleryDemoCategory._({this.name, this.icon});
-  @required
+  const GalleryDemoCategory._({
+    @required this.name,
+    @required this.icon,
+  });
+
   final String name;
-  @required
   final IconData icon;
 
   @override
@@ -43,20 +43,10 @@ const GalleryDemoCategory _kStyle = GalleryDemoCategory._(
   icon: GalleryIcons.custom_typography,
 );
 
-//const GalleryDemoCategory _kCupertinoComponents = GalleryDemoCategory._(
-//  name: 'Cupertino',
-//  icon: GalleryIcons.phone_iphone,
-//);
-
 const GalleryDemoCategory _kMaterialComponents = GalleryDemoCategory._(
   name: 'Material',
   icon: GalleryIcons.category_mdc,
 );
-
-//const GalleryDemoCategory _kMedia = GalleryDemoCategory._(
-//  name: 'Media',
-//  icon: GalleryIcons.drive_video,
-//);
 
 class GalleryDemo {
   const GalleryDemo({
@@ -90,6 +80,22 @@ List<GalleryDemo> _buildGalleryDemos() {
   final List<GalleryDemo> galleryDemos = <GalleryDemo>[
     // Demos
     GalleryDemo(
+      title: 'Shrine',
+      subtitle: 'Basic shopping app',
+      icon: GalleryIcons.shrine,
+      category: _kDemos,
+      routeName: ShrineDemo.routeName,
+      buildRoute: (BuildContext context) => const ShrineDemo(),
+    ),
+    GalleryDemo(
+      title: 'Fortnightly',
+      subtitle: 'Newspaper typography app',
+      icon: GalleryIcons.custom_typography,
+      category: _kDemos,
+      routeName: FortnightlyDemo.routeName,
+      buildRoute: (BuildContext context) => FortnightlyDemo(),
+    ),
+    GalleryDemo(
       title: 'Contact profile',
       subtitle: 'Address book entry with a flexible appbar',
       icon: GalleryIcons.account_box,
@@ -98,20 +104,20 @@ List<GalleryDemo> _buildGalleryDemos() {
       buildRoute: (BuildContext context) => ContactsDemo(),
     ),
     GalleryDemo(
-      title: 'Shrine',
-      subtitle: 'Basic shopping app',
-      icon: GalleryIcons.shrine,
-      category: _kDemos,
-      routeName: ShrineDemo.routeName,
-      buildRoute: (BuildContext context) => ShrineDemo(),
-    ),
-    GalleryDemo(
       title: 'Animation',
       subtitle: 'Section organizer',
       icon: GalleryIcons.animation,
       category: _kDemos,
       routeName: AnimationDemo.routeName,
       buildRoute: (BuildContext context) => const AnimationDemo(),
+    ),
+    GalleryDemo(
+      title: '2D Transformations',
+      subtitle: 'Pan, Zoom, Rotate',
+      icon: GalleryIcons.grid_on,
+      category: _kDemos,
+      routeName: TransformationsDemo.routeName,
+      buildRoute: (BuildContext context) => const TransformationsDemo(),
     ),
 
     // Style
@@ -131,6 +137,7 @@ List<GalleryDemo> _buildGalleryDemos() {
       routeName: TypographyDemo.routeName,
       buildRoute: (BuildContext context) => TypographyDemo(),
     ),
+
     // Material Components
     GalleryDemo(
       title: 'Backdrop',
@@ -162,7 +169,7 @@ List<GalleryDemo> _buildGalleryDemos() {
     ),
     GalleryDemo(
       title: 'Bottom sheet: Modal',
-      subtitle: 'A dismissable bottom sheet',
+      subtitle: 'A dismissible bottom sheet',
       icon: GalleryIcons.bottom_sheets,
       category: _kMaterialComponents,
       routeName: ModalBottomSheetDemo.routeName,
@@ -254,10 +261,10 @@ List<GalleryDemo> _buildGalleryDemos() {
       subtitle: 'A list with one sub-list level',
       icon: GalleryIcons.expand_all,
       category: _kMaterialComponents,
-      routeName: TwoLevelListDemo.routeName,
+      routeName: ExpansionTileListDemo.routeName,
       documentationUrl:
           'https://docs.flutter.io/flutter/material/ExpansionTile-class.html',
-      buildRoute: (BuildContext context) => TwoLevelListDemo(),
+      buildRoute: (BuildContext context) => ExpansionTileListDemo(),
     ),
     GalleryDemo(
       title: 'Expansion panels',
@@ -477,123 +484,6 @@ List<GalleryDemo> _buildGalleryDemos() {
           'https://docs.flutter.io/flutter/material/Tooltip-class.html',
       buildRoute: (BuildContext context) => TooltipDemo(),
     ),
-
-    // Media
-//    GalleryDemo(
-//      title: 'Animated images',
-//      subtitle: 'GIF and WebP animations',
-//      icon: GalleryIcons.animation,
-//      category: _kMedia,
-//      routeName: ImagesDemo.routeName,
-//      buildRoute: (BuildContext context) => ImagesDemo(),
-//    ),
-//    GalleryDemo(
-//      title: 'Video',
-//      subtitle: 'Video playback',
-//      icon: GalleryIcons.drive_video,
-//      category: _kMedia,
-//      routeName: VideoDemo.routeName,
-//      buildRoute: (BuildContext context) => const VideoDemo(),
-//    ),
-    // Cupertino Components
-//    GalleryDemo(
-//      title: 'Activity Indicator',
-//      icon: GalleryIcons.cupertino_progress,
-//      category: _kCupertinoComponents,
-//      routeName: CupertinoProgressIndicatorDemo.routeName,
-//      documentationUrl:
-//          'https://docs.flutter.io/flutter/cupertino/CupertinoActivityIndicator-class.html',
-//      buildRoute: (BuildContext context) => CupertinoProgressIndicatorDemo(),
-//    ),
-//    GalleryDemo(
-//      title: 'Alerts',
-//      icon: GalleryIcons.dialogs,
-//      category: _kCupertinoComponents,
-//      routeName: CupertinoAlertDemo.routeName,
-//      documentationUrl: 'https://docs.flutter.io/flutter/cupertino/showCupertinoDialog.html',
-//      buildRoute: (BuildContext context) => CupertinoAlertDemo(),
-//    ),
-//    GalleryDemo(
-//      title: 'Buttons',
-//      icon: GalleryIcons.generic_buttons,
-//      category: _kCupertinoComponents,
-//      routeName: CupertinoButtonsDemo.routeName,
-//      documentationUrl: 'https://docs.flutter.io/flutter/cupertino/CupertinoButton-class.html',
-//      buildRoute: (BuildContext context) => CupertinoButtonsDemo(),
-//    ),
-//    GalleryDemo(
-//      title: 'Navigation',
-//      icon: GalleryIcons.bottom_navigation,
-//      category: _kCupertinoComponents,
-//      routeName: CupertinoNavigationDemo.routeName,
-//      documentationUrl: 'https://docs.flutter.io/flutter/cupertino/CupertinoTabScaffold-class.html',
-//      buildRoute: (BuildContext context) => CupertinoNavigationDemo(),
-//    ),
-//    GalleryDemo(
-//      title: 'Pickers',
-//      icon: GalleryIcons.event,
-//      category: _kCupertinoComponents,
-//      routeName: CupertinoPickerDemo.routeName,
-//      documentationUrl: 'https://docs.flutter.io/flutter/cupertino/CupertinoPicker-class.html',
-//      buildRoute: (BuildContext context) => CupertinoPickerDemo(),
-//    ),
-//    GalleryDemo(
-//      title: 'Pull to refresh',
-//      icon: GalleryIcons.cupertino_pull_to_refresh,
-//      category: _kCupertinoComponents,
-//      routeName: CupertinoRefreshControlDemo.routeName,
-//      documentationUrl: 'https://docs.flutter.io/flutter/cupertino/CupertinoSliverRefreshControl-class.html',
-//      buildRoute: (BuildContext context) => CupertinoRefreshControlDemo(),
-//    ),
-//    GalleryDemo(
-//      title: 'Segmented Control',
-//      icon: GalleryIcons.tabs,
-//      category: _kCupertinoComponents,
-//      routeName: CupertinoSegmentedControlDemo.routeName,
-//      documentationUrl: 'https://docs.flutter.io/flutter/cupertino/CupertinoSegmentedControl-class.html',
-//      buildRoute: (BuildContext context) => CupertinoSegmentedControlDemo(),
-//    ),
-//    GalleryDemo(
-//      title: 'Sliders',
-//      icon: GalleryIcons.sliders,
-//      category: _kCupertinoComponents,
-//      routeName: CupertinoSliderDemo.routeName,
-//      documentationUrl: 'https://docs.flutter.io/flutter/cupertino/CupertinoSlider-class.html',
-//      buildRoute: (BuildContext context) => CupertinoSliderDemo(),
-//    ),
-//    GalleryDemo(
-//      title: 'Switches',
-//      icon: GalleryIcons.cupertino_switch,
-//      category: _kCupertinoComponents,
-//      routeName: CupertinoSwitchDemo.routeName,
-//      documentationUrl: 'https://docs.flutter.io/flutter/cupertino/CupertinoSwitch-class.html',
-//      buildRoute: (BuildContext context) => CupertinoSwitchDemo(),
-//    ),
-//    GalleryDemo(
-//      title: 'Text Fields',
-//      icon: GalleryIcons.text_fields_alt,
-//      category: _kCupertinoComponents,
-//      routeName: CupertinoTextFieldDemo.routeName,
-//      buildRoute: (BuildContext context) => CupertinoTextFieldDemo(),
-//    ),
-//
-//    // Media
-//    GalleryDemo(
-//      title: 'Animated images',
-//      subtitle: 'GIF and WebP animations',
-//      icon: GalleryIcons.animation,
-//      category: _kMedia,
-//      routeName: ImagesDemo.routeName,
-//      buildRoute: (BuildContext context) => ImagesDemo(),
-//    ),
-//    GalleryDemo(
-//      title: 'Video',
-//      subtitle: 'Video playback',
-//      icon: GalleryIcons.drive_video,
-//      category: _kMedia,
-//      routeName: VideoDemo.routeName,
-//      buildRoute: (BuildContext context) => const VideoDemo(),
-//    ),
   ];
 
   // Keep Pesto around for its regression test value. It is not included

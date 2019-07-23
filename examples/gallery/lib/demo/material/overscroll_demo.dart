@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -37,7 +37,7 @@ class OverscrollDemoState extends State<OverscrollDemo> {
     'K',
     'L',
     'M',
-    'N'
+    'N',
   ];
 
   Future<void> _handleRefresh() {
@@ -47,12 +47,14 @@ class OverscrollDemoState extends State<OverscrollDemo> {
     });
     return completer.future.then<void>((_) {
       _scaffoldKey.currentState?.showSnackBar(SnackBar(
-          content: const Text('Refresh complete'),
-          action: SnackBarAction(
-              label: 'RETRY',
-              onPressed: () {
-                _refreshIndicatorKey.currentState.show();
-              })));
+        content: const Text('Refresh complete'),
+        action: SnackBarAction(
+          label: 'RETRY',
+          onPressed: () {
+            _refreshIndicatorKey.currentState.show();
+          },
+        ),
+      ));
     });
   }
 
@@ -60,31 +62,37 @@ class OverscrollDemoState extends State<OverscrollDemo> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(title: const Text('Pull to refresh'), actions: <Widget>[
-        MaterialDemoDocumentationButton(OverscrollDemo.routeName),
-        IconButton(
+      appBar: AppBar(
+        title: const Text('Pull to refresh'),
+        actions: <Widget>[
+          MaterialDemoDocumentationButton(OverscrollDemo.routeName),
+          IconButton(
             icon: const Icon(Icons.refresh),
             tooltip: 'Refresh',
             onPressed: () {
               _refreshIndicatorKey.currentState.show();
-            }),
-      ]),
+            },
+          ),
+        ],
+      ),
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: _handleRefresh,
-        child: ListView.builder(
-          padding: kMaterialListPadding,
-          itemCount: _items.length,
-          itemBuilder: (BuildContext context, int index) {
-            final String item = _items[index];
-            return ListTile(
-              isThreeLine: true,
-              leading: CircleAvatar(child: Text(item)),
-              title: Text('This item represents $item.'),
-              subtitle: const Text(
-                  'Even more additional list item information appears on line three.'),
-            );
-          },
+        child: Scrollbar(
+          child: ListView.builder(
+            padding: kMaterialListPadding,
+            itemCount: _items.length,
+            itemBuilder: (BuildContext context, int index) {
+              final String item = _items[index];
+              return ListTile(
+                isThreeLine: true,
+                leading: CircleAvatar(child: Text(item)),
+                title: Text('This item represents $item.'),
+                subtitle: const Text(
+                    'Even more additional list item information appears on line three.'),
+              );
+            },
+          ),
         ),
       ),
     );

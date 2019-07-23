@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -31,7 +31,7 @@ class _PersistentBottomSheetDemoState extends State<PersistentBottomSheetDemo> {
       _showBottomSheetCallback = null;
     });
     _scaffoldKey.currentState
-        .showBottomSheet<Null>((BuildContext context) {
+        .showBottomSheet<void>((BuildContext context) {
           final ThemeData themeData = Theme.of(context);
           return Container(
             decoration: BoxDecoration(
@@ -42,7 +42,10 @@ class _PersistentBottomSheetDemoState extends State<PersistentBottomSheetDemo> {
               child: Text(
                 'This is a Material persistent bottom sheet. Drag downwards to dismiss it.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: themeData.accentColor, fontSize: 24.0),
+                style: TextStyle(
+                  color: themeData.accentColor,
+                  fontSize: 24.0,
+                ),
               ),
             ),
           );
@@ -66,10 +69,11 @@ class _PersistentBottomSheetDemoState extends State<PersistentBottomSheetDemo> {
           content: const Text('You tapped the floating action button.'),
           actions: <Widget>[
             FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('OK'))
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
           ],
         );
       },
@@ -79,25 +83,27 @@ class _PersistentBottomSheetDemoState extends State<PersistentBottomSheetDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          title: const Text('Persistent bottom sheet'),
-          actions: <Widget>[
-            MaterialDemoDocumentationButton(
-                PersistentBottomSheetDemo.routeName),
-          ],
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: const Text('Persistent bottom sheet'),
+        actions: <Widget>[
+          MaterialDemoDocumentationButton(PersistentBottomSheetDemo.routeName),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showMessage,
+        backgroundColor: Colors.redAccent,
+        child: const Icon(
+          Icons.add,
+          semanticLabel: 'Add',
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _showMessage,
-          backgroundColor: Colors.redAccent,
-          child: const Icon(
-            Icons.add,
-            semanticLabel: 'Add',
-          ),
+      ),
+      body: Center(
+        child: RaisedButton(
+          onPressed: _showBottomSheetCallback,
+          child: const Text('SHOW BOTTOM SHEET'),
         ),
-        body: Center(
-            child: RaisedButton(
-                onPressed: _showBottomSheetCallback,
-                child: const Text('SHOW BOTTOM SHEET'))));
+      ),
+    );
   }
 }

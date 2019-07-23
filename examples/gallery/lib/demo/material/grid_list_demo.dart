@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -121,7 +121,9 @@ class _GridPhotoViewerState extends State<GridPhotoViewer>
     final Offset direction = details.velocity.pixelsPerSecond / magnitude;
     final double distance = (Offset.zero & context.size).shortestSide;
     _flingAnimation = _controller.drive(Tween<Offset>(
-        begin: _offset, end: _clampOffset(_offset + direction * distance)));
+      begin: _offset,
+      end: _clampOffset(_offset + direction * distance),
+    ));
     _controller
       ..value = 0.0
       ..fling(velocity: magnitude / 1000.0);
@@ -139,8 +141,8 @@ class _GridPhotoViewerState extends State<GridPhotoViewer>
             ..translate(_offset.dx, _offset.dy)
             ..scale(_scale),
           child: Image.asset(
-            '${widget.photo.assetName}',
-            // TODO(flutter_web): package: widget.photo.assetPackage,
+            widget.photo.assetName,
+            package: widget.photo.assetPackage,
             fit: BoxFit.cover,
           ),
         ),
@@ -150,12 +152,12 @@ class _GridPhotoViewerState extends State<GridPhotoViewer>
 }
 
 class GridDemoPhotoItem extends StatelessWidget {
-  GridDemoPhotoItem(
-      {Key key,
-      @required this.photo,
-      @required this.tileStyle,
-      @required this.onBannerTap})
-      : assert(photo != null && photo.isValid),
+  GridDemoPhotoItem({
+    Key key,
+    @required this.photo,
+    @required this.tileStyle,
+    @required this.onBannerTap,
+  })  : assert(photo != null && photo.isValid),
         assert(tileStyle != null),
         assert(onBannerTap != null),
         super(key: key);
@@ -169,7 +171,9 @@ class GridDemoPhotoItem extends StatelessWidget {
     Navigator.push(context,
         MaterialPageRoute<void>(builder: (BuildContext context) {
       return Scaffold(
-        appBar: AppBar(title: Text(photo.title)),
+        appBar: AppBar(
+          title: Text(photo.title),
+        ),
         body: SizedBox.expand(
           child: Hero(
             tag: photo.tag,
@@ -183,17 +187,19 @@ class GridDemoPhotoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget image = GestureDetector(
-        onTap: () {
-          showPhoto(context);
-        },
-        child: Hero(
-            key: Key(photo.assetName),
-            tag: photo.tag,
-            child: Image.asset(
-              '${photo.assetName}',
-              // TODO(flutter_web): package: photo.assetPackage,
-              fit: BoxFit.cover,
-            )));
+      onTap: () {
+        showPhoto(context);
+      },
+      child: Hero(
+        key: Key(photo.assetName),
+        tag: photo.tag,
+        child: Image.asset(
+          photo.assetName,
+          package: photo.assetPackage,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
 
     final IconData icon = photo.isFavorite ? Icons.star : Icons.star_border;
 
@@ -379,13 +385,14 @@ class GridListDemoState extends State<GridListDemo> {
                     (orientation == Orientation.portrait) ? 1.0 : 1.3,
                 children: photos.map<Widget>((Photo photo) {
                   return GridDemoPhotoItem(
-                      photo: photo,
-                      tileStyle: _tileStyle,
-                      onBannerTap: (Photo photo) {
-                        setState(() {
-                          photo.isFavorite = !photo.isFavorite;
-                        });
+                    photo: photo,
+                    tileStyle: _tileStyle,
+                    onBannerTap: (Photo photo) {
+                      setState(() {
+                        photo.isFavorite = !photo.isFavorite;
                       });
+                    },
+                  );
                 }).toList(),
               ),
             ),

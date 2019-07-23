@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -78,25 +78,27 @@ class _ListDemoState extends State<ListDemo> {
           children: <Widget>[
             MergeSemantics(
               child: ListTile(
-                  dense: true,
-                  title: const Text('One-line'),
-                  trailing: Radio<_MaterialListType>(
-                    value: _showAvatars
-                        ? _MaterialListType.oneLineWithAvatar
-                        : _MaterialListType.oneLine,
-                    groupValue: _itemType,
-                    onChanged: changeItemType,
-                  )),
+                dense: true,
+                title: const Text('One-line'),
+                trailing: Radio<_MaterialListType>(
+                  value: _showAvatars
+                      ? _MaterialListType.oneLineWithAvatar
+                      : _MaterialListType.oneLine,
+                  groupValue: _itemType,
+                  onChanged: changeItemType,
+                ),
+              ),
             ),
             MergeSemantics(
               child: ListTile(
-                  dense: true,
-                  title: const Text('Two-line'),
-                  trailing: Radio<_MaterialListType>(
-                    value: _MaterialListType.twoLine,
-                    groupValue: _itemType,
-                    onChanged: changeItemType,
-                  )),
+                dense: true,
+                title: const Text('Two-line'),
+                trailing: Radio<_MaterialListType>(
+                  value: _MaterialListType.twoLine,
+                  groupValue: _itemType,
+                  onChanged: changeItemType,
+                ),
+              ),
             ),
             MergeSemantics(
               child: ListTile(

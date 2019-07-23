@@ -1,22 +1,29 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 import 'dart:async';
 
+import 'package:flutter_web/cupertino.dart';
 import 'package:flutter_web/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter_web/material.dart';
 import 'package:flutter_web/scheduler.dart' show timeDilation;
+import 'package:flutter_web.examples.gallery/demo/shrine/model/app_state_model.dart';
+import 'package:flutter_web.examples.gallery/gallery/scoped_model.dart';
+
+import 'package:flutter_web.examples.gallery/gallery/url_launcher.dart';
 
 import 'demos.dart';
 import 'home.dart';
 import 'options.dart';
 import 'scales.dart';
 import 'themes.dart';
+import 'updater.dart';
 
 class GalleryApp extends StatefulWidget {
   const GalleryApp({
     Key key,
+    this.updateUrlFetcher,
     this.enablePerformanceOverlay = true,
     this.enableRasterCacheImagesCheckerboard = true,
     this.enableOffscreenLayersCheckerboard = true,
@@ -24,6 +31,7 @@ class GalleryApp extends StatefulWidget {
     this.testMode = false,
   }) : super(key: key);
 
+  final UpdateUrlFetcher updateUrlFetcher;
   final bool enablePerformanceOverlay;
   final bool enableRasterCacheImagesCheckerboard;
   final bool enableOffscreenLayersCheckerboard;
@@ -37,6 +45,7 @@ class GalleryApp extends StatefulWidget {
 class _GalleryAppState extends State<GalleryApp> {
   GalleryOptions _options;
   Timer _timeDilationTimer;
+  AppStateModel model;
 
   Map<String, WidgetBuilder> _buildRoutes() {
     // For a different example of how to set up an application routing table
@@ -58,6 +67,7 @@ class _GalleryAppState extends State<GalleryApp> {
       timeDilation: timeDilation,
       platform: defaultTargetPlatform,
     );
+    model = AppStateModel()..loadProducts();
   }
 
   @override
@@ -110,26 +120,48 @@ class _GalleryAppState extends State<GalleryApp> {
         onOptionsChanged: _handleOptionsChanged,
         onSendFeedback: widget.onSendFeedback ??
             () {
-              // TODO: launch('https://github.com/flutter/flutter/issues/new', forceSafariVC: false);
+              launch('https://github.com/flutter/flutter/issues/new/choose',
+                  forceSafariVC: false);
             },
       ),
     );
 
-    return MaterialApp(
-      theme: _options.theme.data.copyWith(platform: _options.platform),
-      title: 'Flutter Web Gallery',
-      color: Colors.grey,
-      showPerformanceOverlay: _options.showPerformanceOverlay,
-      checkerboardOffscreenLayers: _options.showOffscreenLayersCheckerboard,
-      checkerboardRasterCacheImages: _options.showRasterCacheImagesCheckerboard,
-      routes: _buildRoutes(),
-      builder: (BuildContext context, Widget child) {
-        return Directionality(
-          textDirection: _options.textDirection,
-          child: _applyTextScaleFactor(child),
-        );
-      },
-      home: home,
+    if (widget.updateUrlFetcher != null) {
+      home = Updater(
+        updateUrlFetcher: widget.updateUrlFetcher,
+        child: home,
+      );
+    }
+
+    return ScopedModel<AppStateModel>(
+      model: model,
+      child: MaterialApp(
+        theme: _options.theme.data.copyWith(platform: _options.platform),
+        title: 'Flutter Gallery',
+        color: Colors.grey,
+        showPerformanceOverlay: _options.showPerformanceOverlay,
+        checkerboardOffscreenLayers: _options.showOffscreenLayersCheckerboard,
+        checkerboardRasterCacheImages:
+            _options.showRasterCacheImagesCheckerboard,
+        routes: _buildRoutes(),
+        builder: (BuildContext context, Widget child) {
+          return Directionality(
+            textDirection: _options.textDirection,
+            child: _applyTextScaleFactor(
+              // Specifically use a blank Cupertino theme here and do not transfer
+              // over the Material primary color etc except the brightness to
+              // showcase standard iOS looks.
+              CupertinoTheme(
+                data: CupertinoThemeData(
+                  brightness: _options.theme.data.brightness,
+                ),
+                child: child,
+              ),
+            ),
+          );
+        },
+        home: home,
+      ),
     );
   }
 }

@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -10,14 +10,14 @@ import 'package:intl/intl.dart';
 import '../../gallery/demo.dart';
 
 class _InputDropdown extends StatelessWidget {
-  const _InputDropdown(
-      {Key key,
-      this.child,
-      this.labelText,
-      this.valueText,
-      this.valueStyle,
-      this.onPressed})
-      : super(key: key);
+  const _InputDropdown({
+    Key key,
+    this.child,
+    this.labelText,
+    this.valueText,
+    this.valueStyle,
+    this.onPressed,
+  }) : super(key: key);
 
   final String labelText;
   final String valueText;
@@ -39,10 +39,12 @@ class _InputDropdown extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(valueText, style: valueStyle),
-            Icon(Icons.arrow_drop_down,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.grey.shade700
-                    : Colors.white70),
+            Icon(
+              Icons.arrow_drop_down,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.grey.shade700
+                  : Colors.white70,
+            ),
           ],
         ),
       ),
@@ -51,14 +53,14 @@ class _InputDropdown extends StatelessWidget {
 }
 
 class _DateTimePicker extends StatelessWidget {
-  const _DateTimePicker(
-      {Key key,
-      this.labelText,
-      this.selectedDate,
-      this.selectedTime,
-      this.selectDate,
-      this.selectTime})
-      : super(key: key);
+  const _DateTimePicker({
+    Key key,
+    this.labelText,
+    this.selectedDate,
+    this.selectedTime,
+    this.selectDate,
+    this.selectTime,
+  }) : super(key: key);
 
   final String labelText;
   final DateTime selectedDate;
@@ -68,16 +70,19 @@ class _DateTimePicker extends StatelessWidget {
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
     if (picked != null && picked != selectedDate) selectDate(picked);
   }
 
   Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay picked =
-        await showTimePicker(context: context, initialTime: selectedTime);
+    final TimeOfDay picked = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+    );
     if (picked != null && picked != selectedTime) selectTime(picked);
   }
 

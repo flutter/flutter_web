@@ -3,7 +3,10 @@
 // found in the LICENSE file.
 
 import 'package:flutter_web/gestures.dart';
+import 'package:flutter_web/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter_web/material.dart';
+
+import 'package:flutter_web.examples.gallery/gallery/url_launcher.dart';
 
 class _LinkTextSpan extends TextSpan {
   // Beware!
@@ -25,7 +28,7 @@ class _LinkTextSpan extends TextSpan {
             text: text ?? url,
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                //launch(url, forceSafariVC: false);
+                launch(url, forceSafariVC: false);
               });
 }
 
@@ -37,9 +40,9 @@ void showGalleryAboutDialog(BuildContext context) {
 
   showAboutDialog(
     context: context,
-    applicationVersion: '2018 Preview',
-    //applicationIcon: const FlutterLogo(),
-    applicationLegalese: '© 2018 The Chromium Authors',
+    applicationVersion: 'January 2019',
+    applicationIcon: const FlutterLogo(),
+    applicationLegalese: '© 2019 The Chromium Authors',
     children: <Widget>[
       Padding(
         padding: const EdgeInsets.only(top: 24.0),
@@ -47,18 +50,22 @@ void showGalleryAboutDialog(BuildContext context) {
           text: TextSpan(
             children: <TextSpan>[
               TextSpan(
-                  style: aboutTextStyle,
-                  text: 'Flutter web is an early-stage, web framework. '
-                      'This gallery is a preview of '
-                      "Flutter's many widgets, behaviors, animations, layouts, "
-                      'and more. Learn more about Flutter at '),
+                style: aboutTextStyle,
+                text: 'Flutter is an open-source project to help developers '
+                    'build high-performance, high-fidelity, mobile apps for '
+                    '${defaultTargetPlatform == TargetPlatform.iOS ? 'multiple platforms' : 'iOS and Android'} '
+                    'from a single codebase. This design lab is a playground '
+                    "and showcase of Flutter's many widgets, behaviors, "
+                    'animations, layouts, and more. Learn more about Flutter at ',
+              ),
               _LinkTextSpan(
                 style: linkStyle,
-                url: 'https://flutter.io',
+                url: 'https://flutter.dev',
               ),
               TextSpan(
                 style: aboutTextStyle,
-                text: '.\n\nTo see the source code for flutter ',
+                text:
+                    '.\n\nTo see the source code for this app, please visit the ',
               ),
               _LinkTextSpan(
                 style: linkStyle,

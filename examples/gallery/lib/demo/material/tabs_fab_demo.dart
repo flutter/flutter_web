@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -71,28 +71,38 @@ class _TabsFabDemoState extends State<TabsFabDemo>
   }
 
   void _showExplanatoryText() {
-    _scaffoldKey.currentState.showBottomSheet<Null>((BuildContext context) {
+    _scaffoldKey.currentState.showBottomSheet<void>((BuildContext context) {
       return Container(
-          decoration: BoxDecoration(
-              border: Border(
-                  top: BorderSide(color: Theme.of(context).dividerColor))),
-          child: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Text(_explanatoryText,
-                  style: Theme.of(context).textTheme.subhead)));
+        decoration: BoxDecoration(
+            border:
+                Border(top: BorderSide(color: Theme.of(context).dividerColor))),
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Text(_explanatoryText,
+              style: Theme.of(context).textTheme.subhead),
+        ),
+      );
     });
   }
 
   Widget buildTabView(_Page page) {
     return Builder(builder: (BuildContext context) {
       return Container(
-          key: ValueKey<String>(page.label),
-          padding: const EdgeInsets.fromLTRB(48.0, 48.0, 48.0, 96.0),
-          child: Card(
-              child: Center(
-                  child: Text(page.label,
-                      style: TextStyle(color: page.labelColor, fontSize: 32.0),
-                      textAlign: TextAlign.center))));
+        key: ValueKey<String>(page.label),
+        padding: const EdgeInsets.fromLTRB(48.0, 48.0, 48.0, 96.0),
+        child: Card(
+          child: Center(
+            child: Text(
+              page.label,
+              style: TextStyle(
+                color: page.labelColor,
+                fontSize: 32.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
     });
   }
 
@@ -101,20 +111,22 @@ class _TabsFabDemoState extends State<TabsFabDemo>
 
     if (_extendedButtons) {
       return FloatingActionButton.extended(
-          key: ValueKey<Key>(page.fabKey),
-          tooltip: 'Show explanation',
-          backgroundColor: page.fabColor,
-          icon: page.fabIcon,
-          label: Text(page.label.toUpperCase()),
-          onPressed: _showExplanatoryText);
+        key: ValueKey<Key>(page.fabKey),
+        tooltip: 'Show explanation',
+        backgroundColor: page.fabColor,
+        icon: page.fabIcon,
+        label: Text(page.label.toUpperCase()),
+        onPressed: _showExplanatoryText,
+      );
     }
 
     return FloatingActionButton(
-        key: page.fabKey,
-        tooltip: 'Show explanation',
-        backgroundColor: page.fabColor,
-        child: page.fabIcon,
-        onPressed: _showExplanatoryText);
+      key: page.fabKey,
+      tooltip: 'Show explanation',
+      backgroundColor: page.fabColor,
+      child: page.fabIcon,
+      onPressed: _showExplanatoryText,
+    );
   }
 
   @override
@@ -132,7 +144,8 @@ class _TabsFabDemoState extends State<TabsFabDemo>
         actions: <Widget>[
           MaterialDemoDocumentationButton(TabsFabDemo.routeName),
           IconButton(
-            icon: const Icon(Icons.sentiment_very_satisfied),
+            icon: const Icon(Icons.sentiment_very_satisfied,
+                semanticLabel: 'Toggle extended buttons'),
             onPressed: () {
               setState(() {
                 _extendedButtons = !_extendedButtons;
@@ -143,8 +156,9 @@ class _TabsFabDemoState extends State<TabsFabDemo>
       ),
       floatingActionButton: buildFloatingActionButton(_selectedPage),
       body: TabBarView(
-          controller: _controller,
-          children: _allPages.map<Widget>(buildTabView).toList()),
+        controller: _controller,
+        children: _allPages.map<Widget>(buildTabView).toList(),
+      ),
     );
   }
 }
