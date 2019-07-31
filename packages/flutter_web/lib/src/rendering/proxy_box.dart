@@ -1,7 +1,6 @@
 // Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// Synced 2019-05-30T14:20:56.539728.
 
 import 'dart:async';
 
@@ -2766,8 +2765,10 @@ class RenderPointerListener extends RenderProxyBoxWithHitTestBehavior {
         offset: offset,
       );
       context.pushLayer(layer, super.paint, offset);
+    } else {
+      // TODO(flutter_web): Upstream fix to Flutter.
+      super.paint(context, offset);
     }
-    super.paint(context, offset);
   }
 
   @override
