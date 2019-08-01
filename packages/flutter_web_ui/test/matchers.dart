@@ -466,3 +466,28 @@ class SceneTester {
         mode: HtmlComparisonMode.noAttributes);
   }
 }
+
+/// A matcher for functions that throw [AssertionError].
+///
+/// This is equivalent to `throwsA(isInstanceOf<AssertionError>())`.
+///
+/// If you are trying to test whether a call to [WidgetTester.pumpWidget]
+/// results in an [AssertionError], see
+/// [TestWidgetsFlutterBinding.takeException].
+///
+/// See also:
+///
+///  * [throwsFlutterError], to test if a function throws a [FlutterError].
+///  * [throwsArgumentError], to test if a functions throws an [ArgumentError].
+///  * [isAssertionError], to test if any object is any kind of [AssertionError].
+final Matcher throwsAssertionError = throwsA(isAssertionError);
+
+/// A matcher for [AssertionError].
+///
+/// This is equivalent to `isInstanceOf<AssertionError>()`.
+///
+/// See also:
+///
+///  * [throwsAssertionError], to test if a function throws any [AssertionError].
+///  * [isFlutterError], to test if any object is a [FlutterError].
+const Matcher isAssertionError = TypeMatcher<AssertionError>();

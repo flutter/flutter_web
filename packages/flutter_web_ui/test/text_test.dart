@@ -2,15 +2,19 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:test/test.dart';
+
 import 'package:flutter_web_ui/ui.dart';
 import 'package:flutter_web_ui/src/engine.dart';
-import 'package:flutter_web_test/flutter_web_test.dart';
 
-void main() {
+import 'matchers.dart';
+
+void main() async {
   const double baselineRatio = 1.1662499904632568;
 
-  testWidgets('predictably lays out a single-line paragraph',
-      (WidgetTester tester) async {
+  await webOnlyInitializeTestDomRenderer();
+
+  test('predictably lays out a single-line paragraph', () {
     for (double fontSize in <double>[10.0, 20.0, 30.0, 40.0]) {
       final ParagraphBuilder builder = ParagraphBuilder(ParagraphStyle(
         fontFamily: 'Ahem',
@@ -29,14 +33,14 @@ void main() {
       expect(paragraph.alphabeticBaseline, fontSize * .8);
       expect(
         paragraph.ideographicBaseline,
-        moreOrLessEquals(paragraph.alphabeticBaseline * baselineRatio,
-            epsilon: 0.001),
+        within(
+            distance: 0.001,
+            from: paragraph.alphabeticBaseline * baselineRatio),
       );
     }
   });
 
-  testWidgets('predictably lays out a multi-line paragraph',
-      (WidgetTester tester) async {
+  test('predictably lays out a multi-line paragraph', () {
     for (double fontSize in <double>[10.0, 20.0, 30.0, 40.0]) {
       final ParagraphBuilder builder = ParagraphBuilder(ParagraphStyle(
         fontFamily: 'Ahem',
@@ -59,8 +63,9 @@ void main() {
       expect(paragraph.alphabeticBaseline, fontSize * .8);
       expect(
         paragraph.ideographicBaseline,
-        moreOrLessEquals(paragraph.alphabeticBaseline * baselineRatio,
-            epsilon: 0.001),
+        within(
+            distance: 0.001,
+            from: paragraph.alphabeticBaseline * baselineRatio),
       );
     }
   });

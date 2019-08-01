@@ -1,8 +1,12 @@
+// Copyright 2019 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:html';
 
 import 'package:flutter_web_ui/src/engine.dart';
 import 'package:flutter_web_ui/ui.dart' as ui;
-import 'package:flutter_web_test/flutter_web_test.dart';
+import 'package:test/test.dart';
 
 void main() {
   const MethodCodec codec = JSONMethodCodec();

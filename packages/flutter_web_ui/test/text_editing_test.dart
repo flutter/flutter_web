@@ -7,7 +7,10 @@ import 'dart:typed_data';
 
 import 'package:flutter_web_ui/ui.dart' as ui;
 import 'package:flutter_web_ui/src/engine.dart';
-import 'package:flutter_web_test/flutter_web_test.dart';
+
+import 'package:test/test.dart';
+
+import 'matchers.dart';
 
 const MethodCodec codec = JSONMethodCodec();
 

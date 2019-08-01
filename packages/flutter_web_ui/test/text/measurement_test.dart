@@ -4,7 +4,8 @@
 
 import 'package:flutter_web_ui/ui.dart' as ui;
 import 'package:flutter_web_ui/src/engine.dart';
-import 'package:flutter_web_test/flutter_web_test.dart';
+
+import 'package:test/test.dart';
 
 final ui.ParagraphStyle ahemStyle = ui.ParagraphStyle(
   fontFamily: 'ahem',
@@ -39,7 +40,9 @@ void testMeasurements(String description, MeasurementTestBody body) {
   );
 }
 
-void main() {
+void main() async {
+  await ui.webOnlyInitializeTestDomRenderer();
+
   group('$RulerManager', () {
     final ui.ParagraphStyle s1 = ui.ParagraphStyle(fontFamily: 'sans-serif');
     final ui.ParagraphStyle s2 = ui.ParagraphStyle(
@@ -358,7 +361,7 @@ void main() {
       // Word spacing is only supported via DOM measurement.
       final TextMeasurementService instance =
           TextMeasurementService.forParagraph(spacedText);
-      expect(instance, isInstanceOf<DomTextMeasurementService>());
+      expect(instance, const TypeMatcher<DomTextMeasurementService>());
 
       final MeasurementResult normalResult =
           instance.measure(normalText, constraints);
