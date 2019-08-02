@@ -42,7 +42,6 @@ void main() {
   testWidgets(
       'Listener should paint child only once when hover annotation is attached',
       (WidgetTester tester) async {
-    final List<String> log = <String>[];
     _TestPainter painter = _TestPainter();
     await tester.pumpWidget(
       Listener(
