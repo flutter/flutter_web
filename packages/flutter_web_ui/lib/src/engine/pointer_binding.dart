@@ -318,6 +318,7 @@ class TouchAdapter extends BaseAdapter {
     });
 
     _addEventListener('touchend', (html.Event event) {
+      event.preventDefault(); // Prevent default behaviour of touchend event to make working focus and keyboard for Safari on iOS
       _updateButtonDownState(_kPrimaryMouseButton, false);
       _callback(_convertEventToPointerData(ui.PointerChange.up, event));
     });
