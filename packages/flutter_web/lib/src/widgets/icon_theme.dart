@@ -20,7 +20,7 @@ class IconTheme extends InheritedWidget {
     Key key,
     @required this.data,
     @required Widget child,
-  })  : assert(data != null),
+  }) : assert(data != null),
         assert(child != null),
         super(key: key, child: child);
 
@@ -59,9 +59,7 @@ class IconTheme extends InheritedWidget {
   /// ```
   static IconThemeData of(BuildContext context) {
     final IconThemeData iconThemeData = _getInheritedIconThemeData(context);
-    return iconThemeData.isConcrete
-        ? iconThemeData
-        : const IconThemeData.fallback().merge(iconThemeData);
+    return iconThemeData.isConcrete ? iconThemeData : const IconThemeData.fallback().merge(iconThemeData);
   }
 
   static IconThemeData _getInheritedIconThemeData(BuildContext context) {
@@ -75,7 +73,6 @@ class IconTheme extends InheritedWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties
-        .add(DiagnosticsProperty<IconThemeData>('data', data, showName: false));
+    properties.add(DiagnosticsProperty<IconThemeData>('data', data, showName: false));
   }
 }

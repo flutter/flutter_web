@@ -11,10 +11,8 @@ import 'package:flutter_web/foundation.dart';
 
 import 'message_codec.dart';
 import 'system_channels.dart';
-
 /// The [PlatformViewsRegistry] responsible for generating unique identifiers for platform views.
-final PlatformViewsRegistry platformViewsRegistry =
-    PlatformViewsRegistry._instance();
+final PlatformViewsRegistry platformViewsRegistry = PlatformViewsRegistry._instance();
 
 /// A registry responsible for generating unique identifier for platform views.
 ///
@@ -64,7 +62,7 @@ class PlatformViewsService {
   }
 
   Future<void> _onMethodCall(MethodCall call) {
-    switch (call.method) {
+    switch(call.method) {
       case 'viewFocused':
         final int id = call.arguments;
         if (_focusCallbacks.containsKey(id)) {
@@ -72,8 +70,7 @@ class PlatformViewsService {
         }
         break;
       default:
-        throw UnimplementedError(
-            '${call.method} was invoked but isn\'t implemented by PlatformViewsService');
+        throw UnimplementedError('${call.method} was invoked but isn\'t implemented by PlatformViewsService');
     }
     return null;
   }
@@ -82,6 +79,7 @@ class PlatformViewsService {
   ///
   /// The callbacks are invoked when the platform view asks to be focused.
   final Map<int, VoidCallback> _focusCallbacks = <int, VoidCallback>{};
+
 
   /// Creates a controller for a new Android view.
   ///
@@ -159,8 +157,7 @@ class PlatformViewsService {
       'viewType': viewType,
     };
     if (creationParams != null) {
-      final ByteData paramsByteData =
-          creationParamsCodec.encodeMessage(creationParams);
+      final ByteData paramsByteData = creationParamsCodec.encodeMessage(creationParams);
       args['params'] = Uint8List.view(
         paramsByteData.buffer,
         0,
@@ -177,7 +174,7 @@ class PlatformViewsService {
     @required String viewType,
     @required TextDirection layoutDirection,
   }) {
-    assert(id != null);
+    assert (id != null);
     assert(viewType != null);
     assert(layoutDirection != null);
     final HtmlViewController controller = HtmlViewController._(
@@ -199,8 +196,8 @@ class AndroidPointerProperties {
   const AndroidPointerProperties({
     @required this.id,
     @required this.toolType,
-  })  : assert(id != null),
-        assert(toolType != null);
+  }) : assert(id != null),
+       assert(toolType != null);
 
   /// See Android's [MotionEvent.PointerProperties#id](https://developer.android.com/reference/android/view/MotionEvent.PointerProperties.html#id).
   final int id;
@@ -249,15 +246,15 @@ class AndroidPointerCoords {
     @required this.touchMinor,
     @required this.x,
     @required this.y,
-  })  : assert(orientation != null),
-        assert(pressure != null),
-        assert(size != null),
-        assert(toolMajor != null),
-        assert(toolMinor != null),
-        assert(touchMajor != null),
-        assert(touchMinor != null),
-        assert(x != null),
-        assert(y != null);
+  }) : assert(orientation != null),
+       assert(pressure != null),
+       assert(size != null),
+       assert(toolMajor != null),
+       assert(toolMinor != null),
+       assert(touchMajor != null),
+       assert(touchMinor != null),
+       assert(x != null),
+       assert(y != null);
 
   /// The orientation of the touch area and tool area in radians clockwise from vertical.
   ///
@@ -336,22 +333,22 @@ class AndroidMotionEvent {
     @required this.edgeFlags,
     @required this.source,
     @required this.flags,
-  })  : assert(downTime != null),
-        assert(eventTime != null),
-        assert(action != null),
-        assert(pointerCount != null),
-        assert(pointerProperties != null),
-        assert(pointerCoords != null),
-        assert(metaState != null),
-        assert(buttonState != null),
-        assert(xPrecision != null),
-        assert(yPrecision != null),
-        assert(deviceId != null),
-        assert(edgeFlags != null),
-        assert(source != null),
-        assert(flags != null),
-        assert(pointerProperties.length == pointerCount),
-        assert(pointerCoords.length == pointerCount);
+  }) : assert(downTime != null),
+       assert(eventTime != null),
+       assert(action != null),
+       assert(pointerCount != null),
+       assert(pointerProperties != null),
+       assert(pointerCoords != null),
+       assert(metaState != null),
+       assert(buttonState != null),
+       assert(xPrecision != null),
+       assert(yPrecision != null),
+       assert(deviceId != null),
+       assert(edgeFlags != null),
+       assert(source != null),
+       assert(flags != null),
+       assert(pointerProperties.length == pointerCount),
+       assert(pointerCoords.length == pointerCount);
 
   /// The time (in ms) when the user originally pressed down to start a stream of position events,
   /// relative to an arbitrary timeline.
@@ -424,12 +421,8 @@ class AndroidMotionEvent {
       eventTime,
       action,
       pointerCount,
-      pointerProperties
-          .map<List<int>>((AndroidPointerProperties p) => p._asList())
-          .toList(),
-      pointerCoords
-          .map<List<double>>((AndroidPointerCoords p) => p._asList())
-          .toList(),
+      pointerProperties.map<List<int>>((AndroidPointerProperties p) => p._asList()).toList(),
+      pointerCoords.map<List<double>>((AndroidPointerCoords p) => p._asList()).toList(),
       metaState,
       buttonState,
       xPrecision,
@@ -465,25 +458,25 @@ class AndroidViewController {
     dynamic creationParams,
     MessageCodec<dynamic> creationParamsCodec,
     TextDirection layoutDirection,
-  )   : assert(id != null),
-        assert(viewType != null),
-        assert(layoutDirection != null),
-        assert(creationParams == null || creationParamsCodec != null),
-        _viewType = viewType,
-        _creationParams = creationParams,
-        _creationParamsCodec = creationParamsCodec,
-        _layoutDirection = layoutDirection,
-        _state = _PlatformViewState.waitingForSize;
+  ) : assert(id != null),
+      assert(viewType != null),
+      assert(layoutDirection != null),
+      assert(creationParams == null || creationParamsCodec != null),
+      _viewType = viewType,
+      _creationParams = creationParams,
+      _creationParamsCodec = creationParamsCodec,
+      _layoutDirection = layoutDirection,
+      _state = _PlatformViewState.waitingForSize;
 
   /// Action code for when a primary pointer touched the screen.
   ///
   /// Android's [MotionEvent.ACTION_DOWN](https://developer.android.com/reference/android/view/MotionEvent#ACTION_DOWN)
-  static const int kActionDown = 0;
+  static const int kActionDown =  0;
 
   /// Action code for when a primary pointer stopped touching the screen.
   ///
   /// Android's [MotionEvent.ACTION_UP](https://developer.android.com/reference/android/view/MotionEvent#ACTION_UP)
-  static const int kActionUp = 1;
+  static const int kActionUp =  1;
 
   /// Action code for when the event only includes information about pointer movement.
   ///
@@ -498,12 +491,12 @@ class AndroidViewController {
   /// Action code for when a secondary pointer touched the screen.
   ///
   /// Android's [MotionEvent.ACTION_POINTER_DOWN](https://developer.android.com/reference/android/view/MotionEvent#ACTION_POINTER_DOWN)
-  static const int kActionPointerDown = 5;
+  static const int kActionPointerDown =  5;
 
   /// Action code for when a secondary pointer stopped touching the screen.
   ///
   /// Android's [MotionEvent.ACTION_POINTER_UP](https://developer.android.com/reference/android/view/MotionEvent#ACTION_POINTER_UP)
-  static const int kActionPointerUp = 6;
+  static const int kActionPointerUp =  6;
 
   /// Android's [View.LAYOUT_DIRECTION_LTR](https://developer.android.com/reference/android/view/View.html#LAYOUT_DIRECTION_LTR) value.
   static const int kAndroidLayoutDirectionLtr = 0;
@@ -533,8 +526,7 @@ class AndroidViewController {
 
   MessageCodec<dynamic> _creationParamsCodec;
 
-  final List<PlatformViewCreatedCallback> _platformViewCreatedCallbacks =
-      <PlatformViewCreatedCallback>[];
+  final List<PlatformViewCreatedCallback> _platformViewCreatedCallbacks = <PlatformViewCreatedCallback>[];
 
   /// Whether the platform view has already been created.
   bool get isCreated => _state == _PlatformViewState.created;
@@ -548,8 +540,7 @@ class AndroidViewController {
   }
 
   /// Removes a callback added with [addOnPlatformViewCreatedListener].
-  void removeOnPlatformViewCreatedListener(
-      PlatformViewCreatedCallback listener) {
+  void removeOnPlatformViewCreatedListener(PlatformViewCreatedCallback listener) {
     assert(_state != _PlatformViewState.disposed);
     _platformViewCreatedCallbacks.remove(listener);
   }
@@ -560,8 +551,7 @@ class AndroidViewController {
   /// The identifier of the platform view cannot be reused after the view is
   /// disposed.
   Future<void> dispose() async {
-    if (_state == _PlatformViewState.creating ||
-        _state == _PlatformViewState.created)
+    if (_state == _PlatformViewState.creating || _state == _PlatformViewState.created)
       await SystemChannels.platform_views.invokeMethod<void>('dispose', id);
     _platformViewCreatedCallbacks.clear();
     _state = _PlatformViewState.disposed;
@@ -574,16 +564,15 @@ class AndroidViewController {
   ///
   /// The first time a size is set triggers the creation of the Android view.
   Future<void> setSize(Size size) async {
-    assert(_state != _PlatformViewState.disposed,
-        'trying to size a disposed Android View. View id: $id');
+    assert(_state != _PlatformViewState.disposed, 'trying to size a disposed Android View. View id: $id');
 
     assert(size != null);
     assert(!size.isEmpty);
 
-    if (_state == _PlatformViewState.waitingForSize) return _create(size);
+    if (_state == _PlatformViewState.waitingForSize)
+      return _create(size);
 
-    await SystemChannels.platform_views
-        .invokeMethod<void>('resize', <String, dynamic>{
+    await SystemChannels.platform_views.invokeMethod<void>('resize', <String, dynamic>{
       'id': id,
       'width': size.width,
       'height': size.height,
@@ -592,20 +581,20 @@ class AndroidViewController {
 
   /// Sets the layout direction for the Android view.
   Future<void> setLayoutDirection(TextDirection layoutDirection) async {
-    assert(_state != _PlatformViewState.disposed,
-        'trying to set a layout direction for a disposed UIView. View id: $id');
+    assert(_state != _PlatformViewState.disposed,'trying to set a layout direction for a disposed UIView. View id: $id');
 
-    if (layoutDirection == _layoutDirection) return;
+    if (layoutDirection == _layoutDirection)
+      return;
 
     assert(layoutDirection != null);
     _layoutDirection = layoutDirection;
 
     // If the view was not yet created we just update _layoutDirection and return, as the new
     // direction will be used in _create.
-    if (_state == _PlatformViewState.waitingForSize) return;
+    if (_state == _PlatformViewState.waitingForSize)
+      return;
 
-    await SystemChannels.platform_views
-        .invokeMethod<void>('setDirection', <String, dynamic>{
+    await SystemChannels.platform_views.invokeMethod<void>('setDirection', <String, dynamic>{
       'id': id,
       'direction': _getAndroidDirection(layoutDirection),
     });
@@ -638,8 +627,8 @@ class AndroidViewController {
   /// for description of the parameters.
   Future<void> sendMotionEvent(AndroidMotionEvent event) async {
     await SystemChannels.platform_views.invokeMethod<dynamic>(
-      'touch',
-      event._asList(id),
+        'touch',
+        event._asList(id),
     );
   }
 
@@ -657,19 +646,16 @@ class AndroidViewController {
       'direction': _getAndroidDirection(_layoutDirection),
     };
     if (_creationParams != null) {
-      final ByteData paramsByteData =
-          _creationParamsCodec.encodeMessage(_creationParams);
+      final ByteData paramsByteData = _creationParamsCodec.encodeMessage(_creationParams);
       args['params'] = Uint8List.view(
         paramsByteData.buffer,
         0,
         paramsByteData.lengthInBytes,
       );
     }
-    _textureId =
-        await SystemChannels.platform_views.invokeMethod('create', args);
+    _textureId = await SystemChannels.platform_views.invokeMethod('create', args);
     _state = _PlatformViewState.created;
-    for (PlatformViewCreatedCallback callback
-        in _platformViewCreatedCallbacks) {
+    for (PlatformViewCreatedCallback callback in _platformViewCreatedCallbacks) {
       callback(id);
     }
   }
@@ -682,9 +668,10 @@ class UiKitViewController {
   UiKitViewController._(
     this.id,
     TextDirection layoutDirection,
-  )   : assert(id != null),
-        assert(layoutDirection != null),
-        _layoutDirection = layoutDirection;
+  ) : assert(id != null),
+      assert(layoutDirection != null),
+      _layoutDirection = layoutDirection;
+
 
   /// The unique identifier of the iOS view controlled by this controller.
   ///
@@ -698,10 +685,10 @@ class UiKitViewController {
 
   /// Sets the layout direction for the iOS UIView.
   Future<void> setLayoutDirection(TextDirection layoutDirection) async {
-    assert(!_debugDisposed,
-        'trying to set a layout direction for a disposed iOS UIView. View id: $id');
+    assert(!_debugDisposed, 'trying to set a layout direction for a disposed iOS UIView. View id: $id');
 
-    if (layoutDirection == _layoutDirection) return;
+    if (layoutDirection == _layoutDirection)
+      return;
 
     assert(layoutDirection != null);
     _layoutDirection = layoutDirection;
@@ -753,12 +740,12 @@ class HtmlViewController {
     this.id,
     String viewType,
     TextDirection layoutDirection,
-  )   : assert(id != null),
-        assert(viewType != null),
-        assert(layoutDirection != null),
-        _viewType = viewType,
-        _layoutDirection = layoutDirection,
-        _state = _PlatformViewState.waitingForSize;
+  ) : assert(id != null),
+      assert(viewType != null),
+      assert(layoutDirection != null),
+      _viewType = viewType,
+      _layoutDirection = layoutDirection,
+      _state = _PlatformViewState.waitingForSize;
 
   /// The unique identifier of the HTML view controlled by this controller.
   final int id;
@@ -769,8 +756,7 @@ class HtmlViewController {
 
   _PlatformViewState _state;
 
-  final List<PlatformViewCreatedCallback> _platformViewCreatedCallbacks =
-      <PlatformViewCreatedCallback>[];
+  final List<PlatformViewCreatedCallback> _platformViewCreatedCallbacks = <PlatformViewCreatedCallback>[];
 
   /// Whether the platform view has already been created.
   bool get isCreated => _state == _PlatformViewState.created;
@@ -784,8 +770,7 @@ class HtmlViewController {
   }
 
   /// Removes a callback added with [addOnPlatformViewCreatedListener].
-  void removeOnPlatformViewCreatedListener(
-      PlatformViewCreatedCallback listener) {
+  void removeOnPlatformViewCreatedListener(PlatformViewCreatedCallback listener) {
     assert(_state != _PlatformViewState.disposed);
     _platformViewCreatedCallbacks.remove(listener);
   }
@@ -820,8 +805,7 @@ class HtmlViewController {
   /// The identifier of the platform view cannot be reused after the view is
   /// disposed.
   Future<void> dispose() async {
-    if (_state == _PlatformViewState.creating ||
-        _state == _PlatformViewState.created)
+    if (_state == _PlatformViewState.creating || _state == _PlatformViewState.created)
       await SystemChannels.platform_views.invokeMethod<void>('dispose', id);
     _platformViewCreatedCallbacks.clear();
     _state = _PlatformViewState.disposed;
@@ -834,16 +818,15 @@ class HtmlViewController {
   ///
   /// The first time a size is set triggers the creation of the HTML view.
   Future<void> setSize(Size size) async {
-    assert(_state != _PlatformViewState.disposed,
-        'trying to size a disposed HTML View. View id: $id');
+    assert(_state != _PlatformViewState.disposed, 'trying to size a disposed HTML View. View id: $id');
 
     assert(size != null);
     assert(!size.isEmpty);
 
-    if (_state == _PlatformViewState.waitingForSize) return _create(size);
+    if (_state == _PlatformViewState.waitingForSize)
+      return _create(size);
 
-    await SystemChannels.platform_views
-        .invokeMethod<void>('resize', <String, dynamic>{
+    await SystemChannels.platform_views.invokeMethod<void>('resize', <String, dynamic>{
       'id': id,
       'width': size.width,
       'height': size.height,
@@ -852,20 +835,20 @@ class HtmlViewController {
 
   /// Sets the layout direction for the HTML view.
   Future<void> setLayoutDirection(TextDirection layoutDirection) async {
-    assert(_state != _PlatformViewState.disposed,
-        'trying to set a layout direction for a disposed HTML View. View id: $id');
+    assert(_state != _PlatformViewState.disposed, 'trying to set a layout direction for a disposed HTML View. View id: $id');
 
-    if (layoutDirection == _layoutDirection) return;
+    if (layoutDirection == _layoutDirection)
+      return;
 
     assert(layoutDirection != null);
     _layoutDirection = layoutDirection;
 
     // If the view was not yet created we just update _layoutDirection and return, as the new
     // direction will be used in _create.
-    if (_state == _PlatformViewState.waitingForSize) return;
+    if (_state == _PlatformViewState.waitingForSize)
+      return;
 
-    await SystemChannels.platform_views
-        .invokeMethod<void>('setDirection', <String, dynamic>{
+    await SystemChannels.platform_views.invokeMethod<void>('setDirection', <String, dynamic>{
       'id': id,
       'direction': layoutDirection == TextDirection.ltr ? 0 : 1,
     });
@@ -881,8 +864,7 @@ class HtmlViewController {
     };
     await SystemChannels.platform_views.invokeMethod('create', args);
     _state = _PlatformViewState.created;
-    for (PlatformViewCreatedCallback callback
-        in _platformViewCreatedCallbacks) {
+    for (PlatformViewCreatedCallback callback in _platformViewCreatedCallbacks) {
       callback(id);
     }
   }

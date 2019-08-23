@@ -15,18 +15,16 @@ import 'rendering_tester.dart';
 
 class FakeEditableTextState extends TextSelectionDelegate {
   @override
-  TextEditingValue get textEditingValue {
-    return const TextEditingValue();
-  }
+  TextEditingValue get textEditingValue { return const TextEditingValue(); }
 
   @override
-  set textEditingValue(TextEditingValue value) {}
+  set textEditingValue(TextEditingValue value) { }
 
   @override
-  void hideToolbar() {}
+  void hideToolbar() { }
 
   @override
-  void bringIntoView(TextPosition position) {}
+  void bringIntoView(TextPosition position) { }
 }
 
 void main() {
@@ -52,27 +50,28 @@ void main() {
     expect(
       editable.toStringDeep(minLevel: DiagnosticLevel.info),
       equalsIgnoringHashCodes(
-          'RenderEditable#00000 NEEDS-LAYOUT NEEDS-PAINT DETACHED\n'
-          ' │ parentData: MISSING\n'
-          ' │ constraints: MISSING\n'
-          ' │ size: MISSING\n'
-          ' │ cursorColor: null\n'
-          ' │ showCursor: ValueNotifier<bool>#00000(false)\n'
-          ' │ maxLines: 1\n'
-          ' │ minLines: null\n'
-          ' │ selectionColor: null\n'
-          ' │ textScaleFactor: 1.0\n'
-          ' │ locale: ja_JP\n'
-          ' │ selection: null\n'
-          ' │ offset: _FixedViewportOffset#00000(offset: 0.0)\n'
-          ' ╘═╦══ text ═══\n'
-          '   ║ TextSpan:\n'
-          '   ║   inherit: true\n'
-          '   ║   family: Ahem\n'
-          '   ║   size: 10.0\n'
-          '   ║   height: 1.0x\n'
-          '   ║   "12345"\n'
-          '   ╚═══════════\n'),
+        'RenderEditable#00000 NEEDS-LAYOUT NEEDS-PAINT DETACHED\n'
+        ' │ parentData: MISSING\n'
+        ' │ constraints: MISSING\n'
+        ' │ size: MISSING\n'
+        ' │ cursorColor: null\n'
+        ' │ showCursor: ValueNotifier<bool>#00000(false)\n'
+        ' │ maxLines: 1\n'
+        ' │ minLines: null\n'
+        ' │ selectionColor: null\n'
+        ' │ textScaleFactor: 1.0\n'
+        ' │ locale: ja_JP\n'
+        ' │ selection: null\n'
+        ' │ offset: _FixedViewportOffset#00000(offset: 0.0)\n'
+        ' ╘═╦══ text ═══\n'
+        '   ║ TextSpan:\n'
+        '   ║   inherit: true\n'
+        '   ║   family: Ahem\n'
+        '   ║   size: 10.0\n'
+        '   ║   height: 1.0x\n'
+        '   ║   "12345"\n'
+        '   ╚═══════════\n'
+      ),
     );
   });
 
@@ -94,10 +93,33 @@ void main() {
     );
     editable.layout(BoxConstraints.loose(const Size(1000.0, 1000.0)));
     expect(
-      (Canvas canvas) =>
-          editable.paint(TestRecordingPaintingContext(canvas), Offset.zero),
+      (Canvas canvas) => editable.paint(TestRecordingPaintingContext(canvas), Offset.zero),
       paints..clipRect(rect: const Rect.fromLTRB(0.0, 0.0, 1000.0, 10.0)),
     );
+  });
+
+  test('platformInputPaintCallback method called during paint', () {
+    final TextSelectionDelegate delegate = FakeEditableTextState();
+    final RenderEditable editable = RenderEditable(
+      text: const TextSpan(
+        style: TextStyle(height: 1.0, fontSize: 10.0, fontFamily: 'Ahem'),
+        text: 'A',
+      ),
+      textAlign: TextAlign.start,
+      textDirection: TextDirection.ltr,
+      locale: const Locale('en', 'US'),
+      offset: ViewportOffset.fixed(10.0),
+      textSelectionDelegate: delegate,
+    );
+
+    final List<String> log = <String>[];
+    editable.platformInputPaintCallback = () { log.add('callback'); };
+
+    editable.layout(BoxConstraints.loose(const Size(1000.0, 1000.0)));
+    expect((Canvas canvas) => editable.paint(TestRecordingPaintingContext(canvas), Offset.zero),
+      paints..clipRect(rect: const Rect.fromLTRB(0.0, 0.0, 1000.0, 10.0)),
+    );
+    expect(log, hasLength(1));
   });
 
   test('Can change cursor color, radius, visibility', () {
@@ -114,9 +136,7 @@ void main() {
       text: const TextSpan(
         text: 'test',
         style: TextStyle(
-          height: 1.0,
-          fontSize: 10.0,
-          fontFamily: 'Ahem',
+          height: 1.0, fontSize: 10.0, fontFamily: 'Ahem',
         ),
       ),
       selection: const TextSelection.collapsed(
@@ -137,13 +157,10 @@ void main() {
     editable.showCursor = showCursor;
     pumpFrame();
 
-    expect(
-        editable,
-        paints
-          ..rect(
-            color: const Color.fromARGB(0xFF, 0xFF, 0x00, 0x00),
-            rect: const Rect.fromLTWH(40, 0, 1, 10),
-          ));
+    expect(editable, paints..rect(
+      color: const Color.fromARGB(0xFF, 0xFF, 0x00, 0x00),
+      rect: const Rect.fromLTWH(40, 0, 1, 10),
+    ));
 
     // Now change to a rounded caret.
     editable.cursorColor = const Color.fromARGB(0xFF, 0x00, 0x00, 0xFF);
@@ -151,31 +168,25 @@ void main() {
     editable.cursorRadius = const Radius.circular(3);
     pumpFrame();
 
-    expect(
-        editable,
-        paints
-          ..rrect(
-            color: const Color.fromARGB(0xFF, 0x00, 0x00, 0xFF),
-            rrect: RRect.fromRectAndRadius(
-              const Rect.fromLTWH(40, 0, 4, 10),
-              const Radius.circular(3),
-            ),
-          ));
+    expect(editable, paints..rrect(
+      color: const Color.fromARGB(0xFF, 0x00, 0x00, 0xFF),
+      rrect: RRect.fromRectAndRadius(
+        const Rect.fromLTWH(40, 0, 4, 10),
+        const Radius.circular(3),
+      ),
+    ));
 
     editable.textScaleFactor = 2;
     pumpFrame();
 
     // Now the caret height is much bigger due to the bigger font scale.
-    expect(
-        editable,
-        paints
-          ..rrect(
-            color: const Color.fromARGB(0xFF, 0x00, 0x00, 0xFF),
-            rrect: RRect.fromRectAndRadius(
-              const Rect.fromLTWH(80, 0, 4, 20),
-              const Radius.circular(3),
-            ),
-          ));
+    expect(editable, paints..rrect(
+      color: const Color.fromARGB(0xFF, 0x00, 0x00, 0xFF),
+      rrect: RRect.fromRectAndRadius(
+        const Rect.fromLTWH(80, 0, 4, 20),
+        const Radius.circular(3),
+      ),
+    ));
 
     // Can turn off caret.
     showCursor.value = false;
@@ -198,9 +209,7 @@ void main() {
       text: const TextSpan(
         text: '中文测试文本是否正确',
         style: TextStyle(
-          height: 1.0,
-          fontSize: 10.0,
-          fontFamily: 'Ahem',
+          height: 1.0, fontSize: 10.0, fontFamily: 'Ahem',
         ),
       ),
       selection: const TextSelection.collapsed(
@@ -221,13 +230,10 @@ void main() {
     editable.showCursor = showCursor;
     pumpFrame();
 
-    expect(
-        editable,
-        paints
-          ..rect(
-            color: const Color.fromARGB(0xFF, 0xFF, 0x00, 0x00),
-            rect: const Rect.fromLTWH(40, 0, 1, 10),
-          ));
+    expect(editable, paints..rect(
+      color: const Color.fromARGB(0xFF, 0xFF, 0x00, 0x00),
+      rect: const Rect.fromLTWH(40, 0, 1, 10),
+    ));
 
     // Now change to a rounded caret.
     editable.cursorColor = const Color.fromARGB(0xFF, 0x00, 0x00, 0xFF);
@@ -235,31 +241,25 @@ void main() {
     editable.cursorRadius = const Radius.circular(3);
     pumpFrame();
 
-    expect(
-        editable,
-        paints
-          ..rrect(
-            color: const Color.fromARGB(0xFF, 0x00, 0x00, 0xFF),
-            rrect: RRect.fromRectAndRadius(
-              const Rect.fromLTWH(40, 0, 4, 10),
-              const Radius.circular(3),
-            ),
-          ));
+    expect(editable, paints..rrect(
+      color: const Color.fromARGB(0xFF, 0x00, 0x00, 0xFF),
+      rrect: RRect.fromRectAndRadius(
+        const Rect.fromLTWH(40, 0, 4, 10),
+        const Radius.circular(3),
+      ),
+    ));
 
     editable.textScaleFactor = 2;
     pumpFrame();
 
     // Now the caret height is much bigger due to the bigger font scale.
-    expect(
-        editable,
-        paints
-          ..rrect(
-            color: const Color.fromARGB(0xFF, 0x00, 0x00, 0xFF),
-            rrect: RRect.fromRectAndRadius(
-              const Rect.fromLTWH(80, 0, 4, 20),
-              const Radius.circular(3),
-            ),
-          ));
+    expect(editable, paints..rrect(
+      color: const Color.fromARGB(0xFF, 0x00, 0x00, 0xFF),
+      rrect: RRect.fromRectAndRadius(
+        const Rect.fromLTWH(80, 0, 4, 20),
+        const Radius.circular(3),
+      ),
+    ));
 
     // Can turn off caret.
     showCursor.value = false;
@@ -280,9 +280,7 @@ void main() {
       text: const TextSpan(
         text: 'test',
         style: TextStyle(
-          height: 1.0,
-          fontSize: 10.0,
-          fontFamily: 'Ahem',
+          height: 1.0, fontSize: 10.0, fontFamily: 'Ahem',
         ),
       ),
       selection: const TextSelection(
@@ -321,9 +319,7 @@ void main() {
       text: const TextSpan(
         text: 'test',
         style: TextStyle(
-          height: 1.0,
-          fontSize: 10.0,
-          fontFamily: 'Ahem',
+          height: 1.0, fontSize: 10.0, fontFamily: 'Ahem',
         ),
       ),
       selection: const TextSelection.collapsed(
@@ -371,16 +367,13 @@ void main() {
       // This makes the scroll axis vertical.
       maxLines: 2,
       textSelectionDelegate: delegate,
-      onSelectionChanged: (TextSelection selection, RenderEditable renderObject,
-          SelectionChangedCause cause) {
+      onSelectionChanged: (TextSelection selection, RenderEditable renderObject, SelectionChangedCause cause) {
         currentSelection = selection;
       },
       text: const TextSpan(
         text: 'test\ntest',
         style: TextStyle(
-          height: 1.0,
-          fontSize: 10.0,
-          fontFamily: 'Ahem',
+          height: 1.0, fontSize: 10.0, fontFamily: 'Ahem',
         ),
       ),
     );
@@ -392,8 +385,7 @@ void main() {
       paints..paragraph(offset: Offset.zero),
     );
 
-    editable.selectPositionAt(
-        from: const Offset(0, 2), cause: SelectionChangedCause.tap);
+    editable.selectPositionAt(from: const Offset(0, 2), cause: SelectionChangedCause.tap);
     pumpFrame();
 
     expect(currentSelection.isCollapsed, true);
@@ -410,8 +402,7 @@ void main() {
 
     // Tap the same place. But because the offset is scrolled up, the second line
     // gets tapped instead.
-    editable.selectPositionAt(
-        from: const Offset(0, 2), cause: SelectionChangedCause.tap);
+    editable.selectPositionAt(from: const Offset(0, 2), cause: SelectionChangedCause.tap);
     pumpFrame();
 
     expect(currentSelection.isCollapsed, true);
@@ -421,14 +412,14 @@ void main() {
     // Move over by one character.
     editable.handleTapDown(TapDownDetails(globalPosition: const Offset(10, 2)));
     pumpFrame();
-    editable.selectPosition(cause: SelectionChangedCause.tap);
+    editable.selectPosition(cause:SelectionChangedCause.tap);
     pumpFrame();
     expect(currentSelection.isCollapsed, true);
     expect(currentSelection.baseOffset, 6);
 
     editable.handleTapDown(TapDownDetails(globalPosition: const Offset(20, 2)));
     pumpFrame();
-    editable.selectWord(cause: SelectionChangedCause.longPress);
+    editable.selectWord(cause:SelectionChangedCause.longPress);
     pumpFrame();
     expect(currentSelection.isCollapsed, false);
     expect(currentSelection.baseOffset, 5);
@@ -436,8 +427,7 @@ void main() {
 
     // Select one more character down but since it's still part of the same
     // word, the same word is selected.
-    editable.selectWordsInRange(
-        from: const Offset(30, 2), cause: SelectionChangedCause.longPress);
+    editable.selectWordsInRange(from: const Offset(30, 2), cause:SelectionChangedCause.longPress);
     pumpFrame();
     expect(currentSelection.isCollapsed, false);
     expect(currentSelection.baseOffset, 5);
@@ -455,26 +445,20 @@ void main() {
       cursorColor: Colors.red,
       offset: viewportOffset,
       textSelectionDelegate: delegate,
-      onSelectionChanged: (TextSelection selection, RenderEditable renderObject,
-          SelectionChangedCause cause) {
+      onSelectionChanged: (TextSelection selection, RenderEditable renderObject, SelectionChangedCause cause) {
         currentSelection = selection;
       },
       text: const TextSpan(
         text: 'abc def ghi',
         style: TextStyle(
-          height: 1.0,
-          fontSize: 10.0,
-          fontFamily: 'Ahem',
+          height: 1.0, fontSize: 10.0, fontFamily: 'Ahem',
         ),
       ),
     );
 
     layout(editable);
 
-    editable.selectPositionAt(
-        from: const Offset(30, 2),
-        to: const Offset(10, 2),
-        cause: SelectionChangedCause.drag);
+    editable.selectPositionAt(from: const Offset(30, 2), to: const Offset(10, 2), cause: SelectionChangedCause.drag);
     pumpFrame();
 
     expect(currentSelection.isCollapsed, isFalse);
@@ -489,9 +473,7 @@ void main() {
     const TextSpan text = TextSpan(
       text: 'abc def ghi',
       style: TextStyle(
-        height: 1.0,
-        fontSize: 10.0,
-        fontFamily: 'Ahem',
+        height: 1.0, fontSize: 10.0, fontFamily: 'Ahem',
       ),
     );
 
@@ -500,8 +482,7 @@ void main() {
       textDirection: TextDirection.ltr,
       offset: ViewportOffset.zero(),
       selection: const TextSelection(baseOffset: 3, extentOffset: 4),
-      onSelectionChanged: (TextSelection selection, RenderEditable renderObject,
-          SelectionChangedCause cause) {
+      onSelectionChanged: (TextSelection selection, RenderEditable renderObject, SelectionChangedCause cause) {
         selectionChangedCount++;
         updatedSelection = selection;
       },
@@ -511,10 +492,7 @@ void main() {
     layout(editable1);
 
     // Shouldn't cause a selection change.
-    editable1.selectPositionAt(
-        from: const Offset(30, 2),
-        to: const Offset(42, 2),
-        cause: SelectionChangedCause.drag);
+    editable1.selectPositionAt(from: const Offset(30, 2), to: const Offset(42, 2), cause: SelectionChangedCause.drag);
     pumpFrame();
 
     expect(updatedSelection, isNull);
@@ -525,8 +503,7 @@ void main() {
       textDirection: TextDirection.ltr,
       offset: ViewportOffset.zero(),
       selection: const TextSelection(baseOffset: 3, extentOffset: 4),
-      onSelectionChanged: (TextSelection selection, RenderEditable renderObject,
-          SelectionChangedCause cause) {
+      onSelectionChanged: (TextSelection selection, RenderEditable renderObject, SelectionChangedCause cause) {
         selectionChangedCount++;
         updatedSelection = selection;
       },
@@ -536,10 +513,7 @@ void main() {
     layout(editable2);
 
     // Now this should cause a selection change.
-    editable2.selectPositionAt(
-        from: const Offset(30, 2),
-        to: const Offset(48, 2),
-        cause: SelectionChangedCause.drag);
+    editable2.selectPositionAt(from: const Offset(30, 2), to: const Offset(48, 2), cause: SelectionChangedCause.drag);
     pumpFrame();
 
     expect(updatedSelection.baseOffset, 3);

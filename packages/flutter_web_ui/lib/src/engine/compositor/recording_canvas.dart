@@ -49,7 +49,7 @@ class SkRecordingCanvas implements RecordingCanvas {
     // TODO(het): Use `clipRRect` when CanvasKit makes it available.
     // CanvasKit doesn't expose `Canvas.clipRRect`, so we create a path, add the
     // RRect to it, and call clipPath with it.
-    final SkPath rrectPath = new SkPath();
+    final SkPath rrectPath = SkPath();
     rrectPath.addRRect(rrect);
     clipPath(rrectPath, doAntiAlias: doAntiAlias);
   }
@@ -124,8 +124,14 @@ class SkRecordingCanvas implements RecordingCanvas {
 
   @override
   void drawImageRect(ui.Image image, ui.Rect src, ui.Rect dst, ui.Paint paint) {
-    // TODO(het): Implement this.
-    //throw 'drawImageRect';
+    final SkImage skImage = image;
+    skCanvas.callMethod('drawImageRect', <dynamic>[
+      skImage.skImage,
+      makeSkRect(src),
+      makeSkRect(dst),
+      makeSkPaint(paint),
+      false,
+    ]);
   }
 
   @override
@@ -158,7 +164,7 @@ class SkRecordingCanvas implements RecordingCanvas {
     final ParagraphGeometricStyle style = engineParagraph.geometricStyle;
     final js.JsObject skFont =
         skiaFontCollection.getFont(style.effectiveFontFamily, style.fontSize);
-    final js.JsObject skShapedTextOpts = js.JsObject.jsify({
+    final js.JsObject skShapedTextOpts = js.JsObject.jsify(<String, dynamic>{
       'font': skFont,
       'leftToRight': true,
       'text': engineParagraph.plainText,

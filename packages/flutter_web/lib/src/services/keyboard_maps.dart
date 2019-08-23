@@ -13,8 +13,7 @@
 import 'keyboard_key.dart';
 
 /// Maps Android-specific key codes to the matching [LogicalKeyboardKey].
-const Map<int, LogicalKeyboardKey> kAndroidToLogicalKey =
-    <int, LogicalKeyboardKey>{
+const Map<int, LogicalKeyboardKey> kAndroidToLogicalKey = <int, LogicalKeyboardKey>{
   0: LogicalKeyboardKey.none,
   119: LogicalKeyboardKey.fn,
   223: LogicalKeyboardKey.sleep,
@@ -167,8 +166,7 @@ const Map<int, LogicalKeyboardKey> kAndroidToLogicalKey =
 };
 
 /// Maps Android-specific scan codes to the matching [PhysicalKeyboardKey].
-const Map<int, PhysicalKeyboardKey> kAndroidToPhysicalKey =
-    <int, PhysicalKeyboardKey>{
+const Map<int, PhysicalKeyboardKey> kAndroidToPhysicalKey = <int, PhysicalKeyboardKey>{
   464: PhysicalKeyboardKey.fn,
   205: PhysicalKeyboardKey.suspend,
   142: PhysicalKeyboardKey.sleep,
@@ -353,8 +351,7 @@ const Map<int, PhysicalKeyboardKey> kAndroidToPhysicalKey =
 /// A map of Android key codes which have printable representations, but appear
 /// on the number pad. Used to provide different key objects for keys like
 /// KEY_EQUALS and NUMPAD_EQUALS.
-const Map<int, LogicalKeyboardKey> kAndroidNumPadMap =
-    <int, LogicalKeyboardKey>{
+const Map<int, LogicalKeyboardKey> kAndroidNumPadMap = <int, LogicalKeyboardKey>{
   154: LogicalKeyboardKey.numpadDivide,
   155: LogicalKeyboardKey.numpadMultiply,
   156: LogicalKeyboardKey.numpadSubtract,
@@ -377,8 +374,7 @@ const Map<int, LogicalKeyboardKey> kAndroidNumPadMap =
 };
 
 /// Maps Fuchsia-specific IDs to the matching [LogicalKeyboardKey].
-const Map<int, LogicalKeyboardKey> kFuchsiaToLogicalKey =
-    <int, LogicalKeyboardKey>{
+const Map<int, LogicalKeyboardKey> kFuchsiaToLogicalKey = <int, LogicalKeyboardKey>{
   0x100000000: LogicalKeyboardKey.none,
   0x100000010: LogicalKeyboardKey.hyper,
   0x100000011: LogicalKeyboardKey.superKey,
@@ -616,8 +612,7 @@ const Map<int, LogicalKeyboardKey> kFuchsiaToLogicalKey =
 
 /// Maps Fuchsia-specific USB HID Usage IDs to the matching
 /// [PhysicalKeyboardKey].
-const Map<int, PhysicalKeyboardKey> kFuchsiaToPhysicalKey =
-    <int, PhysicalKeyboardKey>{
+const Map<int, PhysicalKeyboardKey> kFuchsiaToPhysicalKey = <int, PhysicalKeyboardKey>{
   0x00000000: PhysicalKeyboardKey.none,
   0x00000010: PhysicalKeyboardKey.hyper,
   0x00000011: PhysicalKeyboardKey.superKey,
@@ -856,8 +851,7 @@ const Map<int, PhysicalKeyboardKey> kFuchsiaToPhysicalKey =
 /// Maps macOS-specific key code values representing [PhysicalKeyboardKey].
 ///
 /// MacOS doesn't provide a scan code, but a virtual keycode to represent a physical key.
-const Map<int, PhysicalKeyboardKey> kMacOsToPhysicalKey =
-    <int, PhysicalKeyboardKey>{
+const Map<int, PhysicalKeyboardKey> kMacOsToPhysicalKey = <int, PhysicalKeyboardKey>{
   0x00000000: PhysicalKeyboardKey.keyA,
   0x0000000b: PhysicalKeyboardKey.keyB,
   0x00000008: PhysicalKeyboardKey.keyC,
@@ -1002,8 +996,7 @@ const Map<int, LogicalKeyboardKey> kMacOsNumPadMap = <int, LogicalKeyboardKey>{
 };
 
 /// Maps GLFW-specific key codes to the matching [LogicalKeyboardKey].
-const Map<int, LogicalKeyboardKey> kGlfwToLogicalKey =
-    <int, LogicalKeyboardKey>{
+const Map<int, LogicalKeyboardKey> kGlfwToLogicalKey = <int, LogicalKeyboardKey>{
   65: LogicalKeyboardKey.keyA,
   66: LogicalKeyboardKey.keyB,
   67: LogicalKeyboardKey.keyC,
@@ -1140,8 +1133,7 @@ const Map<int, LogicalKeyboardKey> kGlfwNumpadMap = <int, LogicalKeyboardKey>{
 };
 
 /// Maps XKB specific key code values representing [PhysicalKeyboardKey].
-const Map<int, PhysicalKeyboardKey> kLinuxToPhysicalKey =
-    <int, PhysicalKeyboardKey>{
+const Map<int, PhysicalKeyboardKey> kLinuxToPhysicalKey = <int, PhysicalKeyboardKey>{
   0x00000096: PhysicalKeyboardKey.sleep,
   0x00000097: PhysicalKeyboardKey.wakeUp,
   0x000000eb: PhysicalKeyboardKey.displayToggleIntExt,
@@ -1354,3 +1346,4 @@ const Map<int, PhysicalKeyboardKey> kLinuxToPhysicalKey =
   0x000000ef: PhysicalKeyboardKey.mailSend,
   0x00000080: PhysicalKeyboardKey.showAllWindows,
 };
+

@@ -293,7 +293,8 @@ class TextTheme extends Diagnosticable {
   ///    individual fields in the [TextTheme] instead of merging all of the
   ///    fields of two [TextTheme]s.
   TextTheme merge(TextTheme other) {
-    if (other == null) return this;
+    if (other == null)
+      return this;
     return copyWith(
       display4: display4?.merge(other.display4) ?? other.display4,
       display3: display3?.merge(other.display3) ?? other.display3,
@@ -476,22 +477,24 @@ class TextTheme extends Diagnosticable {
 
   @override
   bool operator ==(dynamic other) {
-    if (identical(this, other)) return true;
-    if (other.runtimeType != runtimeType) return false;
+    if (identical(this, other))
+      return true;
+    if (other.runtimeType != runtimeType)
+      return false;
     final TextTheme typedOther = other;
-    return display4 == typedOther.display4 &&
-        display3 == typedOther.display3 &&
-        display2 == typedOther.display2 &&
-        display1 == typedOther.display1 &&
-        headline == typedOther.headline &&
-        title == typedOther.title &&
-        subhead == typedOther.subhead &&
-        body2 == typedOther.body2 &&
-        body1 == typedOther.body1 &&
-        caption == typedOther.caption &&
-        button == typedOther.button &&
-        subtitle == typedOther.subtitle &&
-        overline == typedOther.overline;
+    return display4 == typedOther.display4
+        && display3 == typedOther.display3
+        && display2 == typedOther.display2
+        && display1 == typedOther.display1
+        && headline == typedOther.headline
+        && title == typedOther.title
+        && subhead == typedOther.subhead
+        && body2 == typedOther.body2
+        && body1 == typedOther.body1
+        && caption == typedOther.caption
+        && button == typedOther.button
+        && subtitle == typedOther.subtitle
+        && overline == typedOther.overline;
   }
 
   @override
@@ -517,33 +520,19 @@ class TextTheme extends Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    final TextTheme defaultTheme =
-        Typography(platform: defaultTargetPlatform).black;
-    properties.add(DiagnosticsProperty<TextStyle>('display4', display4,
-        defaultValue: defaultTheme.display4));
-    properties.add(DiagnosticsProperty<TextStyle>('display3', display3,
-        defaultValue: defaultTheme.display3));
-    properties.add(DiagnosticsProperty<TextStyle>('display2', display2,
-        defaultValue: defaultTheme.display2));
-    properties.add(DiagnosticsProperty<TextStyle>('display1', display1,
-        defaultValue: defaultTheme.display1));
-    properties.add(DiagnosticsProperty<TextStyle>('headline', headline,
-        defaultValue: defaultTheme.headline));
-    properties.add(DiagnosticsProperty<TextStyle>('title', title,
-        defaultValue: defaultTheme.title));
-    properties.add(DiagnosticsProperty<TextStyle>('subhead', subhead,
-        defaultValue: defaultTheme.subhead));
-    properties.add(DiagnosticsProperty<TextStyle>('body2', body2,
-        defaultValue: defaultTheme.body2));
-    properties.add(DiagnosticsProperty<TextStyle>('body1', body1,
-        defaultValue: defaultTheme.body1));
-    properties.add(DiagnosticsProperty<TextStyle>('caption', caption,
-        defaultValue: defaultTheme.caption));
-    properties.add(DiagnosticsProperty<TextStyle>('button', button,
-        defaultValue: defaultTheme.button));
-    properties.add(DiagnosticsProperty<TextStyle>('subtitle)', subtitle,
-        defaultValue: defaultTheme.subtitle));
-    properties.add(DiagnosticsProperty<TextStyle>('overline', overline,
-        defaultValue: defaultTheme.overline));
+    final TextTheme defaultTheme = Typography(platform: defaultTargetPlatform).black;
+    properties.add(DiagnosticsProperty<TextStyle>('display4', display4, defaultValue: defaultTheme.display4));
+    properties.add(DiagnosticsProperty<TextStyle>('display3', display3, defaultValue: defaultTheme.display3));
+    properties.add(DiagnosticsProperty<TextStyle>('display2', display2, defaultValue: defaultTheme.display2));
+    properties.add(DiagnosticsProperty<TextStyle>('display1', display1, defaultValue: defaultTheme.display1));
+    properties.add(DiagnosticsProperty<TextStyle>('headline', headline, defaultValue: defaultTheme.headline));
+    properties.add(DiagnosticsProperty<TextStyle>('title', title, defaultValue: defaultTheme.title));
+    properties.add(DiagnosticsProperty<TextStyle>('subhead', subhead, defaultValue: defaultTheme.subhead));
+    properties.add(DiagnosticsProperty<TextStyle>('body2', body2, defaultValue: defaultTheme.body2));
+    properties.add(DiagnosticsProperty<TextStyle>('body1', body1, defaultValue: defaultTheme.body1));
+    properties.add(DiagnosticsProperty<TextStyle>('caption', caption, defaultValue: defaultTheme.caption));
+    properties.add(DiagnosticsProperty<TextStyle>('button', button, defaultValue: defaultTheme.button));
+    properties.add(DiagnosticsProperty<TextStyle>('subtitle)', subtitle, defaultValue: defaultTheme.subtitle));
+    properties.add(DiagnosticsProperty<TextStyle>('overline', overline, defaultValue: defaultTheme.overline));
   }
 }

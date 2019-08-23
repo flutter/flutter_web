@@ -70,10 +70,10 @@ class BottomSheetThemeData extends Diagnosticable {
   /// If both arguments are null then null is returned.
   ///
   /// {@macro dart.ui.shadow.lerp}
-  static BottomSheetThemeData lerp(
-      BottomSheetThemeData a, BottomSheetThemeData b, double t) {
+  static BottomSheetThemeData lerp(BottomSheetThemeData a, BottomSheetThemeData b, double t) {
     assert(t != null);
-    if (a == null && b == null) return null;
+    if (a == null && b == null)
+      return null;
     return BottomSheetThemeData(
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
       elevation: lerpDouble(a?.elevation, b?.elevation, t),
@@ -92,23 +92,21 @@ class BottomSheetThemeData extends Diagnosticable {
 
   @override
   bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other.runtimeType != runtimeType) return false;
+    if (identical(this, other))
+      return true;
+    if (other.runtimeType != runtimeType)
+      return false;
     final BottomSheetThemeData typedOther = other;
-    return typedOther.backgroundColor == backgroundColor &&
-        typedOther.elevation == elevation &&
-        typedOther.shape == shape;
+    return typedOther.backgroundColor == backgroundColor
+        && typedOther.elevation == elevation
+        && typedOther.shape == shape;
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Color>(
-        'backgroundColor', backgroundColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<double>('elevation', elevation,
-        defaultValue: null));
-    properties.add(
-        DiagnosticsProperty<ShapeBorder>('shape', shape, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('backgroundColor', backgroundColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<double>('elevation', elevation, defaultValue: null));
+    properties.add(DiagnosticsProperty<ShapeBorder>('shape', shape, defaultValue: null));
   }
 }

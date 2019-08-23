@@ -28,7 +28,8 @@ class TestPointer {
     this.kind = PointerDeviceKind.touch,
     this._device,
     int buttons = kPrimaryButton,
-  ])  : assert(kind != null),
+  ])
+      : assert(kind != null),
         assert(pointer != null),
         assert(buttons != null),
         _buttons = buttons {
@@ -88,7 +89,8 @@ class TestPointer {
     int buttons,
   }) {
     _location = newLocation;
-    if (buttons != null) _buttons = buttons;
+    if (buttons != null)
+      _buttons = buttons;
     switch (event.runtimeType) {
       case PointerDownEvent:
         assert(!isDown);
@@ -120,7 +122,8 @@ class TestPointer {
     assert(!isDown);
     _isDown = true;
     _location = newLocation;
-    if (buttons != null) _buttons = buttons;
+    if (buttons != null)
+      _buttons = buttons;
     return PointerDownEvent(
       timeStamp: timeStamp,
       kind: kind,
@@ -153,7 +156,8 @@ class TestPointer {
         'up, use hover() instead.');
     final Offset delta = newLocation - location;
     _location = newLocation;
-    if (buttons != null) _buttons = buttons;
+    if (buttons != null)
+      _buttons = buttons;
     return PointerMoveEvent(
       timeStamp: timeStamp,
       kind: kind,
@@ -171,7 +175,7 @@ class TestPointer {
   /// specific time stamp by passing the `timeStamp` argument.
   ///
   /// The object is no longer usable after this method has been called.
-  PointerUpEvent up({Duration timeStamp = Duration.zero}) {
+  PointerUpEvent up({ Duration timeStamp = Duration.zero }) {
     assert(isDown);
     _isDown = false;
     return PointerUpEvent(
@@ -189,7 +193,7 @@ class TestPointer {
   /// specific time stamp by passing the `timeStamp` argument.
   ///
   /// The object is no longer usable after this method has been called.
-  PointerCancelEvent cancel({Duration timeStamp = Duration.zero}) {
+  PointerCancelEvent cancel({ Duration timeStamp = Duration.zero }) {
     assert(isDown);
     _isDown = false;
     return PointerCancelEvent(
@@ -255,10 +259,8 @@ class TestPointer {
         !isDown,
         'Hover events can only be generated when the pointer is up. To '
         'simulate movement when the pointer is down, use move() instead.');
-    assert(kind != PointerDeviceKind.touch,
-        "Touch pointers can't generate hover events");
-    final Offset delta =
-        location != null ? newLocation - location : Offset.zero;
+    assert(kind != PointerDeviceKind.touch, "Touch pointers can't generate hover events");
+    final Offset delta = location != null ? newLocation - location : Offset.zero;
     _location = newLocation;
     return PointerHoverEvent(
       timeStamp: timeStamp,
@@ -280,8 +282,7 @@ class TestPointer {
   }) {
     assert(scrollDelta != null);
     assert(timeStamp != null);
-    assert(kind != PointerDeviceKind.touch,
-        "Touch pointers can't generate pointer signal events");
+    assert(kind != PointerDeviceKind.touch, "Touch pointers can't generate pointer signal events");
     return PointerScrollEvent(
       timeStamp: timeStamp,
       kind: kind,
@@ -294,8 +295,7 @@ class TestPointer {
 
 /// Signature for a callback that can dispatch events and returns a future that
 /// completes when the event dispatch is complete.
-typedef EventDispatcher = Future<void> Function(
-    PointerEvent event, HitTestResult result);
+typedef EventDispatcher = Future<void> Function(PointerEvent event, HitTestResult result);
 
 /// Signature for callbacks that perform hit-testing at a given location.
 typedef HitTester = HitTestResult Function(Offset location);
@@ -329,15 +329,15 @@ class TestGesture {
     PointerDeviceKind kind = PointerDeviceKind.touch,
     int device,
     int buttons = kPrimaryButton,
-  })  : assert(dispatcher != null),
-        assert(hitTester != null),
-        assert(pointer != null),
-        assert(kind != null),
-        assert(buttons != null),
-        _dispatcher = dispatcher,
-        _hitTester = hitTester,
-        _pointer = TestPointer(pointer, kind, device, buttons),
-        _result = null;
+  }) : assert(dispatcher != null),
+       assert(hitTester != null),
+       assert(pointer != null),
+       assert(kind != null),
+       assert(buttons != null),
+       _dispatcher = dispatcher,
+       _hitTester = hitTester,
+       _pointer = TestPointer(pointer, kind, device, buttons),
+       _result = null;
 
   /// Dispatch a pointer down event at the given `downLocation`, caching the
   /// hit test result.
@@ -350,8 +350,7 @@ class TestGesture {
 
   /// Dispatch a pointer down event at the given `downLocation`, caching the
   /// hit test result with a custom down event.
-  Future<void> downWithCustomEvent(
-      Offset downLocation, PointerDownEvent event) async {
+  Future<void> downWithCustomEvent(Offset downLocation, PointerDownEvent event) async {
     _pointer.setDownInfo(event, downLocation);
     return TestAsyncUtils.guard<void>(() async {
       _result = _hitTester(downLocation);
@@ -366,8 +365,7 @@ class TestGesture {
 
   /// In a test, send a move event that moves the pointer by the given offset.
   @visibleForTesting
-  Future<void> updateWithCustomEvent(PointerEvent event,
-      {Duration timeStamp = Duration.zero}) {
+  Future<void> updateWithCustomEvent(PointerEvent event, { Duration timeStamp = Duration.zero }) {
     _pointer.setDownInfo(event, event.position);
     return TestAsyncUtils.guard<void>(() {
       return _dispatcher(event, _result);
@@ -375,14 +373,14 @@ class TestGesture {
   }
 
   /// In a test, send a pointer add event for this pointer.
-  Future<void> addPointer({Duration timeStamp = Duration.zero}) {
+  Future<void> addPointer({ Duration timeStamp = Duration.zero }) {
     return TestAsyncUtils.guard<void>(() {
       return _dispatcher(_pointer.addPointer(timeStamp: timeStamp), null);
     });
   }
 
   /// In a test, send a pointer remove event for this pointer.
-  Future<void> removePointer({Duration timeStamp = Duration.zero}) {
+  Future<void> removePointer({ Duration timeStamp = Duration.zero }) {
     return TestAsyncUtils.guard<void>(() {
       return _dispatcher(_pointer.removePointer(timeStamp: timeStamp), null);
     });
@@ -393,7 +391,7 @@ class TestGesture {
   /// If the pointer is down, then a move event is dispatched. If the pointer is
   /// up, then a hover event is dispatched. Touch devices are not able to send
   /// hover events.
-  Future<void> moveBy(Offset offset, {Duration timeStamp = Duration.zero}) {
+  Future<void> moveBy(Offset offset, { Duration timeStamp = Duration.zero }) {
     return moveTo(_pointer.location + offset, timeStamp: timeStamp);
   }
 
@@ -402,20 +400,17 @@ class TestGesture {
   /// If the pointer is down, then a move event is dispatched. If the pointer is
   /// up, then a hover event is dispatched. Touch devices are not able to send
   /// hover events.
-  Future<void> moveTo(Offset location, {Duration timeStamp = Duration.zero}) {
+  Future<void> moveTo(Offset location, { Duration timeStamp = Duration.zero }) {
     return TestAsyncUtils.guard<void>(() {
       if (_pointer._isDown) {
-        assert(
-            _result != null,
+        assert(_result != null,
             'Move events with the pointer down must be preceeded by a down '
             'event that captures a hit test result.');
-        return _dispatcher(
-            _pointer.move(location, timeStamp: timeStamp), _result);
+        return _dispatcher(_pointer.move(location, timeStamp: timeStamp), _result);
       } else {
         assert(_pointer.kind != PointerDeviceKind.touch,
             'Touch device move events can only be sent if the pointer is down.');
-        return _dispatcher(
-            _pointer.hover(location, timeStamp: timeStamp), null);
+        return _dispatcher(_pointer.hover(location, timeStamp: timeStamp), null);
       }
     });
   }

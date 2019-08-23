@@ -547,8 +547,8 @@ class _TestAppState extends State<TestApp> {
               return MaterialPageRoute<void>(
                 settings: settings,
                 builder: (BuildContext context) => Material(
-                  child: widget.child,
-                ),
+                      child: widget.child,
+                    ),
               );
             },
           ),

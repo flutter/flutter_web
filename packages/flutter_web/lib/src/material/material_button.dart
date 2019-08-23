@@ -324,12 +324,9 @@ class MaterialButton extends StatelessWidget {
       onPressed: onPressed,
       onHighlightChanged: onHighlightChanged,
       fillColor: buttonTheme.getFillColor(this),
-      textStyle: theme.textTheme.button
-          .copyWith(color: buttonTheme.getTextColor(this)),
-      focusColor:
-          focusColor ?? buttonTheme.getFocusColor(this) ?? theme.focusColor,
-      hoverColor:
-          hoverColor ?? buttonTheme.getHoverColor(this) ?? theme.hoverColor,
+      textStyle: theme.textTheme.button.copyWith(color: buttonTheme.getTextColor(this)),
+      focusColor: focusColor ?? buttonTheme.getFocusColor(this) ?? theme.focusColor,
+      hoverColor: hoverColor ?? buttonTheme.getHoverColor(this) ?? theme.hoverColor,
       highlightColor: highlightColor ?? theme.highlightColor,
       splashColor: splashColor ?? theme.splashColor,
       elevation: buttonTheme.getElevation(this),
@@ -338,55 +335,36 @@ class MaterialButton extends StatelessWidget {
       highlightElevation: buttonTheme.getHighlightElevation(this),
       padding: buttonTheme.getPadding(this),
       constraints: buttonTheme.getConstraints(this).copyWith(
-            minWidth: minWidth,
-            minHeight: height,
-          ),
+        minWidth: minWidth,
+        minHeight: height,
+      ),
       shape: buttonTheme.getShape(this),
       clipBehavior: clipBehavior ?? Clip.none,
       focusNode: focusNode,
       animationDuration: buttonTheme.getAnimationDuration(this),
       child: child,
-      materialTapTargetSize:
-          materialTapTargetSize ?? theme.materialTapTargetSize,
+      materialTapTargetSize: materialTapTargetSize ?? theme.materialTapTargetSize,
     );
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<VoidCallback>('onPressed', onPressed,
-        ifNull: 'disabled'));
-    properties.add(DiagnosticsProperty<ButtonTextTheme>('textTheme', textTheme,
-        defaultValue: null));
-    properties.add(
-        DiagnosticsProperty<Color>('textColor', textColor, defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>(
-        'disabledTextColor', disabledTextColor,
-        defaultValue: null));
-    properties
-        .add(DiagnosticsProperty<Color>('color', color, defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>('disabledColor', disabledColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>('focusColor', focusColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>('hoverColor', hoverColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>('highlightColor', highlightColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>('splashColor', splashColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Brightness>(
-        'colorBrightness', colorBrightness,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding,
-        defaultValue: null));
-    properties.add(
-        DiagnosticsProperty<ShapeBorder>('shape', shape, defaultValue: null));
-    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<MaterialTapTargetSize>(
-        'materialTapTargetSize', materialTapTargetSize,
-        defaultValue: null));
+    properties.add(ObjectFlagProperty<VoidCallback>('onPressed', onPressed, ifNull: 'disabled'));
+    properties.add(DiagnosticsProperty<ButtonTextTheme>('textTheme', textTheme, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('textColor', textColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('disabledTextColor', disabledTextColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('color', color, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('disabledColor', disabledColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('focusColor', focusColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('hoverColor', hoverColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('highlightColor', highlightColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('splashColor', splashColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<Brightness>('colorBrightness', colorBrightness, defaultValue: null));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding, defaultValue: null));
+    properties.add(DiagnosticsProperty<ShapeBorder>('shape', shape, defaultValue: null));
+    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode, defaultValue: null));
+    properties.add(DiagnosticsProperty<MaterialTapTargetSize>('materialTapTargetSize', materialTapTargetSize, defaultValue: null));
   }
 }
 
@@ -395,4 +373,4 @@ class MaterialButton extends StatelessWidget {
 ///
 /// This mixin only exists to give the "label and icon" button widgets a distinct
 /// type for the sake of [ButtonTheme].
-mixin MaterialButtonWithIconMixin {}
+mixin MaterialButtonWithIconMixin { }

@@ -174,9 +174,9 @@ class _DropdownMenuState<T> extends State<_DropdownMenu<T>> {
             child: route.items[itemIndex],
           ),
           onTap: () => Navigator.pop(
-            context,
-            _DropdownRouteResult<T>(route.items[itemIndex].value),
-          ),
+                context,
+                _DropdownRouteResult<T>(route.items[itemIndex].value),
+              ),
         ),
       ));
     }

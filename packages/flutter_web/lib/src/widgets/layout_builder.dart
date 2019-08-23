@@ -10,8 +10,7 @@ import 'debug.dart';
 import 'framework.dart';
 
 /// The signature of the [LayoutBuilder] builder function.
-typedef LayoutWidgetBuilder = Widget Function(
-    BuildContext context, BoxConstraints constraints);
+typedef LayoutWidgetBuilder = Widget Function(BuildContext context, BoxConstraints constraints);
 
 /// Builds a widget tree that can depend on the parent widget's size.
 ///
@@ -39,8 +38,8 @@ class LayoutBuilder extends RenderObjectWidget {
   const LayoutBuilder({
     Key key,
     @required this.builder,
-  })  : assert(builder != null),
-        super(key: key);
+  }) : assert(builder != null),
+       super(key: key);
 
   /// Called at layout time to construct the widget tree. The builder must not
   /// return null.
@@ -50,8 +49,7 @@ class LayoutBuilder extends RenderObjectWidget {
   _LayoutBuilderElement createElement() => _LayoutBuilderElement(this);
 
   @override
-  _RenderLayoutBuilder createRenderObject(BuildContext context) =>
-      _RenderLayoutBuilder();
+  _RenderLayoutBuilder createRenderObject(BuildContext context) => _RenderLayoutBuilder();
 
   // updateRenderObject is redundant with the logic in the LayoutBuilderElement below.
 }
@@ -69,7 +67,8 @@ class _LayoutBuilderElement extends RenderObjectElement {
 
   @override
   void visitChildren(ElementVisitor visitor) {
-    if (_child != null) visitor(_child);
+    if (_child != null)
+      visitor(_child);
   }
 
   @override
@@ -98,8 +97,7 @@ class _LayoutBuilderElement extends RenderObjectElement {
     // This gets called if markNeedsBuild() is called on us.
     // That might happen if, e.g., our builder uses Inherited widgets.
     renderObject.markNeedsLayout();
-    super
-        .performRebuild(); // Calls widget.updateRenderObject (a no-op in this case).
+    super.performRebuild(); // Calls widget.updateRenderObject (a no-op in this case).
   }
 
   @override
@@ -116,16 +114,14 @@ class _LayoutBuilderElement extends RenderObjectElement {
           built = widget.builder(this, constraints);
           debugWidgetBuilderValue(widget, built);
         } catch (e, stack) {
-          built = ErrorWidget.builder(_debugReportException(
-              ErrorDescription('building $widget'), e, stack));
+          built = ErrorWidget.builder(_debugReportException(ErrorDescription('building $widget'), e, stack));
         }
       }
       try {
         _child = updateChild(_child, built, null);
         assert(_child != null);
       } catch (e, stack) {
-        built = ErrorWidget.builder(_debugReportException(
-            ErrorDescription('building $widget'), e, stack));
+        built = ErrorWidget.builder(_debugReportException(ErrorDescription('building $widget'), e, stack));
         _child = updateChild(null, built, slot);
       }
     });
@@ -133,8 +129,7 @@ class _LayoutBuilderElement extends RenderObjectElement {
 
   @override
   void insertChildRenderObject(RenderObject child, dynamic slot) {
-    final RenderObjectWithChildMixin<RenderObject> renderObject =
-        this.renderObject;
+    final RenderObjectWithChildMixin<RenderObject> renderObject = this.renderObject;
     assert(slot == null);
     assert(renderObject.debugValidateChild(child));
     renderObject.child = child;
@@ -155,8 +150,7 @@ class _LayoutBuilderElement extends RenderObjectElement {
   }
 }
 
-class _RenderLayoutBuilder extends RenderBox
-    with RenderObjectWithChildMixin<RenderBox> {
+class _RenderLayoutBuilder extends RenderBox with RenderObjectWithChildMixin<RenderBox> {
   _RenderLayoutBuilder({
     LayoutCallback<BoxConstraints> callback,
   }) : _callback = callback;
@@ -164,7 +158,8 @@ class _RenderLayoutBuilder extends RenderBox
   LayoutCallback<BoxConstraints> get callback => _callback;
   LayoutCallback<BoxConstraints> _callback;
   set callback(LayoutCallback<BoxConstraints> value) {
-    if (value == _callback) return;
+    if (value == _callback)
+      return;
     _callback = value;
     markNeedsLayout();
   }
@@ -173,9 +168,10 @@ class _RenderLayoutBuilder extends RenderBox
     assert(() {
       if (!RenderObject.debugCheckingIntrinsics) {
         throw FlutterError(
-            'LayoutBuilder does not support returning intrinsic dimensions.\n'
-            'Calculating the intrinsic dimensions would require running the layout '
-            'callback speculatively, which might mutate the live render object tree.');
+          'LayoutBuilder does not support returning intrinsic dimensions.\n'
+          'Calculating the intrinsic dimensions would require running the layout '
+          'callback speculatively, which might mutate the live render object tree.'
+        );
       }
       return true;
     }());
@@ -219,13 +215,14 @@ class _RenderLayoutBuilder extends RenderBox
   }
 
   @override
-  bool hitTestChildren(BoxHitTestResult result, {Offset position}) {
+  bool hitTestChildren(BoxHitTestResult result, { Offset position }) {
     return child?.hitTest(result, position: position) ?? false;
   }
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    if (child != null) context.paintChild(child, offset);
+    if (child != null)
+      context.paintChild(child, offset);
   }
 }
 

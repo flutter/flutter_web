@@ -143,11 +143,8 @@ void main() {
 
   test('mutating PerformanceOverlayLayer fields triggers needsAddToScene', () {
     final PerformanceOverlayLayer layer = PerformanceOverlayLayer(
-        overlayRect: Rect.zero,
-        optionsMask: 0,
-        rasterizerThreshold: 0,
-        checkerboardRasterCacheImages: false,
-        checkerboardOffscreenLayers: false);
+        overlayRect: Rect.zero, optionsMask: 0, rasterizerThreshold: 0,
+        checkerboardRasterCacheImages: false, checkerboardOffscreenLayers: false);
     checkNeedsAddToScene(layer, () {
       layer.overlayRect = unitRect;
     });
@@ -173,8 +170,7 @@ void main() {
   test('mutating ClipRRectLayer fields triggers needsAddToScene', () {
     final ClipRRectLayer layer = ClipRRectLayer(clipRRect: RRect.zero);
     checkNeedsAddToScene(layer, () {
-      layer.clipRRect =
-          RRect.fromRectAndRadius(unitRect, const Radius.circular(0));
+      layer.clipRRect = RRect.fromRectAndRadius(unitRect, const Radius.circular(0));
     });
     checkNeedsAddToScene(layer, () {
       layer.clipBehavior = Clip.antiAliasWithSaveLayer;
@@ -204,11 +200,9 @@ void main() {
   });
 
   test('mutating ShaderMaskLayer fields triggers needsAddToScene', () {
-    const Gradient gradient =
-        RadialGradient(colors: <Color>[Color(0), Color(1)]);
+    const Gradient gradient = RadialGradient(colors: <Color>[Color(0), Color(1)]);
     final Shader shader = gradient.createShader(Rect.zero);
-    final ShaderMaskLayer layer = ShaderMaskLayer(
-        shader: shader, maskRect: Rect.zero, blendMode: BlendMode.clear);
+    final ShaderMaskLayer layer = ShaderMaskLayer(shader: shader, maskRect: Rect.zero, blendMode: BlendMode.clear);
     checkNeedsAddToScene(layer, () {
       layer.maskRect = unitRect;
     });
@@ -221,8 +215,7 @@ void main() {
   }, skip: 'RadialGradient.createShader is not implemented yet');
 
   test('mutating BackdropFilterLayer fields triggers needsAddToScene', () {
-    final BackdropFilterLayer layer =
-        BackdropFilterLayer(filter: ui.ImageFilter.blur());
+    final BackdropFilterLayer layer = BackdropFilterLayer(filter: ui.ImageFilter.blur());
     checkNeedsAddToScene(layer, () {
       layer.filter = ui.ImageFilter.blur(sigmaX: 1.0);
     });
@@ -230,10 +223,7 @@ void main() {
 
   test('mutating PhysicalModelLayer fields triggers needsAddToScene', () {
     final PhysicalModelLayer layer = PhysicalModelLayer(
-        clipPath: Path(),
-        elevation: 0,
-        color: const Color(0),
-        shadowColor: const Color(0));
+        clipPath: Path(), elevation: 0, color: const Color(0), shadowColor: const Color(0));
     checkNeedsAddToScene(layer, () {
       final Path newPath = Path();
       newPath.addRect(unitRect);

@@ -17,8 +17,7 @@ void main() {
       ];
       int i = 0;
       for (OffsetLayer layer in layers) {
-        layer.append(
-            AnnotatedRegionLayer<int>(i, size: const Size(200.0, 100.0)));
+        layer.append(AnnotatedRegionLayer<int>(i, size: const Size(200.0, 100.0)));
         containerLayer.append(layer);
         i += 1;
       }
@@ -47,18 +46,13 @@ void main() {
       expect(containerLayer.find<int>(const Offset(0.0, 201.0)), 2);
     });
 
+
     test('finds a value within the clip in a ClipRRectLayer', () {
       final ContainerLayer containerLayer = ContainerLayer();
       final List<ClipRRectLayer> layers = <ClipRRectLayer>[
-        ClipRRectLayer(
-            clipRRect: RRect.fromLTRBR(
-                0.0, 0.0, 100.0, 100.0, const Radius.circular(4.0))),
-        ClipRRectLayer(
-            clipRRect: RRect.fromLTRBR(
-                0.0, 100.0, 100.0, 200.0, const Radius.circular(4.0))),
-        ClipRRectLayer(
-            clipRRect: RRect.fromLTRBR(
-                0.0, 200.0, 100.0, 300.0, const Radius.circular(4.0))),
+        ClipRRectLayer(clipRRect: RRect.fromLTRBR(0.0, 0.0, 100.0, 100.0, const Radius.circular(4.0))),
+        ClipRRectLayer(clipRRect: RRect.fromLTRBR(0.0, 100.0, 100.0, 200.0, const Radius.circular(4.0))),
+        ClipRRectLayer(clipRRect: RRect.fromLTRBR(0.0, 200.0, 100.0, 300.0, const Radius.circular(4.0))),
       ];
       int i = 0;
       for (ClipRRectLayer layer in layers) {
@@ -74,25 +68,12 @@ void main() {
 
     test('finds a value under a TransformLayer', () {
       final Matrix4 transform = Matrix4(
-        2.625,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        2.625,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        1.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        1.0,
+        2.625, 0.0, 0.0, 0.0,
+        0.0, 2.625, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0, 1.0,
       );
-      final TransformLayer transformLayer =
-          TransformLayer(transform: transform);
+      final TransformLayer transformLayer = TransformLayer(transform: transform);
       final List<OffsetLayer> layers = <OffsetLayer>[
         OffsetLayer(),
         OffsetLayer(offset: const Offset(0.0, 100.0)),
@@ -100,8 +81,7 @@ void main() {
       ];
       int i = 0;
       for (OffsetLayer layer in layers) {
-        final AnnotatedRegionLayer<int> annotatedRegionLayer =
-            AnnotatedRegionLayer<int>(i, size: const Size(100.0, 100.0));
+        final AnnotatedRegionLayer<int> annotatedRegionLayer = AnnotatedRegionLayer<int>(i, size: const Size(100.0, 100.0));
         layer.append(annotatedRegionLayer);
         transformLayer.append(layer);
         i += 1;
@@ -126,8 +106,7 @@ void main() {
 
     test('looks for correct type', () {
       final AnnotatedRegionLayer<int> child1 = AnnotatedRegionLayer<int>(1);
-      final AnnotatedRegionLayer<String> child2 =
-          AnnotatedRegionLayer<String>('hello');
+      final AnnotatedRegionLayer<String> child2 = AnnotatedRegionLayer<String>('hello');
       final ContainerLayer layer = ContainerLayer();
       layer.append(child2);
       layer.append(child1);
@@ -135,12 +114,9 @@ void main() {
       expect(layer.find<String>(Offset.zero), 'hello');
     });
 
-    test(
-        'does not clip Layer.find on an AnnotatedRegion with an unrelated type',
-        () {
+    test('does not clip Layer.find on an AnnotatedRegion with an unrelated type', () {
       final AnnotatedRegionLayer<int> child = AnnotatedRegionLayer<int>(1);
-      final AnnotatedRegionLayer<String> parent =
-          AnnotatedRegionLayer<String>('hello', size: const Size(10.0, 10.0));
+      final AnnotatedRegionLayer<String> parent = AnnotatedRegionLayer<String>('hello', size: const Size(10.0, 10.0));
       final ContainerLayer layer = ContainerLayer();
       parent.append(child);
       layer.append(parent);
@@ -150,8 +126,7 @@ void main() {
 
     test('handles non-invertable transforms', () {
       final AnnotatedRegionLayer<int> child = AnnotatedRegionLayer<int>(1);
-      final TransformLayer parent =
-          TransformLayer(transform: Matrix4.diagonal3Values(0.0, 1.0, 1.0));
+      final TransformLayer parent = TransformLayer(transform: Matrix4.diagonal3Values(0.0, 1.0, 1.0));
       parent.append(child);
 
       expect(parent.find<int>(const Offset(0.0, 0.0)), null);
@@ -162,3 +137,4 @@ void main() {
     });
   });
 }
+

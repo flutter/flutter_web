@@ -12,16 +12,17 @@ void main() {
     expect(
       renderWrap.toStringDeep(minLevel: DiagnosticLevel.info),
       equalsIgnoringHashCodes(
-          'RenderWrap#00000 NEEDS-LAYOUT NEEDS-PAINT DETACHED\n'
-          '   parentData: MISSING\n'
-          '   constraints: MISSING\n'
-          '   size: MISSING\n'
-          '   direction: horizontal\n'
-          '   alignment: start\n'
-          '   spacing: 0.0\n'
-          '   runAlignment: start\n'
-          '   runSpacing: 0.0\n'
-          '   crossAxisAlignment: 0.0\n'),
+        'RenderWrap#00000 NEEDS-LAYOUT NEEDS-PAINT DETACHED\n'
+        '   parentData: MISSING\n'
+        '   constraints: MISSING\n'
+        '   size: MISSING\n'
+        '   direction: horizontal\n'
+        '   alignment: start\n'
+        '   spacing: 0.0\n'
+        '   runAlignment: start\n'
+        '   runSpacing: 0.0\n'
+        '   crossAxisAlignment: 0.0\n'
+      ),
     );
   });
 }

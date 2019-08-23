@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -273,6 +273,9 @@ class MockPersistedPicture extends PersistedPicture {
   double matchForUpdate(PersistedPicture existingSurface) {
     return identical(existingSurface.picture, picture) ? 0.0 : 1.0;
   }
+
+  @override
+  Matrix4 get localTransformInverse => null;
 
   @override
   void build() {

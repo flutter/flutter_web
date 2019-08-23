@@ -109,8 +109,7 @@ void main() {
       longPress.dispose();
     });
 
-    testGesture('Should recognize both tap down and long press',
-        (GestureTester tester) {
+    testGesture('Should recognize both tap down and long press', (GestureTester tester) {
       final TapGestureRecognizer tap = TapGestureRecognizer();
 
       bool tapDownRecognized = false;
@@ -138,8 +137,7 @@ void main() {
     });
 
     testGesture('Drag start delayed by microtask', (GestureTester tester) {
-      final HorizontalDragGestureRecognizer drag =
-          HorizontalDragGestureRecognizer();
+      final HorizontalDragGestureRecognizer drag = HorizontalDragGestureRecognizer();
 
       bool isDangerousStack = false;
 
@@ -209,8 +207,7 @@ void main() {
         longPressUp = true;
       };
       longPressDragUpdate = null;
-      longPressDrag.onLongPressMoveUpdate =
-          (LongPressMoveUpdateDetails details) {
+      longPressDrag.onLongPressMoveUpdate = (LongPressMoveUpdateDetails details) {
         longPressDragUpdate = details.globalPosition;
       };
     });
@@ -283,10 +280,8 @@ void main() {
     });
   });
 
-  testGesture('Can filter long press based on device kind',
-      (GestureTester tester) {
-    final LongPressGestureRecognizer mouseLongPress =
-        LongPressGestureRecognizer(kind: PointerDeviceKind.mouse);
+  testGesture('Can filter long press based on device kind', (GestureTester tester) {
+    final LongPressGestureRecognizer mouseLongPress = LongPressGestureRecognizer(kind: PointerDeviceKind.mouse);
 
     bool mouseLongPressDown = false;
     mouseLongPress.onLongPress = () {

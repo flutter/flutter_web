@@ -1,7 +1,7 @@
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// Synced 2019-06-05T16:17:57.694324.
+// Synced 2019-08-12T13:26:26.250646.
 
 import 'package:flutter_web/foundation.dart';
 import 'package:flutter_web/services.dart';
@@ -42,9 +42,9 @@ class CupertinoTheme extends StatelessWidget {
     Key key,
     @required this.data,
     @required this.child,
-  })  : assert(child != null),
-        assert(data != null),
-        super(key: key);
+  }) : assert(child != null),
+       assert(data != null),
+       super(key: key);
 
   /// The [CupertinoThemeData] styling for this theme.
   final CupertinoThemeData data;
@@ -54,8 +54,7 @@ class CupertinoTheme extends StatelessWidget {
   /// Returns a default [CupertinoThemeData] if no [CupertinoTheme] widgets
   /// exist in the ancestry tree.
   static CupertinoThemeData of(BuildContext context) {
-    final _InheritedCupertinoTheme inheritedTheme =
-        context.inheritFromWidgetOfExactType(_InheritedCupertinoTheme);
+    final _InheritedCupertinoTheme inheritedTheme = context.inheritFromWidgetOfExactType(_InheritedCupertinoTheme);
     return inheritedTheme?.theme?.data ?? const CupertinoThemeData();
   }
 
@@ -66,12 +65,13 @@ class CupertinoTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _InheritedCupertinoTheme(
-        theme: this,
-        child: IconTheme(
-          data: IconThemeData(color: data.primaryColor),
-          child: child,
-        ));
+    return  _InheritedCupertinoTheme(
+      theme: this,
+      child: IconTheme(
+        data: IconThemeData(color: data.primaryColor),
+        child: child,
+      )
+    );
   }
 }
 
@@ -80,14 +80,13 @@ class _InheritedCupertinoTheme extends InheritedWidget {
     Key key,
     @required this.theme,
     @required Widget child,
-  })  : assert(theme != null),
-        super(key: key, child: child);
+  }) : assert(theme != null),
+       super(key: key, child: child);
 
   final CupertinoTheme theme;
 
   @override
-  bool updateShouldNotify(_InheritedCupertinoTheme old) =>
-      theme.data != old.theme.data;
+  bool updateShouldNotify(_InheritedCupertinoTheme old) => theme.data != old.theme.data;
 }
 
 /// Styling specifications for a [CupertinoTheme].
@@ -119,13 +118,13 @@ class CupertinoThemeData extends Diagnosticable {
     Color barBackgroundColor,
     Color scaffoldBackgroundColor,
   }) : this.raw(
-          brightness,
-          primaryColor,
-          primaryContrastingColor,
-          textTheme,
-          barBackgroundColor,
-          scaffoldBackgroundColor,
-        );
+        brightness,
+        primaryColor,
+        primaryContrastingColor,
+        textTheme,
+        barBackgroundColor,
+        scaffoldBackgroundColor,
+      );
 
   /// Same as the default constructor but with positional arguments to avoid
   /// forgetting any and to specify all arguments.
@@ -168,7 +167,6 @@ class CupertinoThemeData extends Diagnosticable {
     return _primaryColor ??
         (_isLight ? CupertinoColors.activeBlue : CupertinoColors.activeOrange);
   }
-
   final Color _primaryColor;
 
   /// A color used for content that must contrast against a [primaryColor] background.
@@ -182,7 +180,6 @@ class CupertinoThemeData extends Diagnosticable {
     return _primaryContrastingColor ??
         (_isLight ? CupertinoColors.white : CupertinoColors.black);
   }
-
   final Color _primaryContrastingColor;
 
   /// Text styles used by Cupertino widgets.
@@ -191,13 +188,11 @@ class CupertinoThemeData extends Diagnosticable {
   /// [brightness] and [primaryColor] of a Material [ThemeData] if coming
   /// from a Material [Theme].
   CupertinoTextThemeData get textTheme {
-    return _textTheme ??
-        CupertinoTextThemeData(
-          brightness: brightness,
-          primaryColor: primaryColor,
-        );
+    return _textTheme ?? CupertinoTextThemeData(
+      brightness: brightness,
+      primaryColor: primaryColor,
+    );
   }
-
   final CupertinoTextThemeData _textTheme;
 
   /// Background color of the top nav bar and bottom tab bar.
@@ -206,11 +201,8 @@ class CupertinoThemeData extends Diagnosticable {
   /// on the [brightness].
   Color get barBackgroundColor {
     return _barBackgroundColor ??
-        (_isLight
-            ? _kDefaultBarLightBackgroundColor
-            : _kDefaultBarDarkBackgroundColor);
+        (_isLight ? _kDefaultBarLightBackgroundColor : _kDefaultBarDarkBackgroundColor);
   }
-
   final Color _barBackgroundColor;
 
   /// Background color of the scaffold.
@@ -220,7 +212,6 @@ class CupertinoThemeData extends Diagnosticable {
     return _scaffoldBackgroundColor ??
         (_isLight ? CupertinoColors.white : CupertinoColors.black);
   }
-
   final Color _scaffoldBackgroundColor;
 
   /// Return an instance of the [CupertinoThemeData] whose property getters
@@ -257,12 +248,10 @@ class CupertinoThemeData extends Diagnosticable {
     return CupertinoThemeData(
       brightness: brightness ?? _brightness,
       primaryColor: primaryColor ?? _primaryColor,
-      primaryContrastingColor:
-          primaryContrastingColor ?? _primaryContrastingColor,
+      primaryContrastingColor: primaryContrastingColor ?? _primaryContrastingColor,
       textTheme: textTheme ?? _textTheme,
       barBackgroundColor: barBackgroundColor ?? _barBackgroundColor,
-      scaffoldBackgroundColor:
-          scaffoldBackgroundColor ?? _scaffoldBackgroundColor,
+      scaffoldBackgroundColor: scaffoldBackgroundColor ?? _scaffoldBackgroundColor,
     );
   }
 
@@ -270,22 +259,12 @@ class CupertinoThemeData extends Diagnosticable {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     const CupertinoThemeData defaultData = CupertinoThemeData();
-    properties.add(EnumProperty<Brightness>('brightness', brightness,
-        defaultValue: defaultData.brightness));
-    properties.add(DiagnosticsProperty<Color>('primaryColor', primaryColor,
-        defaultValue: defaultData.primaryColor));
-    properties.add(DiagnosticsProperty<Color>(
-        'primaryContrastingColor', primaryContrastingColor,
-        defaultValue: defaultData.primaryContrastingColor));
-    properties.add(DiagnosticsProperty<CupertinoTextThemeData>(
-        'textTheme', textTheme,
-        defaultValue: defaultData.textTheme));
-    properties.add(DiagnosticsProperty<Color>(
-        'barBackgroundColor', barBackgroundColor,
-        defaultValue: defaultData.barBackgroundColor));
-    properties.add(DiagnosticsProperty<Color>(
-        'scaffoldBackgroundColor', scaffoldBackgroundColor,
-        defaultValue: defaultData.scaffoldBackgroundColor));
+    properties.add(EnumProperty<Brightness>('brightness', brightness, defaultValue: defaultData.brightness));
+    properties.add(ColorProperty('primaryColor', primaryColor, defaultValue: defaultData.primaryColor));
+    properties.add(ColorProperty('primaryContrastingColor', primaryContrastingColor, defaultValue: defaultData.primaryContrastingColor));
+    properties.add(DiagnosticsProperty<CupertinoTextThemeData>('textTheme', textTheme, defaultValue: defaultData.textTheme));
+    properties.add(ColorProperty('barBackgroundColor', barBackgroundColor, defaultValue: defaultData.barBackgroundColor));
+    properties.add(ColorProperty('scaffoldBackgroundColor', scaffoldBackgroundColor, defaultValue: defaultData.scaffoldBackgroundColor));
   }
 }
 
@@ -298,13 +277,13 @@ class _NoDefaultCupertinoThemeData extends CupertinoThemeData {
     this.barBackgroundColor,
     this.scaffoldBackgroundColor,
   ) : super.raw(
-          brightness,
-          primaryColor,
-          primaryContrastingColor,
-          textTheme,
-          barBackgroundColor,
-          scaffoldBackgroundColor,
-        );
+        brightness,
+        primaryColor,
+        primaryContrastingColor,
+        textTheme,
+        barBackgroundColor,
+        scaffoldBackgroundColor,
+      );
 
   @override
   final Brightness brightness;

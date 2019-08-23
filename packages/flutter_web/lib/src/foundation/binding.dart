@@ -8,8 +8,7 @@ import 'dart:convert' show json;
 import 'dart:developer' as developer;
 import 'package:flutter_web/io.dart' show exit;
 // Before adding any more dart:ui imports, pleaes read the README.
-import 'package:flutter_web_ui/ui.dart' as ui
-    show saveCompilationTrace, Window, window, isWeb;
+import 'package:flutter_web_ui/ui.dart' as ui show saveCompilationTrace, Window, window, isWeb;
 
 import 'package:meta/meta.dart';
 
@@ -27,8 +26,7 @@ import 'print.dart';
 /// "type" key will be set to the string `_extensionType` to indicate
 /// that this is a return value from a service extension, and the
 /// "method" key will be set to the full name of the method.
-typedef ServiceExtensionCallback = Future<Map<String, dynamic>> Function(
-    Map<String, String> parameters);
+typedef ServiceExtensionCallback = Future<Map<String, dynamic>> Function(Map<String, String> parameters);
 
 /// Base class for mixins that provide singleton services (also known as
 /// "bindings").
@@ -101,10 +99,7 @@ abstract class BindingBase {
   @mustCallSuper
   void initInstances() {
     assert(!_debugInitialized);
-    assert(() {
-      _debugInitialized = true;
-      return true;
-    }());
+    assert(() { _debugInitialized = true; return true; }());
   }
 
   /// Called when the binding is initialized, to register service
@@ -177,25 +172,20 @@ abstract class BindingBase {
             }
             _postExtensionStateChangedEvent(
               platformOverrideExtensionName,
-              defaultTargetPlatform
-                  .toString()
-                  .substring('$TargetPlatform.'.length),
+              defaultTargetPlatform.toString().substring('$TargetPlatform.'.length),
             );
             await reassembleApplication();
           }
           return <String, dynamic>{
             'value': defaultTargetPlatform
-                .toString()
-                .substring('$TargetPlatform.'.length),
+                     .toString()
+                     .substring('$TargetPlatform.'.length),
           };
         },
       );
       return true;
     }());
-    assert(() {
-      _debugServiceExtensionsRegistered = true;
-      return true;
-    }());
+    assert(() { _debugServiceExtensionsRegistered = true; return true; }());
   }
 
   /// Whether [lockEvents] is currently locking events.
@@ -224,8 +214,7 @@ abstract class BindingBase {
     assert(callback != null);
     _lockCount += 1;
     final Future<void> future = callback();
-    assert(future != null,
-        'The lockEvents() callback returned null; it should return a Future<void> that completes when the lock is to expire.');
+    assert(future != null, 'The lockEvents() callback returned null; it should return a Future<void> that completes when the lock is to expire.');
     future.whenComplete(() {
       _lockCount -= 1;
       if (!locked) {
@@ -335,8 +324,7 @@ abstract class BindingBase {
       callback: (Map<String, String> parameters) async {
         if (parameters.containsKey('enabled')) {
           await setter(parameters['enabled'] == 'true');
-          _postExtensionStateChangedEvent(
-              name, await getter() ? 'true' : 'false');
+          _postExtensionStateChangedEvent(name, await getter() ? 'true' : 'false');
         }
         return <String, dynamic>{'enabled': await getter() ? 'true' : 'false'};
       },
@@ -498,8 +486,7 @@ abstract class BindingBase {
     assert(name != null);
     assert(callback != null);
     final String methodName = 'ext.flutter.$name';
-    developer.registerExtension(methodName,
-        (String method, Map<String, String> parameters) async {
+    developer.registerExtension(methodName, (String method, Map<String, String> parameters) async {
       assert(method == methodName);
       assert(() {
         if (debugInstrumentationEnabled)
@@ -538,8 +525,7 @@ abstract class BindingBase {
         FlutterError.reportError(FlutterErrorDetails(
           exception: caughtException,
           stack: caughtStack,
-          context: ErrorDescription(
-              'during a service extension callback for "$method"'),
+          context: ErrorDescription('during a service extension callback for "$method"'),
         ));
         return developer.ServiceExtensionResponse.error(
           developer.ServiceExtensionResponse.extensionError,

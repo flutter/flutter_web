@@ -129,8 +129,8 @@ void main() {
                 ExpansionPanel(
                   headerBuilder: (BuildContext context, bool isExpanded) =>
                       const Placeholder(
-                    fallbackHeight: 12.0,
-                  ),
+                        fallbackHeight: 12.0,
+                      ),
                   body: const SizedBox(
                       height: 100.0,
                       child: Placeholder(
@@ -141,16 +141,16 @@ void main() {
                 ExpansionPanel(
                   headerBuilder: (BuildContext context, bool isExpanded) =>
                       const Placeholder(
-                    fallbackHeight: 12.0,
-                  ),
+                        fallbackHeight: 12.0,
+                      ),
                   body: const SizedBox(height: 100.0, child: Placeholder()),
                   isExpanded: b,
                 ),
                 ExpansionPanel(
                   headerBuilder: (BuildContext context, bool isExpanded) =>
                       const Placeholder(
-                    fallbackHeight: 12.0,
-                  ),
+                        fallbackHeight: 12.0,
+                      ),
                   body: const SizedBox(height: 100.0, child: Placeholder()),
                   isExpanded: c,
                 ),

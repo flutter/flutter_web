@@ -484,8 +484,12 @@ class Locale {
   @override
   String toString() {
     final StringBuffer out = StringBuffer(languageCode);
-    if (scriptCode != null) out.write('_$scriptCode');
-    if (_countryCode != null) out.write('_$countryCode');
+    if (scriptCode != null) {
+      out.write('_$scriptCode');
+    }
+    if (_countryCode != null) {
+      out.write('_$countryCode');
+    }
     return out.toString();
   }
 
@@ -656,7 +660,7 @@ abstract class Window {
     _onMetricsChanged = callback;
   }
 
-  static const _enUS = const Locale('en', 'US');
+  static const Locale _enUS = Locale('en', 'US');
 
   /// The system-reported default locale of the device.
   ///
@@ -691,7 +695,7 @@ abstract class Window {
   ///    observe when this value changes.
   List<Locale> get locales => _locales;
   // TODO(flutter_web): Get the real locale from the browser.
-  List<Locale> _locales = const [_enUS];
+  List<Locale> _locales = const <Locale>[_enUS];
 
   /// A callback that is invoked whenever [locale] changes value.
   ///
@@ -717,7 +721,7 @@ abstract class Window {
   ///    scheduling of frames.
   void scheduleFrame() {
     if (webOnlyScheduleFrameCallback == null) {
-      throw new Exception(
+      throw Exception(
           'webOnlyScheduleFrameCallback must be initialized first.');
     }
     webOnlyScheduleFrameCallback();
@@ -930,7 +934,8 @@ abstract class Window {
 
   /// Additional accessibility features that may be enabled by the platform.
   AccessibilityFeatures get accessibilityFeatures => _accessibilityFeatures;
-  AccessibilityFeatures _accessibilityFeatures = AccessibilityFeatures._(0);
+  AccessibilityFeatures _accessibilityFeatures =
+      const AccessibilityFeatures._(0);
 
   /// Updates the application's rendering on the GPU with the newly provided
   /// [Scene]. This function must be called within the scope of the
@@ -1024,17 +1029,29 @@ class AccessibilityFeatures {
   @override
   String toString() {
     final List<String> features = <String>[];
-    if (accessibleNavigation) features.add('accessibleNavigation');
-    if (invertColors) features.add('invertColors');
-    if (disableAnimations) features.add('disableAnimations');
-    if (boldText) features.add('boldText');
-    if (reduceMotion) features.add('reduceMotion');
+    if (accessibleNavigation) {
+      features.add('accessibleNavigation');
+    }
+    if (invertColors) {
+      features.add('invertColors');
+    }
+    if (disableAnimations) {
+      features.add('disableAnimations');
+    }
+    if (boldText) {
+      features.add('boldText');
+    }
+    if (reduceMotion) {
+      features.add('reduceMotion');
+    }
     return 'AccessibilityFeatures$features';
   }
 
   @override
   bool operator ==(dynamic other) {
-    if (other.runtimeType != runtimeType) return false;
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
     final AccessibilityFeatures typedOther = other;
     return _index == typedOther._index;
   }

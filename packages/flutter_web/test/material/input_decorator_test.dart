@@ -2340,8 +2340,7 @@ void main() {
       'labelStyle: TextStyle(<all styles inherited>)',
       'helperStyle: TextStyle(<all styles inherited>)',
       'hintStyle: TextStyle(<all styles inherited>)',
-      // TODO(flutter_web): fix diagnostics property errorMaxLines.
-      'errorMaxLines: 5.0',
+      'errorMaxLines: 5',
       'hasFloatingPlaceholder: false',
       'contentPadding: EdgeInsetsDirectional(40.0, 12.0, 0.0, 12.0)',
       'prefixStyle: TextStyle(<all styles inherited>)',

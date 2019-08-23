@@ -470,9 +470,9 @@ void main() {
     );
     expect(
       () => BorderDirectional.merge(
-        const BorderDirectional(start: magenta3),
-        const BorderDirectional(start: yellow2),
-      ),
+            const BorderDirectional(start: magenta3),
+            const BorderDirectional(start: yellow2),
+          ),
       throwsAssertionError,
     );
   });

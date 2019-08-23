@@ -21,16 +21,14 @@ void main() {
       ui.Rect.zero,
     );
     expect(caretOffset.dx, 0);
-    caretOffset = painter.getOffsetForCaret(
-        ui.TextPosition(offset: text.length), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(ui.TextPosition(offset: text.length), ui.Rect.zero);
     expect(caretOffset.dx, painter.width);
 
     // Check that getOffsetForCaret handles a character that is encoded as a surrogate pair.
     text = 'A\u{1F600}';
     painter.text = TextSpan(text: text);
     painter.layout();
-    caretOffset = painter.getOffsetForCaret(
-        ui.TextPosition(offset: text.length), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(ui.TextPosition(offset: text.length), ui.Rect.zero);
     expect(caretOffset.dx, painter.width);
   });
 
@@ -38,32 +36,24 @@ void main() {
     final TextPainter painter = TextPainter()
       ..textDirection = TextDirection.ltr;
 
-    List<TextSpan> children = <TextSpan>[
-      const TextSpan(text: 'B'),
-      const TextSpan(text: 'C')
-    ];
+    List<TextSpan> children = <TextSpan>[const TextSpan(text: 'B'), const TextSpan(text: 'C')];
     painter.text = TextSpan(text: null, children: children);
     painter.layout();
 
-    Offset caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 0), ui.Rect.zero);
+    Offset caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 0), ui.Rect.zero);
     expect(caretOffset.dx, 0);
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 1), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 1), ui.Rect.zero);
     expect(caretOffset.dx, painter.width / 2);
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 2), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 2), ui.Rect.zero);
     expect(caretOffset.dx, painter.width);
 
     children = <TextSpan>[];
     painter.text = TextSpan(text: null, children: children);
     painter.layout();
 
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 0), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 0), ui.Rect.zero);
     expect(caretOffset.dx, 0);
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 1), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 1), ui.Rect.zero);
     expect(caretOffset.dx, 0);
   });
 
@@ -79,79 +69,55 @@ void main() {
 
     expect(text.length, 23);
 
-    Offset caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 0), ui.Rect.zero);
+    Offset caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 0), ui.Rect.zero);
     expect(caretOffset.dx, 0); // 👩‍
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: text.length), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: text.length), ui.Rect.zero);
     expect(caretOffset.dx, painter.width);
 
     // Two UTF-16 codepoints per emoji, one codepoint per zwj
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 1), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 1), ui.Rect.zero);
     expect(caretOffset.dx, 42); // 👩‍
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 2), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 2), ui.Rect.zero);
     expect(caretOffset.dx, 42); // <zwj>
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 3), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 3), ui.Rect.zero);
     expect(caretOffset.dx, 42); // 👩‍
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 4), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 4), ui.Rect.zero);
     expect(caretOffset.dx, 42); // 👩‍
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 5), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 5), ui.Rect.zero);
     expect(caretOffset.dx, 42); // <zwj>
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 6), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 6), ui.Rect.zero);
     expect(caretOffset.dx, 42); // 👦
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 7), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 7), ui.Rect.zero);
     expect(caretOffset.dx, 42); // 👦
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 8), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 8), ui.Rect.zero);
     expect(caretOffset.dx, 42); // 👩‍
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 9), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 9), ui.Rect.zero);
     expect(caretOffset.dx, 98); // 👩‍
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 10), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 10), ui.Rect.zero);
     expect(caretOffset.dx, 98); // <zwj>
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 11), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 11), ui.Rect.zero);
     expect(caretOffset.dx, 98); // 👩‍
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 12), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 12), ui.Rect.zero);
     expect(caretOffset.dx, 98); // 👩‍
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 13), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 13), ui.Rect.zero);
     expect(caretOffset.dx, 98); // <zwj>
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 14), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 14), ui.Rect.zero);
     expect(caretOffset.dx, 98); // 👧‍
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 15), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 15), ui.Rect.zero);
     expect(caretOffset.dx, 98); // 👧‍
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 16), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 16), ui.Rect.zero);
     expect(caretOffset.dx, 98); // <zwj>
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 17), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 17), ui.Rect.zero);
     expect(caretOffset.dx, 98); // 👧
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 18), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 18), ui.Rect.zero);
     expect(caretOffset.dx, 98); // 👧
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 19), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 19), ui.Rect.zero);
     expect(caretOffset.dx, 98); // 🇺
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 20), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 20), ui.Rect.zero);
     expect(caretOffset.dx, 112); // 🇺
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 21), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 21), ui.Rect.zero);
     expect(caretOffset.dx, 112); // 🇸
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 22), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 22), ui.Rect.zero);
     expect(caretOffset.dx, 112); // 🇸
   }, skip: 'Grapheme clustering (b/123028744)');
 
@@ -164,38 +130,27 @@ void main() {
     painter.textAlign = TextAlign.center;
     painter.layout();
 
-    Offset caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 0), ui.Rect.zero);
+    Offset caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 0), ui.Rect.zero);
     expect(caretOffset.dx, 21);
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: text.length), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: text.length), ui.Rect.zero);
     expect(caretOffset.dx, 441);
 
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 1), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 1), ui.Rect.zero);
     expect(caretOffset.dx, 35);
-    caretOffset = painter.getOffsetForCaret(
-        const ui.TextPosition(offset: 2), ui.Rect.zero);
+    caretOffset = painter.getOffsetForCaret(const ui.TextPosition(offset: 2), ui.Rect.zero);
     expect(caretOffset.dx, 49);
   }, skip: 'Centering with trailing spaces (b/123029261)');
 
   test('TextPainter error test', () {
     final TextPainter painter = TextPainter(textDirection: TextDirection.ltr);
-    expect(() {
-      painter.paint(null, Offset.zero);
-    }, throwsFlutterError);
+    expect(() { painter.paint(null, Offset.zero); }, throwsFlutterError);
   });
 
   test('TextPainter requires textDirection', () {
     final TextPainter painter1 = TextPainter(text: const TextSpan(text: ''));
-    expect(() {
-      painter1.layout();
-    }, throwsAssertionError);
-    final TextPainter painter2 = TextPainter(
-        text: const TextSpan(text: ''), textDirection: TextDirection.rtl);
-    expect(() {
-      painter2.layout();
-    }, isNot(throwsException));
+    expect(() { painter1.layout(); }, throwsAssertionError);
+    final TextPainter painter2 = TextPainter(text: const TextSpan(text: ''), textDirection: TextDirection.rtl);
+    expect(() { painter2.layout(); }, isNot(throwsException));
   });
 
   test('TextPainter size test', () {
@@ -492,8 +447,7 @@ void main() {
     expect(caretOffset.dx, closeTo(0.0, 0.0001));
     expect(caretOffset.dy, closeTo(SIZE_OF_A, 0.0001));
     caretOffset = painter.getOffsetForCaret(
-      ui.TextPosition(
-          offset: text.length - 1, affinity: ui.TextAffinity.upstream),
+      ui.TextPosition(offset: text.length - 1, affinity: ui.TextAffinity.upstream),
       ui.Rect.zero,
     );
     // When affinity is upstream, cursor is at end of first line
@@ -656,7 +610,7 @@ void main() {
       ui.Rect.zero,
     );
     expect(caretOffset.dx, closeTo(0.0, 0.0001));
-    expect(caretOffset.dy, closeTo(SIZE_OF_A, 0.0001));
+    expect(caretOffset.dy,closeTo(SIZE_OF_A, 0.0001));
     caretOffset = painter.getOffsetForCaret(
       ui.TextPosition(offset: offset, affinity: TextAffinity.upstream),
       ui.Rect.zero,

@@ -8,12 +8,12 @@ import 'package:flutter_web/material.dart';
 import 'package:flutter_web/widgets.dart';
 import 'package:flutter_web/services.dart';
 
+
 void main() {
   const TextStyle textStyle = TextStyle();
   const Color cursorColor = Color.fromARGB(0xFF, 0xFF, 0x00, 0x00);
 
-  testWidgets('tapping on a partly visible editable brings it fully on screen',
-      (WidgetTester tester) async {
+  testWidgets('tapping on a partly visible editable brings it fully on screen', (WidgetTester tester) async {
     final ScrollController scrollController = ScrollController();
     final TextEditingController controller = TextEditingController();
     final FocusNode focusNode = FocusNode();
@@ -52,9 +52,7 @@ void main() {
     expect(scrollController.offset, 0.0);
   });
 
-  testWidgets(
-      'tapping on a partly visible editable brings it fully on screen with scrollInsets',
-      (WidgetTester tester) async {
+  testWidgets('tapping on a partly visible editable brings it fully on screen with scrollInsets', (WidgetTester tester) async {
     final ScrollController scrollController = ScrollController();
     final TextEditingController controller = TextEditingController();
     final FocusNode focusNode = FocusNode();
@@ -100,11 +98,8 @@ void main() {
     expect(scrollController.offset, greaterThan(200.0 - 50.0 - 5.0));
   });
 
-  testWidgets(
-      'editable comes back on screen when entering text while it is off-screen',
-      (WidgetTester tester) async {
-    final ScrollController scrollController =
-        ScrollController(initialScrollOffset: 100.0);
+  testWidgets('editable comes back on screen when entering text while it is off-screen', (WidgetTester tester) async {
+    final ScrollController scrollController = ScrollController(initialScrollOffset: 100.0);
     final TextEditingController controller = TextEditingController();
     final FocusNode focusNode = FocusNode();
 
@@ -150,13 +145,10 @@ void main() {
     expect(find.byType(EditableText), findsOneWidget);
   });
 
-  testWidgets(
-      'entering text does not scroll when scrollPhysics.allowImplicitScrolling = false',
-      (WidgetTester tester) async {
+  testWidgets('entering text does not scroll when scrollPhysics.allowImplicitScrolling = false', (WidgetTester tester) async {
     // regression test for https://github.com/flutter/flutter/issues/19523
 
-    final ScrollController scrollController =
-        ScrollController(initialScrollOffset: 100.0);
+    final ScrollController scrollController = ScrollController(initialScrollOffset: 100.0);
     final TextEditingController controller = TextEditingController();
     final FocusNode focusNode = FocusNode();
 
@@ -203,8 +195,7 @@ void main() {
     expect(find.byType(EditableText), findsNothing);
   });
 
-  testWidgets('entering text does not scroll a sourrounding PageView',
-      (WidgetTester tester) async {
+  testWidgets('entering text does not scroll a sourrounding PageView', (WidgetTester tester) async {
     // regression test for https://github.com/flutter/flutter/issues/19523
 
     final TextEditingController textController = TextEditingController();
@@ -251,14 +242,11 @@ void main() {
     expect(textController.text, 'H');
   });
 
-  testWidgets(
-      'focused multi-line editable scrolls caret back into view when typing',
-      (WidgetTester tester) async {
+  testWidgets('focused multi-line editable scrolls caret back into view when typing', (WidgetTester tester) async {
     final ScrollController scrollController = ScrollController();
     final TextEditingController controller = TextEditingController();
     final FocusNode focusNode = FocusNode();
-    controller.text =
-        'Start\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nEnd';
+    controller.text = 'Start\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nEnd';
 
     await tester.pumpWidget(MaterialApp(
       home: Center(
@@ -304,8 +292,7 @@ void main() {
     expect(scrollController.offset, greaterThan(0.0));
   }, skip: true); // TODO(flutter_web): reenable after multiline support added.
 
-  testWidgets('scrolls into view with scrollInserts after the keyboard pops up',
-      (WidgetTester tester) async {
+  testWidgets('scrolls into view with scrollInserts after the keyboard pops up', (WidgetTester tester) async {
     final ScrollController scrollController = ScrollController();
     final TextEditingController controller = TextEditingController();
     final FocusNode focusNode = FocusNode();
@@ -351,7 +338,7 @@ void main() {
 }
 
 class NoImplicitScrollPhysics extends AlwaysScrollableScrollPhysics {
-  const NoImplicitScrollPhysics({ScrollPhysics parent}) : super(parent: parent);
+  const NoImplicitScrollPhysics({ ScrollPhysics parent }) : super(parent: parent);
 
   @override
   bool get allowImplicitScrolling => false;

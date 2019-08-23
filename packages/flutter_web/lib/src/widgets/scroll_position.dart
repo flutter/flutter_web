@@ -278,10 +278,8 @@ abstract class ScrollPosition extends ViewportOffset with ScrollMetrics {
   ///    [applyViewportDimension] or [applyContentDimensions] is called.
   @override
   void correctBy(double correction) {
-    assert(
-      _pixels != null,
-      'An initial pixels value must exist by caling correctPixels on the ScrollPosition',
-    );
+    assert(_pixels != null,
+        'An initial pixels value must exist by caling correctPixels on the ScrollPosition',);
     _pixels += correction;
     _didChangeViewportDimensionOrReceiveCorrection = true;
   }

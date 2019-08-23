@@ -19,8 +19,7 @@ class SquareImage implements ui.Image {
   int get height => 10;
 
   @override
-  Future<ByteData> toByteData(
-      {ui.ImageByteFormat format = ui.ImageByteFormat.rawRgba}) async {
+  Future<ByteData> toByteData({ui.ImageByteFormat format = ui.ImageByteFormat.rawRgba}) async {
     throw UnsupportedError('Cannot encode test image');
   }
 
@@ -39,8 +38,7 @@ class WideImage implements ui.Image {
   int get height => 10;
 
   @override
-  Future<ByteData> toByteData(
-      {ui.ImageByteFormat format = ui.ImageByteFormat.rawRgba}) async {
+  Future<ByteData> toByteData({ui.ImageByteFormat format = ui.ImageByteFormat.rawRgba}) async {
     throw UnsupportedError('Cannot encode test image');
   }
 
@@ -59,8 +57,7 @@ class TallImage implements ui.Image {
   int get height => 20;
 
   @override
-  Future<ByteData> toByteData(
-      {ui.ImageByteFormat format = ui.ImageByteFormat.rawRgba}) async {
+  Future<ByteData> toByteData({ui.ImageByteFormat format = ui.ImageByteFormat.rawRgba}) async {
     throw UnsupportedError('Cannot encode test image');
   }
 

@@ -8,10 +8,7 @@ import '../flutter_test_alternative.dart';
 void main() {
   test('RelativeRect.==', () {
     const RelativeRect r = RelativeRect.fromLTRB(10.0, 20.0, 30.0, 40.0);
-    expect(
-        r,
-        RelativeRect.fromSize(
-            Rect.fromLTWH(10.0, 20.0, 0.0, 0.0), const Size(40.0, 60.0)));
+    expect(r, RelativeRect.fromSize(Rect.fromLTWH(10.0, 20.0, 0.0, 0.0), const Size(40.0, 60.0)));
   });
   test('RelativeRect.shift', () {
     const RelativeRect r1 = RelativeRect.fromLTRB(10.0, 20.0, 30.0, 40.0);

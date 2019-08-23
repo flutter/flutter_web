@@ -75,8 +75,8 @@ void main() {
 
     expect(coloredBox, hasAGoodToStringDeep);
     expect(
-      coloredBox.toStringDeep(minLevel: DiagnosticLevel.info),
-      equalsIgnoringHashCodes(
+        coloredBox.toStringDeep(minLevel: DiagnosticLevel.info),
+        equalsIgnoringHashCodes(
           'RenderDecoratedBox#00000 NEEDS-LAYOUT NEEDS-PAINT DETACHED\n'
           '   parentData: MISSING\n'
           '   constraints: MISSING\n'
@@ -140,8 +140,7 @@ void main() {
       constrainedAxis: Axis.horizontal, // This is reset to null below.
       textDirection: TextDirection.ltr,
       child: RenderConstrainedBox(
-        additionalConstraints:
-            const BoxConstraints.tightFor(width: 200.0, height: 200.0),
+        additionalConstraints: const BoxConstraints.tightFor(width: 200.0, height: 200.0),
       ),
       alignment: Alignment.center,
     );
@@ -158,10 +157,8 @@ void main() {
     unconstrained.constrainedAxis = null;
     renderer.reassembleApplication();
 
-    expect(unconstrained.size.width, equals(200.0),
-        reason: 'unconstrained width');
-    expect(unconstrained.size.height, equals(200.0),
-        reason: 'unconstrained height');
+    expect(unconstrained.size.width, equals(200.0), reason: 'unconstrained width');
+    expect(unconstrained.size.height, equals(200.0), reason: 'unconstrained height');
   });
 
   test('UnconstrainedBox handles vertical overflow', () {
@@ -172,8 +169,7 @@ void main() {
       ),
       alignment: Alignment.center,
     );
-    const BoxConstraints viewport =
-        BoxConstraints(maxHeight: 100.0, maxWidth: 100.0);
+    const BoxConstraints viewport = BoxConstraints(maxHeight: 100.0, maxWidth: 100.0);
     layout(unconstrained, constraints: viewport);
     expect(unconstrained.getMinIntrinsicHeight(100.0), equals(200.0));
     expect(unconstrained.getMaxIntrinsicHeight(100.0), equals(200.0));
@@ -189,8 +185,7 @@ void main() {
       ),
       alignment: Alignment.center,
     );
-    const BoxConstraints viewport =
-        BoxConstraints(maxHeight: 100.0, maxWidth: 100.0);
+    const BoxConstraints viewport = BoxConstraints(maxHeight: 100.0, maxWidth: 100.0);
     layout(unconstrained, constraints: viewport);
     expect(unconstrained.getMinIntrinsicHeight(100.0), equals(0.0));
     expect(unconstrained.getMaxIntrinsicHeight(100.0), equals(0.0));
@@ -209,7 +204,7 @@ void main() {
     expect(
       unconstrained.toStringDeep(minLevel: DiagnosticLevel.info),
       equalsIgnoringHashCodes(
-          'RenderUnconstrainedBox#00000 NEEDS-LAYOUT NEEDS-PAINT DETACHED\n'
+        'RenderUnconstrainedBox#00000 NEEDS-LAYOUT NEEDS-PAINT DETACHED\n'
           '   parentData: MISSING\n'
           '   constraints: MISSING\n'
           '   size: MISSING\n'
@@ -219,8 +214,8 @@ void main() {
   });
 
   test('UnconstrainedBox honors constrainedAxis=Axis.horizontal', () {
-    final RenderConstrainedBox flexible = RenderConstrainedBox(
-        additionalConstraints: const BoxConstraints.expand(height: 200.0));
+    final RenderConstrainedBox flexible =
+        RenderConstrainedBox(additionalConstraints: const BoxConstraints.expand(height: 200.0));
     final RenderUnconstrainedBox unconstrained = RenderUnconstrainedBox(
       constrainedAxis: Axis.horizontal,
       textDirection: TextDirection.ltr,
@@ -238,15 +233,13 @@ void main() {
     const BoxConstraints viewport = BoxConstraints(maxWidth: 100.0);
     layout(unconstrained, constraints: viewport);
 
-    expect(unconstrained.size.width, equals(100.0),
-        reason: 'constrained width');
-    expect(unconstrained.size.height, equals(200.0),
-        reason: 'unconstrained height');
+    expect(unconstrained.size.width, equals(100.0), reason: 'constrained width');
+    expect(unconstrained.size.height, equals(200.0), reason: 'unconstrained height');
   });
 
   test('UnconstrainedBox honors constrainedAxis=Axis.vertical', () {
-    final RenderConstrainedBox flexible = RenderConstrainedBox(
-        additionalConstraints: const BoxConstraints.expand(width: 200.0));
+    final RenderConstrainedBox flexible =
+    RenderConstrainedBox(additionalConstraints: const BoxConstraints.expand(width: 200.0));
     final RenderUnconstrainedBox unconstrained = RenderUnconstrainedBox(
       constrainedAxis: Axis.vertical,
       textDirection: TextDirection.ltr,
@@ -264,10 +257,8 @@ void main() {
     const BoxConstraints viewport = BoxConstraints(maxHeight: 100.0);
     layout(unconstrained, constraints: viewport);
 
-    expect(unconstrained.size.width, equals(200.0),
-        reason: 'unconstrained width');
-    expect(unconstrained.size.height, equals(100.0),
-        reason: 'constrained height');
+    expect(unconstrained.size.width, equals(200.0), reason: 'unconstrained width');
+    expect(unconstrained.size.height, equals(100.0), reason: 'constrained height');
   });
 
   group('hit testing', () {

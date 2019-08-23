@@ -1,4 +1,4 @@
-// Copyright 2018 The Flutter Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -318,9 +318,16 @@ class TouchAdapter extends BaseAdapter {
     });
 
     _addEventListener('touchend', (html.Event event) {
-      event.preventDefault(); // Prevent default behaviour of touchend event to make working focus and keyboard for Safari on iOS
+      // On iOS Safari/Chrome Mobile, the keyboard does not show unless this line is
+      // added.
+      event.preventDefault();
       _updateButtonDownState(_kPrimaryMouseButton, false);
       _callback(_convertEventToPointerData(ui.PointerChange.up, event));
+      if (textEditing.needsKeyboard &&
+          browserEngine == BrowserEngine.webkit &&
+          operatingSystem == OperatingSystem.iOs) {
+        textEditing.editingElement.configureInputElementForIOS();
+      }
     });
 
     _addEventListener('touchcancel', (html.Event event) {

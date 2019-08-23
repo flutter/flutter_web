@@ -2,13 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter_web_ui/ui.dart' as ui
-    show
-        Paragraph,
-        ParagraphBuilder,
-        ParagraphConstraints,
-        ParagraphStyle,
-        TextStyle;
+import 'package:flutter_web_ui/ui.dart' as ui show Paragraph, ParagraphBuilder, ParagraphConstraints, ParagraphStyle, TextStyle;
 
 import 'box.dart';
 import 'object.dart';
@@ -38,7 +32,7 @@ class RenderErrorBox extends RenderBox {
   ///
   /// A message can optionally be provided. If a message is provided, an attempt
   /// will be made to render the message when the box paints.
-  RenderErrorBox([this.message = '']) {
+  RenderErrorBox([ this.message = '' ]) {
     try {
       if (message != '') {
         // This class is intentionally doing things using the low-level
@@ -52,8 +46,9 @@ class RenderErrorBox extends RenderBox {
         final ui.ParagraphBuilder builder = ui.ParagraphBuilder(paragraphStyle);
         builder.pushStyle(textStyle);
         builder.addText(
-            '$message$_kLine$message$_kLine$message$_kLine$message$_kLine$message$_kLine$message$_kLine'
-            '$message$_kLine$message$_kLine$message$_kLine$message$_kLine$message$_kLine$message');
+          '$message$_kLine$message$_kLine$message$_kLine$message$_kLine$message$_kLine$message$_kLine'
+          '$message$_kLine$message$_kLine$message$_kLine$message$_kLine$message$_kLine$message'
+        );
         _paragraph = builder.build();
       }
     } catch (e) {
@@ -106,7 +101,7 @@ class RenderErrorBox extends RenderBox {
   @override
   void paint(PaintingContext context, Offset offset) {
     try {
-      context.canvas.drawRect(offset & size, Paint()..color = backgroundColor);
+      context.canvas.drawRect(offset & size, Paint() .. color = backgroundColor);
       double width;
       if (_paragraph != null) {
         // See the comment in the RenderErrorBox constructor. This is not the

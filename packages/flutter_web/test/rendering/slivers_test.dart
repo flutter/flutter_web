@@ -21,15 +21,16 @@ void main() {
     expect(
       root.toStringDeep(minLevel: DiagnosticLevel.info),
       equalsIgnoringHashCodes(
-          'RenderViewport#00000 NEEDS-LAYOUT NEEDS-PAINT DETACHED\n'
-          '   needs compositing\n'
-          '   parentData: MISSING\n'
-          '   constraints: MISSING\n'
-          '   size: MISSING\n'
-          '   axisDirection: down\n'
-          '   crossAxisDirection: right\n'
-          '   offset: _FixedViewportOffset#00000(offset: 0.0)\n'
-          '   anchor: 0.0\n'),
+        'RenderViewport#00000 NEEDS-LAYOUT NEEDS-PAINT DETACHED\n'
+        '   needs compositing\n'
+        '   parentData: MISSING\n'
+        '   constraints: MISSING\n'
+        '   size: MISSING\n'
+        '   axisDirection: down\n'
+        '   crossAxisDirection: right\n'
+        '   offset: _FixedViewportOffset#00000(offset: 0.0)\n'
+        '   anchor: 0.0\n'
+      ),
     );
     layout(root);
     root.offset = ViewportOffset.fixed(900.0);
@@ -58,16 +59,11 @@ void main() {
       crossAxisDirection: AxisDirection.right,
       offset: ViewportOffset.zero(),
       children: <RenderSliver>[
-        RenderSliverToBoxAdapter(
-            child: a = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: b = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: c = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: d = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: e = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: a = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: b = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: c = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: d = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: e = RenderSizedBox(const Size(100.0, 400.0))),
       ],
     );
     expect(root, hasAGoodToStringDeep);
@@ -80,97 +76,98 @@ void main() {
     expect(
       root.toStringDeep(minLevel: DiagnosticLevel.info),
       equalsIgnoringHashCodes(
-          'RenderViewport#00000 NEEDS-PAINT NEEDS-COMPOSITING-BITS-UPDATE\n'
-          ' │ needs compositing\n'
-          ' │ parentData: <none>\n'
-          ' │ constraints: BoxConstraints(w=800.0, h=600.0)\n'
-          ' │ size: Size(800.0, 600.0)\n'
-          ' │ axisDirection: down\n'
-          ' │ crossAxisDirection: right\n'
-          ' │ offset: _FixedViewportOffset#00000(offset: 0.0)\n'
-          ' │ anchor: 0.0\n'
-          ' │\n'
-          ' ├─center child: RenderSliverToBoxAdapter#00000 relayoutBoundary=up1 NEEDS-PAINT NEEDS-COMPOSITING-BITS-UPDATE\n'
-          ' │ │ parentData: paintOffset=Offset(0.0, 0.0) (can use size)\n'
-          ' │ │ constraints: SliverConstraints(AxisDirection.down,\n'
-          ' │ │   GrowthDirection.forward, ScrollDirection.idle, scrollOffset:\n'
-          ' │ │   0.0, remainingPaintExtent: 600.0, crossAxisExtent: 800.0,\n'
-          ' │ │   crossAxisDirection: AxisDirection.right,\n'
-          ' │ │   viewportMainAxisExtent: 600.0, remainingCacheExtent: 850.0\n'
-          ' │ │   cacheOrigin: 0.0 )\n'
-          ' │ │ geometry: SliverGeometry(scrollExtent: 400.0, paintExtent: 400.0,\n'
-          ' │ │   maxPaintExtent: 400.0, cacheExtent: 400.0)\n'
-          ' │ │\n'
-          ' │ └─child: RenderSizedBox#00000 NEEDS-PAINT\n'
-          ' │     parentData: paintOffset=Offset(0.0, -0.0) (can use size)\n'
-          ' │     constraints: BoxConstraints(w=800.0, 0.0<=h<=Infinity)\n'
-          ' │     size: Size(800.0, 400.0)\n'
-          ' │\n'
-          ' ├─child 1: RenderSliverToBoxAdapter#00000 relayoutBoundary=up1 NEEDS-PAINT NEEDS-COMPOSITING-BITS-UPDATE\n'
-          ' │ │ parentData: paintOffset=Offset(0.0, 400.0) (can use size)\n'
-          ' │ │ constraints: SliverConstraints(AxisDirection.down,\n'
-          ' │ │   GrowthDirection.forward, ScrollDirection.idle, scrollOffset:\n'
-          ' │ │   0.0, remainingPaintExtent: 200.0, crossAxisExtent: 800.0,\n'
-          ' │ │   crossAxisDirection: AxisDirection.right,\n'
-          ' │ │   viewportMainAxisExtent: 600.0, remainingCacheExtent: 450.0\n'
-          ' │ │   cacheOrigin: 0.0 )\n'
-          ' │ │ geometry: SliverGeometry(scrollExtent: 400.0, paintExtent: 200.0,\n'
-          ' │ │   maxPaintExtent: 400.0, hasVisualOverflow: true, cacheExtent:\n'
-          ' │ │   400.0)\n'
-          ' │ │\n'
-          ' │ └─child: RenderSizedBox#00000 NEEDS-PAINT\n'
-          ' │     parentData: paintOffset=Offset(0.0, -0.0) (can use size)\n'
-          ' │     constraints: BoxConstraints(w=800.0, 0.0<=h<=Infinity)\n'
-          ' │     size: Size(800.0, 400.0)\n'
-          ' │\n'
-          ' ├─child 2: RenderSliverToBoxAdapter#00000 relayoutBoundary=up1 NEEDS-PAINT NEEDS-COMPOSITING-BITS-UPDATE\n'
-          ' │ │ parentData: paintOffset=Offset(0.0, 800.0) (can use size)\n'
-          ' │ │ constraints: SliverConstraints(AxisDirection.down,\n'
-          ' │ │   GrowthDirection.forward, ScrollDirection.idle, scrollOffset:\n'
-          ' │ │   0.0, remainingPaintExtent: 0.0, crossAxisExtent: 800.0,\n'
-          ' │ │   crossAxisDirection: AxisDirection.right,\n'
-          ' │ │   viewportMainAxisExtent: 600.0, remainingCacheExtent: 50.0\n'
-          ' │ │   cacheOrigin: 0.0 )\n'
-          ' │ │ geometry: SliverGeometry(scrollExtent: 400.0, hidden,\n'
-          ' │ │   maxPaintExtent: 400.0, hasVisualOverflow: true, cacheExtent:\n'
-          ' │ │   50.0)\n'
-          ' │ │\n'
-          ' │ └─child: RenderSizedBox#00000 NEEDS-PAINT\n'
-          ' │     parentData: paintOffset=Offset(0.0, -0.0) (can use size)\n'
-          ' │     constraints: BoxConstraints(w=800.0, 0.0<=h<=Infinity)\n'
-          ' │     size: Size(800.0, 400.0)\n'
-          ' │\n'
-          ' ├─child 3: RenderSliverToBoxAdapter#00000 relayoutBoundary=up1 NEEDS-PAINT NEEDS-COMPOSITING-BITS-UPDATE\n'
-          ' │ │ parentData: paintOffset=Offset(0.0, 1200.0) (can use size)\n'
-          ' │ │ constraints: SliverConstraints(AxisDirection.down,\n'
-          ' │ │   GrowthDirection.forward, ScrollDirection.idle, scrollOffset:\n'
-          ' │ │   0.0, remainingPaintExtent: 0.0, crossAxisExtent: 800.0,\n'
-          ' │ │   crossAxisDirection: AxisDirection.right,\n'
-          ' │ │   viewportMainAxisExtent: 600.0, remainingCacheExtent: 0.0\n'
-          ' │ │   cacheOrigin: 0.0 )\n'
-          ' │ │ geometry: SliverGeometry(scrollExtent: 400.0, hidden,\n'
-          ' │ │   maxPaintExtent: 400.0, hasVisualOverflow: true)\n'
-          ' │ │\n'
-          ' │ └─child: RenderSizedBox#00000 NEEDS-PAINT\n'
-          ' │     parentData: paintOffset=Offset(0.0, -0.0) (can use size)\n'
-          ' │     constraints: BoxConstraints(w=800.0, 0.0<=h<=Infinity)\n'
-          ' │     size: Size(800.0, 400.0)\n'
-          ' │\n'
-          ' └─child 4: RenderSliverToBoxAdapter#00000 relayoutBoundary=up1 NEEDS-PAINT NEEDS-COMPOSITING-BITS-UPDATE\n'
-          '   │ parentData: paintOffset=Offset(0.0, 1600.0) (can use size)\n'
-          '   │ constraints: SliverConstraints(AxisDirection.down,\n'
-          '   │   GrowthDirection.forward, ScrollDirection.idle, scrollOffset:\n'
-          '   │   0.0, remainingPaintExtent: 0.0, crossAxisExtent: 800.0,\n'
-          '   │   crossAxisDirection: AxisDirection.right,\n'
-          '   │   viewportMainAxisExtent: 600.0, remainingCacheExtent: 0.0\n'
-          '   │   cacheOrigin: 0.0 )\n'
-          '   │ geometry: SliverGeometry(scrollExtent: 400.0, hidden,\n'
-          '   │   maxPaintExtent: 400.0, hasVisualOverflow: true)\n'
-          '   │\n'
-          '   └─child: RenderSizedBox#00000 NEEDS-PAINT\n'
-          '       parentData: paintOffset=Offset(0.0, -0.0) (can use size)\n'
-          '       constraints: BoxConstraints(w=800.0, 0.0<=h<=Infinity)\n'
-          '       size: Size(800.0, 400.0)\n'),
+        'RenderViewport#00000 NEEDS-PAINT NEEDS-COMPOSITING-BITS-UPDATE\n'
+        ' │ needs compositing\n'
+        ' │ parentData: <none>\n'
+        ' │ constraints: BoxConstraints(w=800.0, h=600.0)\n'
+        ' │ size: Size(800.0, 600.0)\n'
+        ' │ axisDirection: down\n'
+        ' │ crossAxisDirection: right\n'
+        ' │ offset: _FixedViewportOffset#00000(offset: 0.0)\n'
+        ' │ anchor: 0.0\n'
+        ' │\n'
+        ' ├─center child: RenderSliverToBoxAdapter#00000 relayoutBoundary=up1 NEEDS-PAINT NEEDS-COMPOSITING-BITS-UPDATE\n'
+        ' │ │ parentData: paintOffset=Offset(0.0, 0.0) (can use size)\n'
+        ' │ │ constraints: SliverConstraints(AxisDirection.down,\n'
+        ' │ │   GrowthDirection.forward, ScrollDirection.idle, scrollOffset:\n'
+        ' │ │   0.0, remainingPaintExtent: 600.0, crossAxisExtent: 800.0,\n'
+        ' │ │   crossAxisDirection: AxisDirection.right,\n'
+        ' │ │   viewportMainAxisExtent: 600.0, remainingCacheExtent: 850.0\n'
+        ' │ │   cacheOrigin: 0.0 )\n'
+        ' │ │ geometry: SliverGeometry(scrollExtent: 400.0, paintExtent: 400.0,\n'
+        ' │ │   maxPaintExtent: 400.0, cacheExtent: 400.0)\n'
+        ' │ │\n'
+        ' │ └─child: RenderSizedBox#00000 NEEDS-PAINT\n'
+        ' │     parentData: paintOffset=Offset(0.0, -0.0) (can use size)\n'
+        ' │     constraints: BoxConstraints(w=800.0, 0.0<=h<=Infinity)\n'
+        ' │     size: Size(800.0, 400.0)\n'
+        ' │\n'
+        ' ├─child 1: RenderSliverToBoxAdapter#00000 relayoutBoundary=up1 NEEDS-PAINT NEEDS-COMPOSITING-BITS-UPDATE\n'
+        ' │ │ parentData: paintOffset=Offset(0.0, 400.0) (can use size)\n'
+        ' │ │ constraints: SliverConstraints(AxisDirection.down,\n'
+        ' │ │   GrowthDirection.forward, ScrollDirection.idle, scrollOffset:\n'
+        ' │ │   0.0, remainingPaintExtent: 200.0, crossAxisExtent: 800.0,\n'
+        ' │ │   crossAxisDirection: AxisDirection.right,\n'
+        ' │ │   viewportMainAxisExtent: 600.0, remainingCacheExtent: 450.0\n'
+        ' │ │   cacheOrigin: 0.0 )\n'
+        ' │ │ geometry: SliverGeometry(scrollExtent: 400.0, paintExtent: 200.0,\n'
+        ' │ │   maxPaintExtent: 400.0, hasVisualOverflow: true, cacheExtent:\n'
+        ' │ │   400.0)\n'
+        ' │ │\n'
+        ' │ └─child: RenderSizedBox#00000 NEEDS-PAINT\n'
+        ' │     parentData: paintOffset=Offset(0.0, -0.0) (can use size)\n'
+        ' │     constraints: BoxConstraints(w=800.0, 0.0<=h<=Infinity)\n'
+        ' │     size: Size(800.0, 400.0)\n'
+        ' │\n'
+        ' ├─child 2: RenderSliverToBoxAdapter#00000 relayoutBoundary=up1 NEEDS-PAINT NEEDS-COMPOSITING-BITS-UPDATE\n'
+        ' │ │ parentData: paintOffset=Offset(0.0, 800.0) (can use size)\n'
+        ' │ │ constraints: SliverConstraints(AxisDirection.down,\n'
+        ' │ │   GrowthDirection.forward, ScrollDirection.idle, scrollOffset:\n'
+        ' │ │   0.0, remainingPaintExtent: 0.0, crossAxisExtent: 800.0,\n'
+        ' │ │   crossAxisDirection: AxisDirection.right,\n'
+        ' │ │   viewportMainAxisExtent: 600.0, remainingCacheExtent: 50.0\n'
+        ' │ │   cacheOrigin: 0.0 )\n'
+        ' │ │ geometry: SliverGeometry(scrollExtent: 400.0, hidden,\n'
+        ' │ │   maxPaintExtent: 400.0, hasVisualOverflow: true, cacheExtent:\n'
+        ' │ │   50.0)\n'
+        ' │ │\n'
+        ' │ └─child: RenderSizedBox#00000 NEEDS-PAINT\n'
+        ' │     parentData: paintOffset=Offset(0.0, -0.0) (can use size)\n'
+        ' │     constraints: BoxConstraints(w=800.0, 0.0<=h<=Infinity)\n'
+        ' │     size: Size(800.0, 400.0)\n'
+        ' │\n'
+        ' ├─child 3: RenderSliverToBoxAdapter#00000 relayoutBoundary=up1 NEEDS-PAINT NEEDS-COMPOSITING-BITS-UPDATE\n'
+        ' │ │ parentData: paintOffset=Offset(0.0, 1200.0) (can use size)\n'
+        ' │ │ constraints: SliverConstraints(AxisDirection.down,\n'
+        ' │ │   GrowthDirection.forward, ScrollDirection.idle, scrollOffset:\n'
+        ' │ │   0.0, remainingPaintExtent: 0.0, crossAxisExtent: 800.0,\n'
+        ' │ │   crossAxisDirection: AxisDirection.right,\n'
+        ' │ │   viewportMainAxisExtent: 600.0, remainingCacheExtent: 0.0\n'
+        ' │ │   cacheOrigin: 0.0 )\n'
+        ' │ │ geometry: SliverGeometry(scrollExtent: 400.0, hidden,\n'
+        ' │ │   maxPaintExtent: 400.0, hasVisualOverflow: true)\n'
+        ' │ │\n'
+        ' │ └─child: RenderSizedBox#00000 NEEDS-PAINT\n'
+        ' │     parentData: paintOffset=Offset(0.0, -0.0) (can use size)\n'
+        ' │     constraints: BoxConstraints(w=800.0, 0.0<=h<=Infinity)\n'
+        ' │     size: Size(800.0, 400.0)\n'
+        ' │\n'
+        ' └─child 4: RenderSliverToBoxAdapter#00000 relayoutBoundary=up1 NEEDS-PAINT NEEDS-COMPOSITING-BITS-UPDATE\n'
+        '   │ parentData: paintOffset=Offset(0.0, 1600.0) (can use size)\n'
+        '   │ constraints: SliverConstraints(AxisDirection.down,\n'
+        '   │   GrowthDirection.forward, ScrollDirection.idle, scrollOffset:\n'
+        '   │   0.0, remainingPaintExtent: 0.0, crossAxisExtent: 800.0,\n'
+        '   │   crossAxisDirection: AxisDirection.right,\n'
+        '   │   viewportMainAxisExtent: 600.0, remainingCacheExtent: 0.0\n'
+        '   │   cacheOrigin: 0.0 )\n'
+        '   │ geometry: SliverGeometry(scrollExtent: 400.0, hidden,\n'
+        '   │   maxPaintExtent: 400.0, hasVisualOverflow: true)\n'
+        '   │\n'
+        '   └─child: RenderSizedBox#00000 NEEDS-PAINT\n'
+        '       parentData: paintOffset=Offset(0.0, -0.0) (can use size)\n'
+        '       constraints: BoxConstraints(w=800.0, 0.0<=h<=Infinity)\n'
+        '       size: Size(800.0, 400.0)\n'
+      ),
     );
     expect(a.localToGlobal(const Offset(0.0, 0.0)), const Offset(0.0, 0.0));
     expect(b.localToGlobal(const Offset(0.0, 0.0)), const Offset(0.0, 400.0));
@@ -178,16 +175,11 @@ void main() {
     expect(d.localToGlobal(const Offset(0.0, 0.0)), const Offset(0.0, 1200.0));
     expect(e.localToGlobal(const Offset(0.0, 0.0)), const Offset(0.0, 1600.0));
 
-    expect(a.localToGlobal(const Offset(800.0, 400.0)),
-        const Offset(800.0, 400.0));
-    expect(b.localToGlobal(const Offset(800.0, 400.0)),
-        const Offset(800.0, 800.0));
-    expect(c.localToGlobal(const Offset(800.0, 400.0)),
-        const Offset(800.0, 1200.0));
-    expect(d.localToGlobal(const Offset(800.0, 400.0)),
-        const Offset(800.0, 1600.0));
-    expect(e.localToGlobal(const Offset(800.0, 400.0)),
-        const Offset(800.0, 2000.0));
+    expect(a.localToGlobal(const Offset(800.0, 400.0)), const Offset(800.0, 400.0));
+    expect(b.localToGlobal(const Offset(800.0, 400.0)), const Offset(800.0, 800.0));
+    expect(c.localToGlobal(const Offset(800.0, 400.0)), const Offset(800.0, 1200.0));
+    expect(d.localToGlobal(const Offset(800.0, 400.0)), const Offset(800.0, 1600.0));
+    expect(e.localToGlobal(const Offset(800.0, 400.0)), const Offset(800.0, 2000.0));
 
     root.offset = ViewportOffset.fixed(200.0);
     pumpFrame();
@@ -225,16 +217,11 @@ void main() {
       crossAxisDirection: AxisDirection.right,
       offset: ViewportOffset.zero(),
       children: <RenderSliver>[
-        RenderSliverToBoxAdapter(
-            child: a = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: b = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: c = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: d = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: e = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: a = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: b = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: c = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: d = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: e = RenderSizedBox(const Size(100.0, 400.0))),
       ],
     );
     layout(root);
@@ -278,9 +265,7 @@ void main() {
   });
 
   Offset _getPaintOrigin(RenderObject render) {
-    final Vector3 transformed3 = render
-        .getTransformTo(null)
-        .perspectiveTransform(Vector3(0.0, 0.0, 0.0));
+    final Vector3 transformed3 = render.getTransformTo(null).perspectiveTransform(Vector3(0.0, 0.0, 0.0));
     return Offset(transformed3.x, transformed3.y);
   }
 
@@ -291,16 +276,11 @@ void main() {
       crossAxisDirection: AxisDirection.down,
       offset: ViewportOffset.zero(),
       children: <RenderSliver>[
-        RenderSliverToBoxAdapter(
-            child: a = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: b = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: c = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: d = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: e = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: a = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: b = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: c = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: d = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: e = RenderSizedBox(const Size(400.0, 100.0))),
       ],
     );
     layout(root);
@@ -380,16 +360,11 @@ void main() {
       crossAxisDirection: AxisDirection.down,
       offset: ViewportOffset.zero(),
       children: <RenderSliver>[
-        RenderSliverToBoxAdapter(
-            child: a = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: b = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: c = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: d = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: e = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: a = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: b = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: c = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: d = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: e = RenderSizedBox(const Size(400.0, 100.0))),
       ],
     );
     layout(root);
@@ -453,16 +428,11 @@ void main() {
       crossAxisDirection: AxisDirection.right,
       offset: ViewportOffset.zero(),
       children: <RenderSliver>[
-        RenderSliverToBoxAdapter(
-            child: a = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: b = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: c = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: d = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: e = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: a = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: b = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: c = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: d = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: e = RenderSizedBox(const Size(100.0, 400.0))),
       ],
     );
     layout(root);
@@ -476,16 +446,11 @@ void main() {
     expect(d.localToGlobal(const Offset(0.0, 0.0)), const Offset(0.0, 1200.0));
     expect(e.localToGlobal(const Offset(0.0, 0.0)), const Offset(0.0, 1600.0));
 
-    expect(a.localToGlobal(const Offset(800.0, 400.0)),
-        const Offset(800.0, 400.0));
-    expect(b.localToGlobal(const Offset(800.0, 400.0)),
-        const Offset(800.0, 800.0));
-    expect(c.localToGlobal(const Offset(800.0, 400.0)),
-        const Offset(800.0, 1200.0));
-    expect(d.localToGlobal(const Offset(800.0, 400.0)),
-        const Offset(800.0, 1600.0));
-    expect(e.localToGlobal(const Offset(800.0, 400.0)),
-        const Offset(800.0, 2000.0));
+    expect(a.localToGlobal(const Offset(800.0, 400.0)), const Offset(800.0, 400.0));
+    expect(b.localToGlobal(const Offset(800.0, 400.0)), const Offset(800.0, 800.0));
+    expect(c.localToGlobal(const Offset(800.0, 400.0)), const Offset(800.0, 1200.0));
+    expect(d.localToGlobal(const Offset(800.0, 400.0)), const Offset(800.0, 1600.0));
+    expect(e.localToGlobal(const Offset(800.0, 400.0)), const Offset(800.0, 2000.0));
 
     root.offset = ViewportOffset.fixed(200.0);
     pumpFrame();
@@ -523,16 +488,11 @@ void main() {
       crossAxisDirection: AxisDirection.right,
       offset: ViewportOffset.zero(),
       children: <RenderSliver>[
-        RenderSliverToBoxAdapter(
-            child: a = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: b = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: c = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: d = RenderSizedBox(const Size(100.0, 400.0))),
-        RenderSliverToBoxAdapter(
-            child: e = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: a = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: b = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: c = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: d = RenderSizedBox(const Size(100.0, 400.0))),
+        RenderSliverToBoxAdapter(child: e = RenderSizedBox(const Size(100.0, 400.0))),
       ],
     );
     layout(root);
@@ -582,16 +542,11 @@ void main() {
       crossAxisDirection: AxisDirection.down,
       offset: ViewportOffset.zero(),
       children: <RenderSliver>[
-        RenderSliverToBoxAdapter(
-            child: a = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: b = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: c = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: d = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: e = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: a = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: b = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: c = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: d = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: e = RenderSizedBox(const Size(400.0, 100.0))),
       ],
     );
     layout(root);
@@ -641,16 +596,11 @@ void main() {
       crossAxisDirection: AxisDirection.down,
       offset: ViewportOffset.zero(),
       children: <RenderSliver>[
-        RenderSliverToBoxAdapter(
-            child: a = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: b = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: c = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: d = RenderSizedBox(const Size(400.0, 100.0))),
-        RenderSliverToBoxAdapter(
-            child: e = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: a = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: b = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: c = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: d = RenderSizedBox(const Size(400.0, 100.0))),
+        RenderSliverToBoxAdapter(child: e = RenderSizedBox(const Size(400.0, 100.0))),
       ],
     );
     layout(root);
@@ -701,8 +651,7 @@ void main() {
         crossAxisDirection: AxisDirection.down,
         offset: ViewportOffset.fixed(200.0),
         children: <RenderSliver>[
-          RenderSliverToBoxAdapter(
-              child: RenderSizedBox(const Size(400.0, 100.0))),
+          RenderSliverToBoxAdapter(child: RenderSizedBox(const Size(400.0, 100.0))),
         ],
       ),
     );
@@ -722,10 +671,8 @@ void main() {
         crossAxisDirection: AxisDirection.down,
         offset: ViewportOffset.fixed(200.0),
         children: <RenderSliver>[
-          RenderSliverToBoxAdapter(
-              child: RenderSizedBox(const Size(300.0, 100.0))),
-          RenderSliverToBoxAdapter(
-              child: RenderSizedBox(const Size(150.0, 100.0))),
+          RenderSliverToBoxAdapter(child: RenderSizedBox(const Size(300.0, 100.0))),
+          RenderSliverToBoxAdapter(child: RenderSizedBox(const Size(150.0, 100.0))),
         ],
       ),
     );
@@ -769,7 +716,7 @@ void main() {
     const double height = 150.0;
 
     final RenderSliver sliver = RenderSliverToBoxAdapter(
-      child: RenderSizedBox(const Size(400.0, height)),
+        child: RenderSizedBox(const Size(400.0, height)),
     );
     final RenderViewport root = RenderViewport(
       axisDirection: AxisDirection.down,
@@ -918,8 +865,7 @@ void main() {
         crossAxisOffset: 0.0,
         mainAxisPosition: 0.0,
         crossAxisPosition: 0.0,
-        hitTest: (SliverHitTestResult result,
-            {double mainAxisPosition, double crossAxisPosition}) {
+        hitTest: (SliverHitTestResult result, { double mainAxisPosition, double crossAxisPosition }) {
           expect(result, isNotNull);
           mainAxisPositions.add(mainAxisPosition);
           crossAxisPositions.add(crossAxisPosition);
@@ -938,8 +884,7 @@ void main() {
         crossAxisOffset: 6.0,
         mainAxisPosition: 10.0,
         crossAxisPosition: 20.0,
-        hitTest: (SliverHitTestResult result,
-            {double mainAxisPosition, double crossAxisPosition}) {
+        hitTest: (SliverHitTestResult result, { double mainAxisPosition, double crossAxisPosition }) {
           expect(result, isNotNull);
           mainAxisPositions.add(mainAxisPosition);
           crossAxisPositions.add(crossAxisPosition);
@@ -958,8 +903,7 @@ void main() {
         crossAxisOffset: -6.0,
         mainAxisPosition: 10.0,
         crossAxisPosition: 20.0,
-        hitTest: (SliverHitTestResult result,
-            {double mainAxisPosition, double crossAxisPosition}) {
+        hitTest: (SliverHitTestResult result, { double mainAxisPosition, double crossAxisPosition }) {
           expect(result, isNotNull);
           mainAxisPositions.add(mainAxisPosition);
           crossAxisPositions.add(crossAxisPosition);

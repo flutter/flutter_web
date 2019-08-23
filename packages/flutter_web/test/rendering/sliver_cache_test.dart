@@ -9,11 +9,8 @@ import '../flutter_test_alternative.dart';
 import 'rendering_tester.dart';
 
 void main() {
-  test(
-      'RenderViewport calculates correct constraints, RenderSliverToBoxAdapter calculates correct geometry',
-      () {
-    final List<RenderSliver> children =
-        List<RenderSliver>.generate(30, (int index) {
+  test('RenderViewport calculates correct constraints, RenderSliverToBoxAdapter calculates correct geometry', () {
+    final List<RenderSliver> children = List<RenderSliver>.generate(30, (int index) {
       return RenderSliverToBoxAdapter(
         child: RenderSizedBox(const Size(400.0, 100.0)),
       );
@@ -288,8 +285,7 @@ void main() {
     final List<RenderBox> children = List<RenderBox>.generate(30, (int index) {
       return RenderSizedBox(const Size(400.0, 100.0));
     });
-    final TestRenderSliverBoxChildManager childManager =
-        TestRenderSliverBoxChildManager(
+    final TestRenderSliverBoxChildManager childManager = TestRenderSliverBoxChildManager(
       children: children,
     );
     RenderSliverFixedExtentList inner;
@@ -340,6 +336,7 @@ void main() {
     expect(children.sublist(0, 9).every((RenderBox r) => r.attached), true);
     expect(children.sublist(9, 30).any((RenderBox r) => r.attached), false);
 
+
     // scroll to the middle
     root.offset = ViewportOffset.fixed(1500.0);
     pumpFrame();
@@ -388,8 +385,7 @@ void main() {
     final List<RenderBox> children = List<RenderBox>.generate(30, (int index) {
       return RenderSizedBox(const Size(400.0, 100.0));
     });
-    final TestRenderSliverBoxChildManager childManager =
-        TestRenderSliverBoxChildManager(
+    final TestRenderSliverBoxChildManager childManager = TestRenderSliverBoxChildManager(
       children: children,
     );
     RenderSliverList inner;
@@ -440,6 +436,7 @@ void main() {
     expect(children.sublist(0, 9).every((RenderBox r) => r.attached), true);
     expect(children.sublist(9, 30).any((RenderBox r) => r.attached), false);
 
+
     // scroll to the middle
     root.offset = ViewportOffset.fixed(1500.0);
     pumpFrame();
@@ -488,8 +485,7 @@ void main() {
     final List<RenderBox> children = List<RenderBox>.generate(60, (int index) {
       return RenderSizedBox(const Size(400.0, 100.0));
     });
-    final TestRenderSliverBoxChildManager childManager =
-        TestRenderSliverBoxChildManager(
+    final TestRenderSliverBoxChildManager childManager = TestRenderSliverBoxChildManager(
       children: children,
     );
     RenderSliverGrid inner;
@@ -540,6 +536,7 @@ void main() {
     expect(children.sublist(0, 18).every((RenderBox r) => r.attached), true);
     expect(children.sublist(18, 60).any((RenderBox r) => r.attached), false);
 
+
     // scroll to the middle
     root.offset = ViewportOffset.fixed(1500.0);
     pumpFrame();
@@ -586,10 +583,8 @@ void main() {
   test('RenderSliverPadding calculates correct geometry', () {
     // Viewport is 800x600, each item is 100px high with 50px before and after = 200px
 
-    final List<RenderSliverToBoxAdapter> adapters =
-        <RenderSliverToBoxAdapter>[];
-    final List<RenderSliverPadding> paddings =
-        List<RenderSliverPadding>.generate(30, (int index) {
+    final List<RenderSliverToBoxAdapter> adapters = <RenderSliverToBoxAdapter>[];
+    final List<RenderSliverPadding> paddings = List<RenderSliverPadding>.generate(30, (int index) {
       RenderSliverToBoxAdapter adapter;
       final RenderSliverPadding padding = RenderSliverPadding(
         padding: const EdgeInsets.symmetric(vertical: 50.0),
@@ -600,6 +595,7 @@ void main() {
       adapters.add(adapter);
       return padding;
     });
+
 
     final RenderViewport root = RenderViewport(
       axisDirection: AxisDirection.down,
@@ -763,6 +759,7 @@ void main() {
     root.offset = ViewportOffset.fixed(5400.0);
     pumpFrame();
 
+
     final RenderSliverPadding firstPadding = paddings[0];
     expectSliverConstraints(
       sliver: firstPadding,
@@ -881,25 +878,14 @@ void main() {
   });
 }
 
-void expectSliverConstraints(
-    {RenderSliver sliver,
-    double cacheOrigin,
-    double remainingPaintExtent,
-    double remainingCacheExtent,
-    double scrollOffset}) {
+void expectSliverConstraints({RenderSliver sliver, double cacheOrigin, double remainingPaintExtent, double remainingCacheExtent, double scrollOffset}) {
   expect(sliver.constraints.cacheOrigin, cacheOrigin, reason: 'cacheOrigin');
-  expect(sliver.constraints.remainingPaintExtent, remainingPaintExtent,
-      reason: 'remainingPaintExtent');
-  expect(sliver.constraints.remainingCacheExtent, remainingCacheExtent,
-      reason: 'remainingCacheExtent');
+  expect(sliver.constraints.remainingPaintExtent, remainingPaintExtent, reason: 'remainingPaintExtent');
+  expect(sliver.constraints.remainingCacheExtent, remainingCacheExtent, reason: 'remainingCacheExtent');
   expect(sliver.constraints.scrollOffset, scrollOffset, reason: 'scrollOffset');
 }
 
-void expectSliverGeometry(
-    {RenderSliver sliver,
-    double paintExtent,
-    double cacheExtent,
-    bool visible}) {
+void expectSliverGeometry({RenderSliver sliver, double paintExtent, double cacheExtent, bool visible}) {
   expect(sliver.geometry.paintExtent, paintExtent, reason: 'paintExtent');
   expect(sliver.geometry.cacheExtent, cacheExtent, reason: 'cacheExtent');
   expect(sliver.geometry.visible, visible, reason: 'visible');
@@ -943,8 +929,9 @@ class TestRenderSliverBoxChildManager extends RenderSliverBoxChildManager {
   int _currentlyUpdatingChildIndex;
 
   @override
-  void createChild(int index, {@required RenderBox after}) {
-    if (index < 0 || index >= children.length) return;
+  void createChild(int index, { @required RenderBox after }) {
+    if (index < 0 || index >= children.length)
+      return;
     try {
       _currentlyUpdatingChildIndex = index;
       _renderObject.insert(children[index], after: after);
@@ -959,17 +946,14 @@ class TestRenderSliverBoxChildManager extends RenderSliverBoxChildManager {
   }
 
   @override
-  double estimateMaxScrollOffset(
-    SliverConstraints constraints, {
+  double estimateMaxScrollOffset(SliverConstraints constraints, {
     int firstIndex,
     int lastIndex,
     double leadingScrollOffset,
     double trailingScrollOffset,
   }) {
     assert(lastIndex >= firstIndex);
-    return children.length *
-        (trailingScrollOffset - leadingScrollOffset) /
-        (lastIndex - firstIndex + 1);
+    return children.length * (trailingScrollOffset - leadingScrollOffset) / (lastIndex - firstIndex + 1);
   }
 
   @override
@@ -983,5 +967,5 @@ class TestRenderSliverBoxChildManager extends RenderSliverBoxChildManager {
   }
 
   @override
-  void setDidUnderflow(bool value) {}
+  void setDidUnderflow(bool value) { }
 }

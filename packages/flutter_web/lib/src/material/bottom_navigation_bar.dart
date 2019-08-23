@@ -188,26 +188,26 @@ class BottomNavigationBar extends StatefulWidget {
     this.unselectedLabelStyle,
     this.showSelectedLabels = true,
     bool showUnselectedLabels,
-  })  : assert(items != null),
-        assert(items.length >= 2),
-        assert(
-          items.every((BottomNavigationBarItem item) => item.title != null) ==
-              true,
-          'Every item must have a non-null title',
-        ),
-        assert(0 <= currentIndex && currentIndex < items.length),
-        assert(elevation != null && elevation >= 0.0),
-        assert(iconSize != null && iconSize >= 0.0),
-        assert(selectedItemColor != null ? fixedColor == null : true,
-            'Either selectedItemColor or fixedColor can be specified, but not both'),
-        assert(selectedFontSize != null && selectedFontSize >= 0.0),
-        assert(unselectedFontSize != null && unselectedFontSize >= 0.0),
-        assert(showSelectedLabels != null),
-        type = _type(type, items),
-        selectedItemColor = selectedItemColor ?? fixedColor,
-        showUnselectedLabels =
-            showUnselectedLabels ?? _defaultShowUnselected(_type(type, items)),
-        super(key: key);
+  }) : assert(items != null),
+       assert(items.length >= 2),
+       assert(
+        items.every((BottomNavigationBarItem item) => item.title != null) == true,
+        'Every item must have a non-null title',
+       ),
+       assert(0 <= currentIndex && currentIndex < items.length),
+       assert(elevation != null && elevation >= 0.0),
+       assert(iconSize != null && iconSize >= 0.0),
+       assert(
+         selectedItemColor != null ? fixedColor == null : true,
+         'Either selectedItemColor or fixedColor can be specified, but not both'
+       ),
+       assert(selectedFontSize != null && selectedFontSize >= 0.0),
+       assert(unselectedFontSize != null && unselectedFontSize >= 0.0),
+       assert(showSelectedLabels != null),
+       type = _type(type, items),
+       selectedItemColor = selectedItemColor ?? fixedColor,
+       showUnselectedLabels = showUnselectedLabels ?? _defaultShowUnselected(_type(type, items)),
+       super(key: key);
 
   /// Defines the appearance of the button items that are arrayed within the
   /// bottom navigation bar.
@@ -323,15 +323,13 @@ class BottomNavigationBar extends StatefulWidget {
   // [BottomNavigationBarType.fixed] is used for 3 or fewer items, and
   // [BottomNavigationBarType.shifting] is used for 4+ items.
   static BottomNavigationBarType _type(
-    BottomNavigationBarType type,
-    List<BottomNavigationBarItem> items,
+      BottomNavigationBarType type,
+      List<BottomNavigationBarItem> items,
   ) {
     if (type != null) {
       return type;
     }
-    return items.length <= 3
-        ? BottomNavigationBarType.fixed
-        : BottomNavigationBarType.shifting;
+    return items.length <= 3 ? BottomNavigationBarType.fixed : BottomNavigationBarType.shifting;
   }
 
   // Used by the [BottomNavigationBar] constructor to set the [showUnselected]
@@ -373,12 +371,12 @@ class _BottomNavigationTile extends StatelessWidget {
     this.showSelectedLabels,
     this.showUnselectedLabels,
     this.indexLabel,
-  })  : assert(type != null),
-        assert(item != null),
-        assert(animation != null),
-        assert(selected != null),
-        assert(selectedLabelStyle != null),
-        assert(unselectedLabelStyle != null);
+    }) : assert(type != null),
+         assert(item != null),
+         assert(animation != null),
+         assert(selected != null),
+         assert(selectedLabelStyle != null),
+         assert(unselectedLabelStyle != null);
 
   final BottomNavigationBarType type;
   final BottomNavigationBarItem item;
@@ -410,12 +408,10 @@ class _BottomNavigationTile extends StatelessWidget {
     final double unselectedIconSize = unselectedIconTheme?.size ?? iconSize;
     // The amount that the selected icon is bigger than the unselected icons,
     // (or zero if the selected icon is not bigger than the unselected icons).
-    final double selectedIconDiff =
-        math.max(selectedIconSize - unselectedIconSize, 0);
+    final double selectedIconDiff = math.max(selectedIconSize - unselectedIconSize, 0);
     // The amount that the unselected icons are bigger than the selected icon,
     // (or zero if the unselected icons are not any bigger than the selected icon).
-    final double unselectedIconDiff =
-        math.max(unselectedIconSize - selectedIconSize, 0);
+    final double unselectedIconDiff = math.max(unselectedIconSize - selectedIconSize, 0);
 
     // Defines the padding for the animating icons + labels.
     //
@@ -486,8 +482,7 @@ class _BottomNavigationTile extends StatelessWidget {
               InkResponse(
                 onTap: onTap,
                 child: Padding(
-                  padding:
-                      EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+                  padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -526,6 +521,7 @@ class _BottomNavigationTile extends StatelessWidget {
   }
 }
 
+
 class _TileIcon extends StatelessWidget {
   const _TileIcon({
     Key key,
@@ -536,9 +532,9 @@ class _TileIcon extends StatelessWidget {
     @required this.item,
     @required this.selectedIconTheme,
     @required this.unselectedIconTheme,
-  })  : assert(selected != null),
-        assert(item != null),
-        super(key: key);
+  }) : assert(selected != null),
+       assert(item != null),
+       super(key: key);
 
   final ColorTween colorTween;
   final Animation<double> animation;
@@ -584,14 +580,14 @@ class _Label extends StatelessWidget {
     @required this.unselectedLabelStyle,
     @required this.showSelectedLabels,
     @required this.showUnselectedLabels,
-  })  : assert(colorTween != null),
-        assert(animation != null),
-        assert(item != null),
-        assert(selectedLabelStyle != null),
-        assert(unselectedLabelStyle != null),
-        assert(showSelectedLabels != null),
-        assert(showUnselectedLabels != null),
-        super(key: key);
+  }) : assert(colorTween != null),
+       assert(animation != null),
+       assert(item != null),
+       assert(selectedLabelStyle != null),
+       assert(unselectedLabelStyle != null),
+       assert(showSelectedLabels != null),
+       assert(showUnselectedLabels != null),
+       super(key: key);
 
   final ColorTween colorTween;
   final Animation<double> animation;
@@ -664,8 +660,7 @@ class _Label extends StatelessWidget {
   }
 }
 
-class _BottomNavigationBarState extends State<BottomNavigationBar>
-    with TickerProviderStateMixin {
+class _BottomNavigationBarState extends State<BottomNavigationBar> with TickerProviderStateMixin {
   List<AnimationController> _controllers = <AnimationController>[];
   List<CurvedAnimation> _animations;
 
@@ -676,23 +671,22 @@ class _BottomNavigationBarState extends State<BottomNavigationBar>
   // animation is complete.
   Color _backgroundColor;
 
-  static final Animatable<double> _flexTween =
-      Tween<double>(begin: 1.0, end: 1.5);
+  static final Animatable<double> _flexTween = Tween<double>(begin: 1.0, end: 1.5);
 
   void _resetState() {
-    for (AnimationController controller in _controllers) controller.dispose();
-    for (_Circle circle in _circles) circle.dispose();
+    for (AnimationController controller in _controllers)
+      controller.dispose();
+    for (_Circle circle in _circles)
+      circle.dispose();
     _circles.clear();
 
-    _controllers =
-        List<AnimationController>.generate(widget.items.length, (int index) {
+    _controllers = List<AnimationController>.generate(widget.items.length, (int index) {
       return AnimationController(
         duration: kThemeAnimationDuration,
         vsync: this,
       )..addListener(_rebuild);
     });
-    _animations =
-        List<CurvedAnimation>.generate(widget.items.length, (int index) {
+    _animations = List<CurvedAnimation>.generate(widget.items.length, (int index) {
       return CurvedAnimation(
         parent: _controllers[index],
         curve: Curves.fastOutSlowIn,
@@ -718,13 +712,14 @@ class _BottomNavigationBarState extends State<BottomNavigationBar>
 
   @override
   void dispose() {
-    for (AnimationController controller in _controllers) controller.dispose();
-    for (_Circle circle in _circles) circle.dispose();
+    for (AnimationController controller in _controllers)
+      controller.dispose();
+    for (_Circle circle in _circles)
+      circle.dispose();
     super.dispose();
   }
 
-  double _evaluateFlex(Animation<double> animation) =>
-      _flexTween.evaluate(animation);
+  double _evaluateFlex(Animation<double> animation) => _flexTween.evaluate(animation);
 
   void _pushCircle(int index) {
     if (widget.items[index].backgroundColor != null) {
@@ -735,22 +730,22 @@ class _BottomNavigationBarState extends State<BottomNavigationBar>
           color: widget.items[index].backgroundColor,
           vsync: this,
         )..controller.addStatusListener(
-            (AnimationStatus status) {
-              switch (status) {
-                case AnimationStatus.completed:
-                  setState(() {
-                    final _Circle circle = _circles.removeFirst();
-                    _backgroundColor = circle.color;
-                    circle.dispose();
-                  });
-                  break;
-                case AnimationStatus.dismissed:
-                case AnimationStatus.forward:
-                case AnimationStatus.reverse:
-                  break;
-              }
-            },
-          ),
+          (AnimationStatus status) {
+            switch (status) {
+              case AnimationStatus.completed:
+                setState(() {
+                  final _Circle circle = _circles.removeFirst();
+                  _backgroundColor = circle.color;
+                  circle.dispose();
+                });
+                break;
+              case AnimationStatus.dismissed:
+              case AnimationStatus.forward:
+              case AnimationStatus.reverse:
+                break;
+            }
+          },
+        ),
       );
     }
   }
@@ -786,22 +781,19 @@ class _BottomNavigationBarState extends State<BottomNavigationBar>
   static TextStyle _effectiveTextStyle(TextStyle textStyle, double fontSize) {
     textStyle ??= const TextStyle();
     // Prefer the font size on textStyle if present.
-    return textStyle.fontSize == null
-        ? textStyle.copyWith(fontSize: fontSize)
-        : textStyle;
+    return textStyle.fontSize == null ? textStyle.copyWith(fontSize: fontSize) : textStyle;
   }
 
   List<Widget> _createTiles() {
-    final MaterialLocalizations localizations =
-        MaterialLocalizations.of(context);
+    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
     assert(localizations != null);
 
     final ThemeData themeData = Theme.of(context);
 
     final TextStyle effectiveSelectedLabelStyle =
-        _effectiveTextStyle(widget.selectedLabelStyle, widget.selectedFontSize);
-    final TextStyle effectiveUnselectedLabelStyle = _effectiveTextStyle(
-        widget.unselectedLabelStyle, widget.unselectedFontSize);
+      _effectiveTextStyle(widget.selectedLabelStyle, widget.selectedFontSize);
+    final TextStyle effectiveUnselectedLabelStyle =
+      _effectiveTextStyle(widget.unselectedLabelStyle, widget.unselectedFontSize);
 
     Color themeColor;
     switch (themeData.brightness) {
@@ -817,8 +809,7 @@ class _BottomNavigationBarState extends State<BottomNavigationBar>
     switch (widget.type) {
       case BottomNavigationBarType.fixed:
         colorTween = ColorTween(
-          begin:
-              widget.unselectedItemColor ?? themeData.textTheme.caption.color,
+          begin: widget.unselectedItemColor ?? themeData.textTheme.caption.color,
           end: widget.selectedItemColor ?? widget.fixedColor ?? themeColor,
         );
         break;
@@ -842,15 +833,15 @@ class _BottomNavigationBarState extends State<BottomNavigationBar>
         selectedLabelStyle: effectiveSelectedLabelStyle,
         unselectedLabelStyle: effectiveUnselectedLabelStyle,
         onTap: () {
-          if (widget.onTap != null) widget.onTap(i);
+          if (widget.onTap != null)
+            widget.onTap(i);
         },
         colorTween: colorTween,
         flex: _evaluateFlex(_animations[i]),
         selected: i == widget.currentIndex,
         showSelectedLabels: widget.showSelectedLabels,
         showUnselectedLabels: widget.showUnselectedLabels,
-        indexLabel: localizations.tabLabel(
-            tabIndex: i + 1, tabCount: widget.items.length),
+        indexLabel: localizations.tabLabel(tabIndex: i + 1, tabCount: widget.items.length),
       ));
     }
     return tiles;
@@ -873,9 +864,7 @@ class _BottomNavigationBarState extends State<BottomNavigationBar>
     assert(debugCheckHasMediaQuery(context));
 
     // Labels apply up to _bottomMargin padding. Remainder is media padding.
-    final double additionalBottomPadding = math.max(
-        MediaQuery.of(context).padding.bottom - widget.selectedFontSize / 2.0,
-        0.0);
+    final double additionalBottomPadding = math.max(MediaQuery.of(context).padding.bottom - widget.selectedFontSize / 2.0, 0.0);
     Color backgroundColor;
     switch (widget.type) {
       case BottomNavigationBarType.fixed:
@@ -891,15 +880,13 @@ class _BottomNavigationBarState extends State<BottomNavigationBar>
         elevation: widget.elevation,
         color: backgroundColor,
         child: ConstrainedBox(
-          constraints: BoxConstraints(
-              minHeight: kBottomNavigationBarHeight + additionalBottomPadding),
+          constraints: BoxConstraints(minHeight: kBottomNavigationBarHeight + additionalBottomPadding),
           child: CustomPaint(
             painter: _RadialPainter(
               circles: _circles.toList(),
               textDirection: Directionality.of(context),
             ),
-            child: Material(
-              // Splashes.
+            child: Material( // Splashes.
               type: MaterialType.transparency,
               child: Padding(
                 padding: EdgeInsets.only(bottom: additionalBottomPadding),
@@ -924,9 +911,9 @@ class _Circle {
     @required this.index,
     @required this.color,
     @required TickerProvider vsync,
-  })  : assert(state != null),
-        assert(index != null),
-        assert(color != null) {
+  }) : assert(state != null),
+       assert(index != null),
+       assert(color != null) {
     controller = AnimationController(
       duration: kThemeAnimationDuration,
       vsync: vsync,
@@ -948,20 +935,15 @@ class _Circle {
     double weightSum(Iterable<Animation<double>> animations) {
       // We're adding flex values instead of animation values to produce correct
       // ratios.
-      return animations
-          .map<double>(state._evaluateFlex)
-          .fold<double>(0.0, (double sum, double value) => sum + value);
+      return animations.map<double>(state._evaluateFlex).fold<double>(0.0, (double sum, double value) => sum + value);
     }
 
     final double allWeights = weightSum(state._animations);
     // These weights sum to the start edge of the indexed item.
-    final double leadingWeights =
-        weightSum(state._animations.sublist(0, index));
+    final double leadingWeights = weightSum(state._animations.sublist(0, index));
 
     // Add half of its flex value in order to get to the center.
-    return (leadingWeights +
-            state._evaluateFlex(state._animations[index]) / 2.0) /
-        allWeights;
+    return (leadingWeights + state._evaluateFlex(state._animations[index]) / 2.0) / allWeights;
   }
 
   void dispose() {
@@ -974,8 +956,8 @@ class _RadialPainter extends CustomPainter {
   _RadialPainter({
     @required this.circles,
     @required this.textDirection,
-  })  : assert(circles != null),
-        assert(textDirection != null);
+  }) : assert(circles != null),
+       assert(textDirection != null);
 
   final List<_Circle> circles;
   final TextDirection textDirection;
@@ -992,11 +974,15 @@ class _RadialPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_RadialPainter oldPainter) {
-    if (textDirection != oldPainter.textDirection) return true;
-    if (circles == oldPainter.circles) return false;
-    if (circles.length != oldPainter.circles.length) return true;
+    if (textDirection != oldPainter.textDirection)
+      return true;
+    if (circles == oldPainter.circles)
+      return false;
+    if (circles.length != oldPainter.circles.length)
+      return true;
     for (int i = 0; i < circles.length; i += 1)
-      if (circles[i] != oldPainter.circles[i]) return true;
+      if (circles[i] != oldPainter.circles[i])
+        return true;
     return false;
   }
 
@@ -1015,8 +1001,7 @@ class _RadialPainter extends CustomPainter {
           leftFraction = circle.horizontalLeadingOffset;
           break;
       }
-      final Offset center =
-          Offset(leftFraction * size.width, size.height / 2.0);
+      final Offset center = Offset(leftFraction * size.width, size.height / 2.0);
       final Tween<double> radiusTween = Tween<double>(
         begin: 0.0,
         end: _maxRadius(center, size),

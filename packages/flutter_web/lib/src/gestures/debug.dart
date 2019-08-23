@@ -61,7 +61,8 @@ bool debugAssertAllGesturesVarsUnset(String reason) {
   assert(() {
     if (debugPrintHitTestResults ||
         debugPrintGestureArenaDiagnostics ||
-        debugPrintRecognizerCallbacksTrace) throw FlutterError(reason);
+        debugPrintRecognizerCallbacksTrace)
+      throw FlutterError(reason);
     return true;
   }());
   return true;

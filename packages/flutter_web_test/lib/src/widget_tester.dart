@@ -56,16 +56,15 @@ typedef WidgetTesterCallback = Future<void> Function(WidgetTester widgetTester);
 /// ```
 @isTest
 void testWidgets(
-  String description,
-  WidgetTesterCallback callback, {
-  bool skip = false,
-  test_package.Timeout timeout,
-  bool semanticsEnabled = false,
-}) {
+    String description,
+    WidgetTesterCallback callback, {
+      bool skip = false,
+      test_package.Timeout timeout,
+      bool semanticsEnabled = false,
+    }) {
   debugIsInTest = true;
 
-  final Future<void> webEngineInitialization =
-      webOnlyInitializeTestDomRenderer();
+  final Future<void> webEngineInitialization = webOnlyInitializeTestDomRenderer();
 
   final TestWidgetsFlutterBinding binding =
       TestWidgetsFlutterBinding.ensureInitialized();
@@ -80,7 +79,7 @@ void testWidgets(
     tester._recordNumberOfSemanticsHandles();
     test_package.addTearDown(binding.postTest);
     return binding.runTest(
-      () async {
+          () async {
         await callback(tester);
         semanticsHandle?.dispose();
       },

@@ -15,9 +15,8 @@ void main() {
 
     await tester.pumpWidget(NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification value) {
-        if (value is ScrollStartNotification ||
-            value is ScrollUpdateNotification ||
-            value is ScrollEndNotification) notification = value;
+        if (value is ScrollStartNotification || value is ScrollUpdateNotification || value is ScrollEndNotification)
+          notification = value;
         return false;
       },
       child: const SingleChildScrollView(
@@ -25,15 +24,13 @@ void main() {
       ),
     ));
 
-    final TestGesture gesture =
-        await tester.startGesture(const Offset(100.0, 100.0));
+    final TestGesture gesture = await tester.startGesture(const Offset(100.0, 100.0));
     await tester.pump(const Duration(seconds: 1));
     expect(notification, isInstanceOf<ScrollStartNotification>());
     expect(notification.depth, equals(0));
     final ScrollStartNotification start = notification;
     expect(start.dragDetails, isNotNull);
-    expect(
-        start.dragDetails.globalPosition, equals(const Offset(100.0, 100.0)));
+    expect(start.dragDetails.globalPosition, equals(const Offset(100.0, 100.0)));
 
     await gesture.moveBy(const Offset(-10.0, -10.0));
     await tester.pump(const Duration(seconds: 1));
@@ -87,8 +84,7 @@ void main() {
       ),
     ));
 
-    final TestGesture gesture =
-        await tester.startGesture(const Offset(100.0, 100.0));
+    final TestGesture gesture = await tester.startGesture(const Offset(100.0, 100.0));
     await tester.pump(const Duration(seconds: 1));
     await gesture.moveBy(const Offset(-10.0, -40.0));
     await tester.pump(const Duration(seconds: 1));
@@ -109,8 +105,7 @@ void main() {
     expect(depth1Values, equals(<int>[1, 1, 1, 1, 1]));
   });
 
-  testWidgets('ScrollNotifications bubble past Scaffold Material',
-      (WidgetTester tester) async {
+  testWidgets('ScrollNotifications bubble past Scaffold Material', (WidgetTester tester) async {
     final List<Type> notificationTypes = <Type>[];
 
     await tester.pumpWidget(
@@ -141,8 +136,7 @@ void main() {
       ),
     );
 
-    final TestGesture gesture =
-        await tester.startGesture(const Offset(100.0, 100.0));
+    final TestGesture gesture = await tester.startGesture(const Offset(100.0, 100.0));
     await tester.pump(const Duration(seconds: 1));
     await gesture.moveBy(const Offset(-10.0, -40.0));
     await tester.pump(const Duration(seconds: 1));
@@ -158,4 +152,5 @@ void main() {
     ];
     expect(notificationTypes, equals(types));
   });
+
 }

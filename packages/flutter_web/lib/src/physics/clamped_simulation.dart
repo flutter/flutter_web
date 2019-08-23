@@ -17,6 +17,7 @@ import 'simulation.dart';
 /// the maximum value for the times that it would otherwise have been reported
 /// as higher.
 class ClampedSimulation extends Simulation {
+
   /// Creates a [ClampedSimulation] that clamps the given simulation.
   ///
   /// The named arguments specify the ranges for the clamping behavior, as
@@ -27,9 +28,9 @@ class ClampedSimulation extends Simulation {
     this.xMax = double.infinity,
     this.dxMin = double.negativeInfinity,
     this.dxMax = double.infinity,
-  })  : assert(simulation != null),
-        assert(xMax >= xMin),
-        assert(dxMax >= dxMin);
+  }) : assert(simulation != null),
+       assert(xMax >= xMin),
+       assert(dxMax >= dxMin);
 
   /// The simulation being clamped. Calls to [x], [dx], and [isDone] are
   /// forwarded to the simulation.

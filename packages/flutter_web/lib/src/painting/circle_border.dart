@@ -26,7 +26,7 @@ class CircleBorder extends ShapeBorder {
   /// Create a circle border.
   ///
   /// The [side] argument must not be null.
-  const CircleBorder({this.side = BorderSide.none}) : assert(side != null);
+  const CircleBorder({ this.side = BorderSide.none }) : assert(side != null);
 
   /// The style of this border.
   final BorderSide side;
@@ -54,7 +54,7 @@ class CircleBorder extends ShapeBorder {
   }
 
   @override
-  Path getInnerPath(Rect rect, {TextDirection textDirection}) {
+  Path getInnerPath(Rect rect, { TextDirection textDirection }) {
     return Path()
       ..addOval(Rect.fromCircle(
         center: rect.center,
@@ -63,7 +63,7 @@ class CircleBorder extends ShapeBorder {
   }
 
   @override
-  Path getOuterPath(Rect rect, {TextDirection textDirection}) {
+  Path getOuterPath(Rect rect, { TextDirection textDirection }) {
     return Path()
       ..addOval(Rect.fromCircle(
         center: rect.center,
@@ -72,19 +72,19 @@ class CircleBorder extends ShapeBorder {
   }
 
   @override
-  void paint(Canvas canvas, Rect rect, {TextDirection textDirection}) {
+  void paint(Canvas canvas, Rect rect, { TextDirection textDirection }) {
     switch (side.style) {
       case BorderStyle.none:
         break;
       case BorderStyle.solid:
-        canvas.drawCircle(rect.center, (rect.shortestSide - side.width) / 2.0,
-            side.toPaint());
+        canvas.drawCircle(rect.center, (rect.shortestSide - side.width) / 2.0, side.toPaint());
     }
   }
 
   @override
   bool operator ==(dynamic other) {
-    if (runtimeType != other.runtimeType) return false;
+    if (runtimeType != other.runtimeType)
+      return false;
     final CircleBorder typedOther = other;
     return side == typedOther.side;
   }

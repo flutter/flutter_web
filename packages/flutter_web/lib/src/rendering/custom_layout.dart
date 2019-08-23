@@ -117,23 +117,26 @@ abstract class MultiChildLayoutDelegate {
     assert(() {
       if (child == null) {
         throw FlutterError(
-            'The $this custom multichild layout delegate tried to lay out a non-existent child.\n'
-            'There is no child with the id "$childId".');
+          'The $this custom multichild layout delegate tried to lay out a non-existent child.\n'
+          'There is no child with the id "$childId".'
+        );
       }
       if (!_debugChildrenNeedingLayout.remove(child)) {
         throw FlutterError(
-            'The $this custom multichild layout delegate tried to lay out the child with id "$childId" more than once.\n'
-            'Each child must be laid out exactly once.');
+          'The $this custom multichild layout delegate tried to lay out the child with id "$childId" more than once.\n'
+          'Each child must be laid out exactly once.'
+        );
       }
       try {
         assert(constraints.debugAssertIsValid(isAppliedConstraint: true));
       } on AssertionError catch (exception) {
         throw FlutterError(
-            'The $this custom multichild layout delegate provided invalid box constraints for the child with id "$childId".\n'
-            '$exception\n'
-            'The minimum width and height must be greater than or equal to zero.\n'
-            'The maximum width must be greater than or equal to the minimum width.\n'
-            'The maximum height must be greater than or equal to the minimum height.');
+          'The $this custom multichild layout delegate provided invalid box constraints for the child with id "$childId".\n'
+          '$exception\n'
+          'The minimum width and height must be greater than or equal to zero.\n'
+          'The maximum width must be greater than or equal to the minimum width.\n'
+          'The maximum height must be greater than or equal to the minimum height.'
+        );
       }
       return true;
     }());
@@ -152,12 +155,14 @@ abstract class MultiChildLayoutDelegate {
     assert(() {
       if (child == null) {
         throw FlutterError(
-            'The $this custom multichild layout delegate tried to position out a non-existent child:\n'
-            'There is no child with the id "$childId".');
+          'The $this custom multichild layout delegate tried to position out a non-existent child:\n'
+          'There is no child with the id "$childId".'
+        );
       }
       if (offset == null) {
         throw FlutterError(
-            'The $this custom multichild layout delegate provided a null position for the child with id "$childId".');
+          'The $this custom multichild layout delegate provided a null position for the child with id "$childId".'
+        );
       }
       return true;
     }());
@@ -190,9 +195,11 @@ abstract class MultiChildLayoutDelegate {
         final MultiChildLayoutParentData childParentData = child.parentData;
         assert(() {
           if (childParentData.id == null) {
-            throw FlutterError('The following child has no ID:\n'
-                '  $child\n'
-                'Every child of a RenderCustomMultiChildLayoutBox must have an ID in its parent data.');
+            throw FlutterError(
+              'The following child has no ID:\n'
+              '  $child\n'
+              'Every child of a RenderCustomMultiChildLayoutBox must have an ID in its parent data.'
+            );
           }
           return true;
         }());
@@ -208,14 +215,16 @@ abstract class MultiChildLayoutDelegate {
         if (_debugChildrenNeedingLayout.isNotEmpty) {
           if (_debugChildrenNeedingLayout.length > 1) {
             throw FlutterError(
-                'The $this custom multichild layout delegate forgot to lay out the following children:\n'
-                '  ${_debugChildrenNeedingLayout.map<String>(_debugDescribeChild).join("\n  ")}\n'
-                'Each child must be laid out exactly once.');
+              'The $this custom multichild layout delegate forgot to lay out the following children:\n'
+              '  ${_debugChildrenNeedingLayout.map<String>(_debugDescribeChild).join("\n  ")}\n'
+              'Each child must be laid out exactly once.'
+            );
           } else {
             throw FlutterError(
-                'The $this custom multichild layout delegate forgot to lay out the following child:\n'
-                '  ${_debugDescribeChild(_debugChildrenNeedingLayout.single)}\n'
-                'Each child must be laid out exactly once.');
+              'The $this custom multichild layout delegate forgot to lay out the following child:\n'
+              '  ${_debugDescribeChild(_debugChildrenNeedingLayout.single)}\n'
+              'Each child must be laid out exactly once.'
+            );
           }
         }
         return true;
@@ -270,17 +279,16 @@ abstract class MultiChildLayoutDelegate {
 /// size of the parent, but the size of the parent cannot depend on the sizes of
 /// the children.
 class RenderCustomMultiChildLayoutBox extends RenderBox
-    with
-        ContainerRenderObjectMixin<RenderBox, MultiChildLayoutParentData>,
-        RenderBoxContainerDefaultsMixin<RenderBox, MultiChildLayoutParentData> {
+  with ContainerRenderObjectMixin<RenderBox, MultiChildLayoutParentData>,
+       RenderBoxContainerDefaultsMixin<RenderBox, MultiChildLayoutParentData> {
   /// Creates a render object that customizes the layout of multiple children.
   ///
   /// The [delegate] argument must not be null.
   RenderCustomMultiChildLayoutBox({
     List<RenderBox> children,
     @required MultiChildLayoutDelegate delegate,
-  })  : assert(delegate != null),
-        _delegate = delegate {
+  }) : assert(delegate != null),
+       _delegate = delegate {
     addAll(children);
   }
 
@@ -295,9 +303,10 @@ class RenderCustomMultiChildLayoutBox extends RenderBox
   MultiChildLayoutDelegate _delegate;
   set delegate(MultiChildLayoutDelegate value) {
     assert(value != null);
-    if (_delegate == value) return;
-    if (value.runtimeType != _delegate.runtimeType ||
-        value.shouldRelayout(_delegate)) markNeedsLayout();
+    if (_delegate == value)
+      return;
+    if (value.runtimeType != _delegate.runtimeType || value.shouldRelayout(_delegate))
+      markNeedsLayout();
     _delegate = value;
   }
 
@@ -312,33 +321,33 @@ class RenderCustomMultiChildLayoutBox extends RenderBox
 
   @override
   double computeMinIntrinsicWidth(double height) {
-    final double width =
-        _getSize(BoxConstraints.tightForFinite(height: height)).width;
-    if (width.isFinite) return width;
+    final double width = _getSize(BoxConstraints.tightForFinite(height: height)).width;
+    if (width.isFinite)
+      return width;
     return 0.0;
   }
 
   @override
   double computeMaxIntrinsicWidth(double height) {
-    final double width =
-        _getSize(BoxConstraints.tightForFinite(height: height)).width;
-    if (width.isFinite) return width;
+    final double width = _getSize(BoxConstraints.tightForFinite(height: height)).width;
+    if (width.isFinite)
+      return width;
     return 0.0;
   }
 
   @override
   double computeMinIntrinsicHeight(double width) {
-    final double height =
-        _getSize(BoxConstraints.tightForFinite(width: width)).height;
-    if (height.isFinite) return height;
+    final double height = _getSize(BoxConstraints.tightForFinite(width: width)).height;
+    if (height.isFinite)
+      return height;
     return 0.0;
   }
 
   @override
   double computeMaxIntrinsicHeight(double width) {
-    final double height =
-        _getSize(BoxConstraints.tightForFinite(width: width)).height;
-    if (height.isFinite) return height;
+    final double height = _getSize(BoxConstraints.tightForFinite(width: width)).height;
+    if (height.isFinite)
+      return height;
     return 0.0;
   }
 
@@ -354,7 +363,7 @@ class RenderCustomMultiChildLayoutBox extends RenderBox
   }
 
   @override
-  bool hitTestChildren(BoxHitTestResult result, {Offset position}) {
+  bool hitTestChildren(BoxHitTestResult result, { Offset position }) {
     return defaultHitTestChildren(result, position: position);
   }
 }

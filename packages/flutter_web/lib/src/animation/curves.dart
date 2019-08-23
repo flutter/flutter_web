@@ -125,10 +125,10 @@ class Interval extends Curve {
   /// Creates an interval curve.
   ///
   /// The arguments must not be null.
-  const Interval(this.begin, this.end, {this.curve = Curves.linear})
-      : assert(begin != null),
-        assert(end != null),
-        assert(curve != null);
+  const Interval(this.begin, this.end, { this.curve = Curves.linear })
+    : assert(begin != null),
+      assert(end != null),
+      assert(curve != null);
 
   /// The largest value for which this interval is 0.0.
   ///
@@ -151,13 +151,15 @@ class Interval extends Curve {
     assert(end <= 1.0);
     assert(end >= begin);
     t = ((t - begin) / (end - begin)).clamp(0.0, 1.0);
-    if (t == 0.0 || t == 1.0) return t;
+    if (t == 0.0 || t == 1.0)
+      return t;
     return curve.transform(t);
   }
 
   @override
   String toString() {
-    if (curve is! _Linear) return '$runtimeType($begin\u22EF$end)\u27A9$curve';
+    if (curve is! _Linear)
+      return '$runtimeType($begin\u22EF$end)\u27A9$curve';
     return '$runtimeType($begin\u22EF$end)';
   }
 }
@@ -207,10 +209,10 @@ class Cubic extends Curve {
   ///
   /// The [a], [b], [c], and [d] arguments must not be null.
   const Cubic(this.a, this.b, this.c, this.d)
-      : assert(a != null),
-        assert(b != null),
-        assert(c != null),
-        assert(d != null);
+    : assert(a != null),
+      assert(b != null),
+      assert(c != null),
+      assert(d != null);
 
   /// The x coordinate of the first control point.
   ///
@@ -239,7 +241,9 @@ class Cubic extends Curve {
   static const double _cubicErrorBound = 0.001;
 
   double _evaluateCubic(double a, double b, double m) {
-    return 3 * a * (1 - m) * (1 - m) * m + 3 * b * (1 - m) * m * m + m * m * m;
+    return 3 * a * (1 - m) * (1 - m) * m +
+           3 * b * (1 - m) *           m * m +
+                                       m * m * m;
   }
 
   @override
@@ -375,6 +379,7 @@ class _BounceInOutCurve extends Curve {
   }
 }
 
+
 // ELASTIC CURVES
 
 /// An oscillating curve that grows in magnitude while overshooting its bounds.
@@ -396,8 +401,7 @@ class ElasticInCurve extends Curve {
   double transformInternal(double t) {
     final double s = period / 4.0;
     t = t - 1.0;
-    return -math.pow(2.0, 10.0 * t) *
-        math.sin((t - s) * (math.pi * 2.0) / period);
+    return -math.pow(2.0, 10.0 * t) * math.sin((t - s) * (math.pi * 2.0) / period);
   }
 
   @override
@@ -424,9 +428,7 @@ class ElasticOutCurve extends Curve {
   @override
   double transformInternal(double t) {
     final double s = period / 4.0;
-    return math.pow(2.0, -10 * t) *
-            math.sin((t - s) * (math.pi * 2.0) / period) +
-        1.0;
+    return math.pow(2.0, -10 * t) * math.sin((t - s) * (math.pi * 2.0) / period) + 1.0;
   }
 
   @override
@@ -456,14 +458,9 @@ class ElasticInOutCurve extends Curve {
     final double s = period / 4.0;
     t = 2.0 * t - 1.0;
     if (t < 0.0)
-      return -0.5 *
-          math.pow(2.0, 10.0 * t) *
-          math.sin((t - s) * (math.pi * 2.0) / period);
+      return -0.5 * math.pow(2.0, 10.0 * t) * math.sin((t - s) * (math.pi * 2.0) / period);
     else
-      return math.pow(2.0, -10.0 * t) *
-              math.sin((t - s) * (math.pi * 2.0) / period) *
-              0.5 +
-          1.0;
+      return math.pow(2.0, -10.0 * t) * math.sin((t - s) * (math.pi * 2.0) / period) * 0.5 + 1.0;
   }
 
   @override
@@ -471,6 +468,7 @@ class ElasticInOutCurve extends Curve {
     return '$runtimeType($period)';
   }
 }
+
 
 // PREDEFINED CURVES
 

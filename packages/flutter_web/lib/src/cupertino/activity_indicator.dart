@@ -1,6 +1,7 @@
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// Synced 2019-08-12T13:26:26.179953.
 
 import 'dart:math' as math;
 
@@ -21,10 +22,10 @@ class CupertinoActivityIndicator extends StatefulWidget {
     Key key,
     this.animating = true,
     this.radius = _kDefaultIndicatorRadius,
-  })  : assert(animating != null),
-        assert(radius != null),
-        assert(radius > 0),
-        super(key: key);
+  }) : assert(animating != null),
+       assert(radius != null),
+       assert(radius > 0),
+       super(key: key);
 
   /// Whether the activity indicator is running its animation.
   ///
@@ -37,12 +38,11 @@ class CupertinoActivityIndicator extends StatefulWidget {
   final double radius;
 
   @override
-  _CupertinoActivityIndicatorState createState() =>
-      _CupertinoActivityIndicatorState();
+  _CupertinoActivityIndicatorState createState() => _CupertinoActivityIndicatorState();
 }
 
-class _CupertinoActivityIndicatorState extends State<CupertinoActivityIndicator>
-    with SingleTickerProviderStateMixin {
+
+class _CupertinoActivityIndicatorState extends State<CupertinoActivityIndicator> with SingleTickerProviderStateMixin {
   AnimationController _controller;
 
   @override
@@ -53,7 +53,8 @@ class _CupertinoActivityIndicatorState extends State<CupertinoActivityIndicator>
       vsync: this,
     );
 
-    if (widget.animating) _controller.repeat();
+    if (widget.animating)
+      _controller.repeat();
   }
 
   @override
@@ -98,29 +99,30 @@ class _CupertinoActivityIndicatorPainter extends CustomPainter {
   _CupertinoActivityIndicatorPainter({
     this.position,
     double radius,
-  })  : tickFundamentalRRect = RRect.fromLTRBXY(
-            -radius,
-            1.0 * radius / _kDefaultIndicatorRadius,
-            -radius / 2.0,
-            -1.0 * radius / _kDefaultIndicatorRadius,
-            1.0,
-            1.0),
-        super(repaint: position);
+  }) : tickFundamentalRRect = RRect.fromLTRBXY(
+           -radius,
+           1.0 * radius / _kDefaultIndicatorRadius,
+           -radius / 2.0,
+           -1.0 * radius / _kDefaultIndicatorRadius,
+           1.0,
+           1.0,
+       ),
+       super(repaint: position);
 
   final Animation<double> position;
   final RRect tickFundamentalRRect;
 
   @override
   void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint();
+
     canvas.save();
     canvas.translate(size.width / 2.0, size.height / 2.0);
 
     final int activeTick = (_kTickCount * position.value).floor();
 
-    for (int i = 0; i < _kTickCount; ++i) {
-      final double t =
-          (((i + activeTick) % _kTickCount) / _kHalfTickCount).clamp(0.0, 1.0);
-      final Paint paint = Paint();
+    for (int i = 0; i < _kTickCount; ++ i) {
+      final double t = (((i + activeTick) % _kTickCount) / _kHalfTickCount).clamp(0.0, 1.0);
       paint.color = Color.lerp(_kActiveTickColor, _kTickColor, t);
       canvas.drawRRect(tickFundamentalRRect, paint);
       canvas.rotate(-_kTwoPI / _kTickCount);

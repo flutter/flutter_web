@@ -11,12 +11,18 @@ void main() {
   test('nested repaint boundaries - smoke test', () {
     RenderOpacity a, b, c;
     a = RenderOpacity(
-        opacity: 1.0,
-        child: RenderRepaintBoundary(
-            child: b = RenderOpacity(
-                opacity: 1.0,
-                child: RenderRepaintBoundary(
-                    child: c = RenderOpacity(opacity: 1.0)))));
+      opacity: 1.0,
+      child: RenderRepaintBoundary(
+        child: b = RenderOpacity(
+          opacity: 1.0,
+          child: RenderRepaintBoundary(
+            child: c = RenderOpacity(
+              opacity: 1.0
+            )
+          )
+        )
+      )
+    );
     layout(a, phase: EnginePhase.flushSemantics);
     c.opacity = 0.9;
     pumpFrame(phase: EnginePhase.flushSemantics);
@@ -29,9 +35,7 @@ void main() {
     pumpFrame(phase: EnginePhase.flushSemantics);
   });
 
-  test(
-      'Repaint boundary can get new parent after markNeedsCompositingBitsUpdate',
-      () {
+  test('Repaint boundary can get new parent after markNeedsCompositingBitsUpdate', () {
     // Regression test for https://github.com/flutter/flutter/issues/24029.
 
     final RenderRepaintBoundary repaintBoundary = RenderRepaintBoundary();

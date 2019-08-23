@@ -10,14 +10,14 @@
 /// framework.
 library foundation;
 
-export 'package:meta/meta.dart'
-    show
-        immutable,
-        mustCallSuper,
-        optionalTypeArgs,
-        protected,
-        required,
-        visibleForTesting;
+export 'package:meta/meta.dart' show
+  immutable,
+  mustCallSuper,
+  optionalTypeArgs,
+  protected,
+  required,
+  visibleForTesting;
+
 
 export 'src/foundation/assertions.dart';
 export 'src/foundation/basic_types.dart';

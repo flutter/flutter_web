@@ -33,9 +33,7 @@ class TestFocusState extends State<TestFocus> {
     super.dispose();
   }
 
-  String get label => focusNode.hasFocus
-      ? '${widget.name.toUpperCase()} FOCUSED'
-      : widget.name.toLowerCase();
+  String get label => focusNode.hasFocus ? '${widget.name.toUpperCase()} FOCUSED' : widget.name.toLowerCase();
 
   @override
   void initState() {
@@ -81,8 +79,7 @@ void main() {
 
       expect(key.currentState.focusNode.hasFocus, isFalse);
 
-      FocusScope.of(key.currentContext)
-          .requestFocus(key.currentState.focusNode);
+      FocusScope.of(key.currentContext).requestFocus(key.currentState.focusNode);
       await tester.pumpAndSettle();
 
       expect(key.currentState.focusNode.hasFocus, isTrue);
@@ -106,8 +103,7 @@ void main() {
       expect(keyB.currentState.focusNode.hasFocus, isFalse);
       expect(find.text('b'), findsOneWidget);
 
-      FocusScope.of(keyA.currentContext)
-          .requestFocus(keyA.currentState.focusNode);
+      FocusScope.of(keyA.currentContext).requestFocus(keyA.currentState.focusNode);
       await tester.pumpAndSettle();
 
       expect(keyA.currentState.focusNode.hasFocus, isTrue);
@@ -116,8 +112,7 @@ void main() {
       expect(find.text('b'), findsOneWidget);
 
       // Set focus to the "B" node to unfocus the "A" node.
-      FocusScope.of(keyB.currentContext)
-          .requestFocus(keyB.currentState.focusNode);
+      FocusScope.of(keyB.currentContext).requestFocus(keyB.currentState.focusNode);
       await tester.pumpAndSettle();
 
       expect(keyA.currentState.focusNode.hasFocus, isFalse);
@@ -146,9 +141,7 @@ void main() {
       expect(find.text('B FOCUSED'), findsOneWidget);
     });
 
-    testWidgets(
-        'Can have multiple focused children and they update accordingly',
-        (WidgetTester tester) async {
+    testWidgets('Can have multiple focused children and they update accordingly', (WidgetTester tester) async {
       final GlobalKey<TestFocusState> keyA = GlobalKey();
       final GlobalKey<TestFocusState> keyB = GlobalKey();
 
@@ -196,12 +189,9 @@ void main() {
 
     // This moves a focus node first into a focus scope that is added to its
     // parent, and then out of that focus scope again.
-    testWidgets('Can move focus in and out of FocusScope',
-        (WidgetTester tester) async {
-      final FocusScopeNode parentFocusScope =
-          FocusScopeNode(debugLabel: 'Parent Scope Node');
-      final FocusScopeNode childFocusScope =
-          FocusScopeNode(debugLabel: 'Child Scope Node');
+    testWidgets('Can move focus in and out of FocusScope', (WidgetTester tester) async {
+      final FocusScopeNode parentFocusScope = FocusScopeNode(debugLabel: 'Parent Scope Node');
+      final FocusScopeNode childFocusScope = FocusScopeNode(debugLabel: 'Child Scope Node');
       final GlobalKey<TestFocusState> key = GlobalKey();
 
       // Initially create the focus inside of the parent FocusScope.
@@ -224,8 +214,7 @@ void main() {
 
       expect(key.currentState.focusNode.hasFocus, isFalse);
       expect(find.text('a'), findsOneWidget);
-      FocusScope.of(key.currentContext)
-          .requestFocus(key.currentState.focusNode);
+      FocusScope.of(key.currentContext).requestFocus(key.currentState.focusNode);
       await tester.pumpAndSettle();
 
       expect(key.currentState.focusNode.hasFocus, isTrue);
@@ -246,11 +235,9 @@ void main() {
             '     debugLabel: "Child"\n'),
       );
 
+      expect(WidgetsBinding.instance.focusManager.rootScope, hasAGoodToStringDeep);
       expect(
-          WidgetsBinding.instance.focusManager.rootScope, hasAGoodToStringDeep);
-      expect(
-        WidgetsBinding.instance.focusManager.rootScope
-            .toStringDeep(minLevel: DiagnosticLevel.info),
+        WidgetsBinding.instance.focusManager.rootScope.toStringDeep(minLevel: DiagnosticLevel.info),
         equalsIgnoringHashCodes('FocusScopeNode#00000\n'
             ' │ FOCUSED\n'
             ' │ debugLabel: "Root Focus Scope"\n'
@@ -269,8 +256,7 @@ void main() {
       );
 
       // Add the child focus scope to the focus tree.
-      final FocusAttachment childAttachment =
-          childFocusScope.attach(key.currentContext);
+      final FocusAttachment childAttachment = childFocusScope.attach(key.currentContext);
       parentFocusScope.setFirstFocus(childFocusScope);
       await tester.pumpAndSettle();
       expect(childFocusScope.isFirstFocus, isTrue);
@@ -349,14 +335,10 @@ void main() {
       childAttachment.detach();
     });
 
-    testWidgets('Setting first focus requests focus for the scope properly.',
-        (WidgetTester tester) async {
-      final FocusScopeNode parentFocusScope =
-          FocusScopeNode(debugLabel: 'Parent Scope Node');
-      final FocusScopeNode childFocusScope1 =
-          FocusScopeNode(debugLabel: 'Child Scope Node 1');
-      final FocusScopeNode childFocusScope2 =
-          FocusScopeNode(debugLabel: 'Child Scope Node 2');
+    testWidgets('Setting first focus requests focus for the scope properly.', (WidgetTester tester) async {
+      final FocusScopeNode parentFocusScope = FocusScopeNode(debugLabel: 'Parent Scope Node');
+      final FocusScopeNode childFocusScope1 = FocusScopeNode(debugLabel: 'Child Scope Node 1');
+      final FocusScopeNode childFocusScope2 = FocusScopeNode(debugLabel: 'Child Scope Node 2');
       final GlobalKey<TestFocusState> keyA = GlobalKey(debugLabel: 'Key A');
       final GlobalKey<TestFocusState> keyB = GlobalKey(debugLabel: 'Key B');
       final GlobalKey<TestFocusState> keyC = GlobalKey(debugLabel: 'Key C');
@@ -456,8 +438,7 @@ void main() {
       expect(childFocusScope2.isFirstFocus, isFalse);
     });
 
-    testWidgets('Removing focused widget moves focus to next widget',
-        (WidgetTester tester) async {
+    testWidgets('Removing focused widget moves focus to next widget', (WidgetTester tester) async {
       final GlobalKey<TestFocusState> keyA = GlobalKey();
       final GlobalKey<TestFocusState> keyB = GlobalKey();
 
@@ -476,8 +457,7 @@ void main() {
         ),
       );
 
-      FocusScope.of(keyA.currentContext)
-          .requestFocus(keyA.currentState.focusNode);
+      FocusScope.of(keyA.currentContext).requestFocus(keyA.currentState.focusNode);
 
       await tester.pumpAndSettle();
 
@@ -503,13 +483,10 @@ void main() {
       expect(find.text('b'), findsOneWidget);
     });
 
-    testWidgets('Adding a new FocusScope attaches the child it to its parent.',
-        (WidgetTester tester) async {
+    testWidgets('Adding a new FocusScope attaches the child it to its parent.', (WidgetTester tester) async {
       final GlobalKey<TestFocusState> keyA = GlobalKey();
-      final FocusScopeNode parentFocusScope =
-          FocusScopeNode(debugLabel: 'Parent Scope Node');
-      final FocusScopeNode childFocusScope =
-          FocusScopeNode(debugLabel: 'Child Scope Node');
+      final FocusScopeNode parentFocusScope = FocusScopeNode(debugLabel: 'Parent Scope Node');
+      final FocusScopeNode childFocusScope = FocusScopeNode(debugLabel: 'Child Scope Node');
 
       await tester.pumpWidget(
         FocusScope(
@@ -521,11 +498,9 @@ void main() {
         ),
       );
 
-      FocusScope.of(keyA.currentContext)
-          .requestFocus(keyA.currentState.focusNode);
+      FocusScope.of(keyA.currentContext).requestFocus(keyA.currentState.focusNode);
       expect(FocusScope.of(keyA.currentContext), equals(childFocusScope));
-      WidgetsBinding.instance.focusManager.rootScope
-          .setFirstFocus(FocusScope.of(keyA.currentContext));
+      WidgetsBinding.instance.focusManager.rootScope.setFirstFocus(FocusScope.of(keyA.currentContext));
 
       await tester.pumpAndSettle();
 
@@ -554,13 +529,10 @@ void main() {
     });
 
     // Arguably, this isn't correct behavior, but it is what happens now.
-    testWidgets(
-        "Removing focused widget doesn't move focus to next widget within FocusScope",
-        (WidgetTester tester) async {
+    testWidgets("Removing focused widget doesn't move focus to next widget within FocusScope", (WidgetTester tester) async {
       final GlobalKey<TestFocusState> keyA = GlobalKey();
       final GlobalKey<TestFocusState> keyB = GlobalKey();
-      final FocusScopeNode parentFocusScope =
-          FocusScopeNode(debugLabel: 'Parent Scope');
+      final FocusScopeNode parentFocusScope = FocusScopeNode(debugLabel: 'Parent Scope');
 
       await tester.pumpWidget(
         FocusScope(
@@ -584,8 +556,7 @@ void main() {
         ),
       );
 
-      FocusScope.of(keyA.currentContext)
-          .requestFocus(keyA.currentState.focusNode);
+      FocusScope.of(keyA.currentContext).requestFocus(keyA.currentState.focusNode);
       final FocusScopeNode scope = FocusScope.of(keyA.currentContext);
       WidgetsBinding.instance.focusManager.rootScope.setFirstFocus(scope);
 
@@ -616,14 +587,12 @@ void main() {
       expect(find.text('b'), findsOneWidget);
     });
 
-    testWidgets('Removing a FocusScope removes its node from the tree',
-        (WidgetTester tester) async {
+    testWidgets('Removing a FocusScope removes its node from the tree', (WidgetTester tester) async {
       final GlobalKey<TestFocusState> keyA = GlobalKey();
       final GlobalKey<TestFocusState> keyB = GlobalKey();
       final GlobalKey<TestFocusState> scopeKeyA = GlobalKey();
       final GlobalKey<TestFocusState> scopeKeyB = GlobalKey();
-      final FocusScopeNode parentFocusScope =
-          FocusScopeNode(debugLabel: 'Parent Scope');
+      final FocusScopeNode parentFocusScope = FocusScopeNode(debugLabel: 'Parent Scope');
 
       // This checks both FocusScopes that have their own nodes, as well as those
       // that use external nodes.
@@ -661,10 +630,8 @@ void main() {
         ),
       );
 
-      FocusScope.of(keyB.currentContext)
-          .requestFocus(keyB.currentState.focusNode);
-      FocusScope.of(keyA.currentContext)
-          .requestFocus(keyA.currentState.focusNode);
+      FocusScope.of(keyB.currentContext).requestFocus(keyB.currentState.focusNode);
+      FocusScope.of(keyA.currentContext).requestFocus(keyA.currentState.focusNode);
       final FocusScopeNode aScope = FocusScope.of(keyA.currentContext);
       final FocusScopeNode bScope = FocusScope.of(keyB.currentContext);
       WidgetsBinding.instance.focusManager.rootScope.setFirstFocus(bScope);
@@ -684,17 +651,13 @@ void main() {
     });
 
     // By "pinned", it means kept in the tree by a GlobalKey.
-    testWidgets(
-        "Removing pinned focused scope doesn't move focus to focused widget within next FocusScope",
-        (WidgetTester tester) async {
+    testWidgets("Removing pinned focused scope doesn't move focus to focused widget within next FocusScope", (WidgetTester tester) async {
       final GlobalKey<TestFocusState> keyA = GlobalKey();
       final GlobalKey<TestFocusState> keyB = GlobalKey();
       final GlobalKey<TestFocusState> scopeKeyA = GlobalKey();
       final GlobalKey<TestFocusState> scopeKeyB = GlobalKey();
-      final FocusScopeNode parentFocusScope1 =
-          FocusScopeNode(debugLabel: 'Parent Scope 1');
-      final FocusScopeNode parentFocusScope2 =
-          FocusScopeNode(debugLabel: 'Parent Scope 2');
+      final FocusScopeNode parentFocusScope1 = FocusScopeNode(debugLabel: 'Parent Scope 1');
+      final FocusScopeNode parentFocusScope2 = FocusScopeNode(debugLabel: 'Parent Scope 2');
 
       await tester.pumpWidget(
         DefaultFocusTraversal(
@@ -731,10 +694,8 @@ void main() {
         ),
       );
 
-      FocusScope.of(keyB.currentContext)
-          .requestFocus(keyB.currentState.focusNode);
-      FocusScope.of(keyA.currentContext)
-          .requestFocus(keyA.currentState.focusNode);
+      FocusScope.of(keyB.currentContext).requestFocus(keyB.currentState.focusNode);
+      FocusScope.of(keyA.currentContext).requestFocus(keyA.currentState.focusNode);
       final FocusScopeNode bScope = FocusScope.of(keyB.currentContext);
       final FocusScopeNode aScope = FocusScope.of(keyA.currentContext);
       WidgetsBinding.instance.focusManager.rootScope.setFirstFocus(bScope);
@@ -776,15 +737,11 @@ void main() {
       expect(find.text('b'), findsOneWidget);
     });
 
-    testWidgets(
-        "Removing unpinned focused scope doesn't move focus to focused widget within next FocusScope",
-        (WidgetTester tester) async {
+    testWidgets("Removing unpinned focused scope doesn't move focus to focused widget within next FocusScope", (WidgetTester tester) async {
       final GlobalKey<TestFocusState> keyA = GlobalKey();
       final GlobalKey<TestFocusState> keyB = GlobalKey();
-      final FocusScopeNode parentFocusScope1 =
-          FocusScopeNode(debugLabel: 'Parent Scope 1');
-      final FocusScopeNode parentFocusScope2 =
-          FocusScopeNode(debugLabel: 'Parent Scope 2');
+      final FocusScopeNode parentFocusScope1 = FocusScopeNode(debugLabel: 'Parent Scope 1');
+      final FocusScopeNode parentFocusScope2 = FocusScopeNode(debugLabel: 'Parent Scope 2');
 
       await tester.pumpWidget(
         DefaultFocusTraversal(
@@ -819,10 +776,8 @@ void main() {
         ),
       );
 
-      FocusScope.of(keyB.currentContext)
-          .requestFocus(keyB.currentState.focusNode);
-      FocusScope.of(keyA.currentContext)
-          .requestFocus(keyA.currentState.focusNode);
+      FocusScope.of(keyB.currentContext).requestFocus(keyB.currentState.focusNode);
+      FocusScope.of(keyA.currentContext).requestFocus(keyA.currentState.focusNode);
       final FocusScopeNode bScope = FocusScope.of(keyB.currentContext);
       final FocusScopeNode aScope = FocusScope.of(keyA.currentContext);
       WidgetsBinding.instance.focusManager.rootScope.setFirstFocus(bScope);
@@ -862,8 +817,7 @@ void main() {
       expect(find.text('b'), findsOneWidget);
     });
 
-    testWidgets('Moving widget from one scope to another retains focus',
-        (WidgetTester tester) async {
+    testWidgets('Moving widget from one scope to another retains focus', (WidgetTester tester) async {
       final FocusScopeNode parentFocusScope1 = FocusScopeNode();
       final FocusScopeNode parentFocusScope2 = FocusScopeNode();
       final GlobalKey<TestFocusState> keyA = GlobalKey();
@@ -898,8 +852,7 @@ void main() {
         ),
       );
 
-      FocusScope.of(keyA.currentContext)
-          .requestFocus(keyA.currentState.focusNode);
+      FocusScope.of(keyA.currentContext).requestFocus(keyA.currentState.focusNode);
       final FocusScopeNode aScope = FocusScope.of(keyA.currentContext);
       WidgetsBinding.instance.focusManager.rootScope.setFirstFocus(aScope);
 
@@ -947,12 +900,9 @@ void main() {
       expect(find.text('b'), findsOneWidget);
     });
 
-    testWidgets('Moving FocusScopeNodes retains focus',
-        (WidgetTester tester) async {
-      final FocusScopeNode parentFocusScope1 =
-          FocusScopeNode(debugLabel: 'Scope 1');
-      final FocusScopeNode parentFocusScope2 =
-          FocusScopeNode(debugLabel: 'Scope 2');
+    testWidgets('Moving FocusScopeNodes retains focus', (WidgetTester tester) async {
+      final FocusScopeNode parentFocusScope1 = FocusScopeNode(debugLabel: 'Scope 1');
+      final FocusScopeNode parentFocusScope2 = FocusScopeNode(debugLabel: 'Scope 2');
       final GlobalKey<TestFocusState> keyA = GlobalKey();
       final GlobalKey<TestFocusState> keyB = GlobalKey();
 
@@ -987,8 +937,7 @@ void main() {
         ),
       );
 
-      FocusScope.of(keyA.currentContext)
-          .requestFocus(keyA.currentState.focusNode);
+      FocusScope.of(keyA.currentContext).requestFocus(keyA.currentState.focusNode);
       final FocusScopeNode aScope = FocusScope.of(keyA.currentContext);
       WidgetsBinding.instance.focusManager.rootScope.setFirstFocus(aScope);
 
@@ -1058,8 +1007,7 @@ void main() {
     });
   });
   group(Focus, () {
-    testWidgets('Focus.of stops at the nearest Focus widget.',
-        (WidgetTester tester) async {
+    testWidgets('Focus.of stops at the nearest Focus widget.', (WidgetTester tester) async {
       final GlobalKey key1 = GlobalKey(debugLabel: '1');
       final GlobalKey key2 = GlobalKey(debugLabel: '2');
       final GlobalKey key3 = GlobalKey(debugLabel: '3');
@@ -1203,8 +1151,7 @@ void main() {
       expect(node.hasFocus, isTrue);
     });
   });
-  testWidgets('Nodes are removed when all Focuses are removed.',
-      (WidgetTester tester) async {
+  testWidgets('Nodes are removed when all Focuses are removed.', (WidgetTester tester) async {
     final GlobalKey key1 = GlobalKey(debugLabel: '1');
     bool gotFocus;
     await tester.pumpWidget(

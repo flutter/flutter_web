@@ -16,27 +16,24 @@ class FooState extends State<Foo> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      return ScrollConfiguration(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return ScrollConfiguration(
           behavior: FooScrollBehavior(),
           child: ListView(
             controller: scrollController,
             children: <Widget>[
               GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      /* this is needed to trigger the original bug this is regression-testing */
-                    });
-                    scrollController.animateTo(200.0,
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.linear);
-                  },
-                  child: const DecoratedBox(
-                    decoration: BoxDecoration(color: Color(0)),
-                    child: SizedBox(
-                      height: 200.0,
-                    ),
-                  )),
+                onTap: () {
+                  setState(() { /* this is needed to trigger the original bug this is regression-testing */ });
+                  scrollController.animateTo(200.0, duration: const Duration(milliseconds: 500), curve: Curves.linear);
+                },
+                child: const DecoratedBox(
+                  decoration: BoxDecoration(color: Color(0)),
+                  child: SizedBox(
+                    height: 200.0,
+                  ),
+                )
+              ),
               const DecoratedBox(
                 decoration: BoxDecoration(color: Color(0)),
                 child: SizedBox(
@@ -68,8 +65,10 @@ class FooState extends State<Foo> {
                 ),
               ),
             ],
-          ));
-    });
+          )
+        );
+      }
+    );
   }
 }
 
@@ -86,13 +85,9 @@ void main() {
         child: Foo(),
       ),
     );
-    expect(
-        tester.state<ScrollableState>(find.byType(Scrollable)).position.pixels,
-        0.0);
+    expect(tester.state<ScrollableState>(find.byType(Scrollable)).position.pixels, 0.0);
     await tester.tap(find.byType(GestureDetector).first);
     await tester.pumpAndSettle();
-    expect(
-        tester.state<ScrollableState>(find.byType(Scrollable)).position.pixels,
-        200.0);
+    expect(tester.state<ScrollableState>(find.byType(Scrollable)).position.pixels, 200.0);
   });
 }

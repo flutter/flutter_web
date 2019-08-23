@@ -10,8 +10,7 @@ import 'package:flutter_web/gestures.dart';
 void main() {
   const Offset forcePressOffset = Offset(400.0, 50.0);
 
-  testWidgets('Uncontested scrolls start immediately',
-      (WidgetTester tester) async {
+  testWidgets('Uncontested scrolls start immediately', (WidgetTester tester) async {
     bool didStartDrag = false;
     double updatedDragDelta;
     bool didEndDrag = false;
@@ -37,8 +36,7 @@ void main() {
     expect(didEndDrag, isFalse);
 
     const Offset firstLocation = Offset(10.0, 10.0);
-    final TestGesture gesture =
-        await tester.startGesture(firstLocation, pointer: 7);
+    final TestGesture gesture = await tester.startGesture(firstLocation, pointer: 7);
     expect(didStartDrag, isTrue);
     didStartDrag = false;
     expect(updatedDragDelta, isNull);
@@ -60,29 +58,19 @@ void main() {
     await tester.pumpWidget(Container());
   });
 
-  testWidgets('Match two scroll gestures in succession',
-      (WidgetTester tester) async {
+  testWidgets('Match two scroll gestures in succession', (WidgetTester tester) async {
     int gestureCount = 0;
     double dragDistance = 0.0;
 
     const Offset downLocation = Offset(10.0, 10.0);
-    const Offset upLocation =
-        Offset(10.0, 50.0); // must be far enough to be more than kTouchSlop
+    const Offset upLocation = Offset(10.0, 50.0); // must be far enough to be more than kTouchSlop
 
     final Widget widget = GestureDetector(
       dragStartBehavior: DragStartBehavior.down,
-      onVerticalDragUpdate: (DragUpdateDetails details) {
-        dragDistance += details.primaryDelta;
-      },
-      onVerticalDragEnd: (DragEndDetails details) {
-        gestureCount += 1;
-      },
-      onHorizontalDragUpdate: (DragUpdateDetails details) {
-        fail('gesture should not match');
-      },
-      onHorizontalDragEnd: (DragEndDetails details) {
-        fail('gesture should not match');
-      },
+      onVerticalDragUpdate: (DragUpdateDetails details) { dragDistance += details.primaryDelta; },
+      onVerticalDragEnd: (DragEndDetails details) { gestureCount += 1; },
+      onHorizontalDragUpdate: (DragUpdateDetails details) { fail('gesture should not match'); },
+      onHorizontalDragEnd: (DragEndDetails details) { fail('gesture should not match'); },
       child: Container(
         color: const Color(0xFF00FF00),
       ),
@@ -114,8 +102,7 @@ void main() {
           didStartPan = true;
         },
         onPanUpdate: (DragUpdateDetails details) {
-          panDelta =
-              panDelta == null ? details.delta : panDelta + details.delta;
+          panDelta = panDelta == null ? details.delta : panDelta + details.delta;
         },
         onPanEnd: (DragEndDetails details) {
           didEndPan = true;
@@ -201,6 +188,7 @@ void main() {
     await tester.tapAt(const Offset(10.0, 10.0));
     expect(didReceivePointerDown, isTrue);
     expect(didTap, isTrue);
+
   });
 
   testWidgets('Empty', (WidgetTester tester) async {
@@ -248,8 +236,7 @@ void main() {
       ),
     );
 
-    final RenderSemanticsGestureHandler renderObj1 =
-        tester.renderObject(find.byType(GestureDetector));
+    final RenderSemanticsGestureHandler renderObj1 = tester.renderObject(find.byType(GestureDetector));
     final GestureTapCallback actualCallback1 = renderObj1.onTap;
 
     await tester.pumpWidget(
@@ -261,16 +248,14 @@ void main() {
       ),
     );
 
-    final RenderSemanticsGestureHandler renderObj2 =
-        tester.renderObject(find.byType(GestureDetector));
+    final RenderSemanticsGestureHandler renderObj2 = tester.renderObject(find.byType(GestureDetector));
     final GestureTapCallback actualCallback2 = renderObj2.onTap;
 
     expect(renderObj1, same(renderObj2));
     expect(actualCallback1, same(actualCallback2)); // Should be cached.
   });
 
-  testWidgets('Tap down occurs after kPressTimeout',
-      (WidgetTester tester) async {
+  testWidgets('Tap down occurs after kPressTimeout', (WidgetTester tester) async {
     int tapDown = 0;
     int tap = 0;
     int tapCancel = 0;
@@ -304,8 +289,7 @@ void main() {
     // Pointer is dragged from the center of the 800x100 gesture detector
     // to a point (400,300) below it. This should never call onTap.
     Future<void> dragOut(Duration timeout) async {
-      final TestGesture gesture =
-          await tester.startGesture(const Offset(400.0, 50.0));
+      final TestGesture gesture = await tester.startGesture(const Offset(400.0, 50.0));
       // If the timeout is less than kPressTimeout the recognizer will not
       // trigger any callbacks. If the timeout is greater than kLongPressTimeout
       // then onTapDown, onLongPress, and onCancel will be called.
@@ -333,8 +317,7 @@ void main() {
     expect(longPress, 1);
   });
 
-  testWidgets('Long Press Up Callback called after long press',
-      (WidgetTester tester) async {
+  testWidgets('Long Press Up Callback called after long press', (WidgetTester tester) async {
     int longPressUp = 0;
 
     await tester.pumpWidget(
@@ -354,20 +337,16 @@ void main() {
     );
 
     Future<void> longPress(Duration timeout) async {
-      final TestGesture gesture =
-          await tester.startGesture(const Offset(400.0, 50.0));
+      final TestGesture gesture = await tester.startGesture(const Offset(400.0, 50.0));
       await tester.pump(timeout);
       await gesture.up();
     }
 
-    await longPress(kLongPressTimeout +
-        const Duration(
-            seconds: 1)); // To make sure the time for long press has occurred
+    await longPress(kLongPressTimeout + const Duration(seconds: 1)); // To make sure the time for long press has occurred
     expect(longPressUp, 1);
   });
 
-  testWidgets('Force Press Callback called after force press',
-      (WidgetTester tester) async {
+  testWidgets('Force Press Callback called after force press', (WidgetTester tester) async {
     int forcePressStart = 0;
     int forcePressPeaked = 0;
     int forcePressUpdate = 0;
@@ -403,66 +382,31 @@ void main() {
       ),
     );
 
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(0.0, 0.0),
-        pressure: 0.3,
-        pressureMin: 0,
-        pressureMax: 1));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(0.0, 0.0), pressure: 0.3, pressureMin: 0, pressureMax: 1));
 
     expect(forcePressStart, 0);
     expect(forcePressPeaked, 0);
     expect(forcePressUpdate, 0);
     expect(forcePressEnded, 0);
 
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(0.0, 0.0),
-        pressure: 0.5,
-        pressureMin: 0,
-        pressureMax: 1));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(0.0, 0.0), pressure: 0.5, pressureMin: 0, pressureMax: 1));
 
     expect(forcePressStart, 1);
     expect(forcePressPeaked, 0);
     expect(forcePressUpdate, 1);
     expect(forcePressEnded, 0);
 
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(0.0, 0.0),
-        pressure: 0.6,
-        pressureMin: 0,
-        pressureMax: 1));
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(0.0, 0.0),
-        pressure: 0.7,
-        pressureMin: 0,
-        pressureMax: 1));
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(0.0, 0.0),
-        pressure: 0.2,
-        pressureMin: 0,
-        pressureMax: 1));
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(0.0, 0.0),
-        pressure: 0.3,
-        pressureMin: 0,
-        pressureMax: 1));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(0.0, 0.0), pressure: 0.6, pressureMin: 0, pressureMax: 1));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(0.0, 0.0), pressure: 0.7, pressureMin: 0, pressureMax: 1));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(0.0, 0.0), pressure: 0.2, pressureMin: 0, pressureMax: 1));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(0.0, 0.0), pressure: 0.3, pressureMin: 0, pressureMax: 1));
 
     expect(forcePressStart, 1);
     expect(forcePressPeaked, 0);
     expect(forcePressUpdate, 5);
     expect(forcePressEnded, 0);
 
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(0.0, 0.0),
-        pressure: 0.9,
-        pressureMin: 0,
-        pressureMax: 1));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(0.0, 0.0), pressure: 0.9, pressureMin: 0, pressureMax: 1));
 
     expect(forcePressStart, 1);
     expect(forcePressPeaked, 1);
@@ -477,9 +421,7 @@ void main() {
     expect(forcePressEnded, 1);
   });
 
-  testWidgets(
-      'Force Press Callback not called if long press triggered before force press',
-      (WidgetTester tester) async {
+  testWidgets('Force Press Callback not called if long press triggered before force press', (WidgetTester tester) async {
     int forcePressStart = 0;
     int longPressTimes = 0;
 
@@ -514,12 +456,7 @@ void main() {
       ),
     );
 
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(400.0, 50.0),
-        pressure: 0.3,
-        pressureMin: 0,
-        pressureMax: maxPressure));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(400.0, 50.0), pressure: 0.3, pressureMin: 0, pressureMax: maxPressure));
 
     expect(forcePressStart, 0);
     expect(longPressTimes, 0);
@@ -531,20 +468,13 @@ void main() {
     expect(forcePressStart, 0);
 
     // Failed attempt to trigger the force press.
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(400.0, 50.0),
-        pressure: 0.5,
-        pressureMin: 0,
-        pressureMax: maxPressure));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(400.0, 50.0), pressure: 0.5, pressureMin: 0, pressureMax: maxPressure));
 
     expect(longPressTimes, 1);
     expect(forcePressStart, 0);
   });
 
-  testWidgets(
-      'Force Press Callback not called if drag triggered before force press',
-      (WidgetTester tester) async {
+  testWidgets('Force Press Callback not called if drag triggered before force press', (WidgetTester tester) async {
     int forcePressStart = 0;
     int horizontalDragStart = 0;
 
@@ -578,12 +508,7 @@ void main() {
       ),
     );
 
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(0.0, 0.0),
-        pressure: 0.3,
-        pressureMin: 0,
-        pressureMax: 1));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(0.0, 0.0), pressure: 0.3, pressureMin: 0, pressureMax: 1));
 
     expect(forcePressStart, 0);
     expect(horizontalDragStart, 0);
@@ -595,12 +520,7 @@ void main() {
     expect(forcePressStart, 0);
 
     // Failed attempt to trigger the force press.
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(0.0, 0.0),
-        pressure: 0.5,
-        pressureMin: 0,
-        pressureMax: 1));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(0.0, 0.0), pressure: 0.5, pressureMin: 0, pressureMax: 1));
 
     expect(horizontalDragStart, 1);
     expect(forcePressStart, 0);

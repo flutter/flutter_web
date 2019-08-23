@@ -110,8 +110,8 @@ class TestRecordingPaintingContext extends ClipContext
   }
 
   @override
-  ClipRectLayer pushClipRect(bool needsCompositing, Offset offset,
-      Rect clipRect, PaintingContextCallback painter,
+  ClipRectLayer pushClipRect(bool needsCompositing, Offset offset, Rect clipRect,
+      PaintingContextCallback painter,
       {Clip clipBehavior = Clip.hardEdge, ClipRectLayer oldLayer}) {
     clipRectAndPaint(clipRect.shift(offset), clipBehavior,
         clipRect.shift(offset), () => painter(this, offset));
@@ -119,8 +119,8 @@ class TestRecordingPaintingContext extends ClipContext
   }
 
   @override
-  ClipRRectLayer pushClipRRect(bool needsCompositing, Offset offset,
-      Rect bounds, RRect clipRRect, PaintingContextCallback painter,
+  ClipRRectLayer pushClipRRect(bool needsCompositing, Offset offset, Rect bounds,
+      RRect clipRRect, PaintingContextCallback painter,
       {Clip clipBehavior = Clip.antiAlias, ClipRRectLayer oldLayer}) {
     assert(clipBehavior != null);
     clipRRectAndPaint(clipRRect.shift(offset), clipBehavior,
@@ -138,9 +138,8 @@ class TestRecordingPaintingContext extends ClipContext
   }
 
   @override
-  TransformLayer pushTransform(bool needsCompositing, Offset offset,
-      Matrix4 transform, PaintingContextCallback painter,
-      {TransformLayer oldLayer}) {
+  TransformLayer pushTransform(bool needsCompositing, Offset offset, Matrix4 transform,
+      PaintingContextCallback painter, {TransformLayer oldLayer}) {
     canvas.save();
     canvas.transform(transform.storage);
     painter(this, offset);
@@ -149,25 +148,15 @@ class TestRecordingPaintingContext extends ClipContext
   }
 
   @override
-  OpacityLayer pushOpacity(
-      Offset offset, int alpha, PaintingContextCallback painter,
-      {OpacityLayer oldLayer}) {
+  OpacityLayer pushOpacity(Offset offset, int alpha, PaintingContextCallback painter, {OpacityLayer oldLayer}) {
     canvas.saveLayer(null, null); // TODO(ianh): Expose the alpha somewhere.
     painter(this, offset);
     canvas.restore();
     return null;
   }
 
-  PhysicalModelLayer pushPhysicalModel(
-      Offset offset,
-      Path clipPath,
-      Clip clipBehavior,
-      double elevation,
-      Color color,
-      Color shadowColor,
-      PaintingContextCallback painter,
-      {PhysicalModelLayer oldLayer,
-      Rect childPaintBounds}) {
+  PhysicalModelLayer pushPhysicalModel(Offset offset, Path clipPath, Clip clipBehavior, double elevation, Color color,
+      Color shadowColor, PaintingContextCallback painter, { PhysicalModelLayer oldLayer, Rect childPaintBounds }) {
     canvas.saveLayer(null, null); // TODO(ianh): Expose the alpha somewhere.
     painter(this, offset);
     canvas.restore();

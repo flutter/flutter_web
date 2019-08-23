@@ -1,12 +1,13 @@
 // Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// Synced 2019-05-30T14:20:56.198905.
+// Synced 2019-08-12T13:26:26.449232.
 
 import 'arena.dart';
 import 'constants.dart';
 import 'events.dart';
 import 'recognizer.dart';
+import 'velocity_tracker.dart';
 
 /// Callback signature for [LongPressGestureRecognizer.onLongPress].
 ///
@@ -25,24 +26,21 @@ typedef GestureLongPressUpCallback = void Function();
 /// Called when a pointer has remained in contact with the screen at the
 /// same location for a long period of time. Also reports the long press down
 /// position.
-typedef GestureLongPressStartCallback = void Function(
-    LongPressStartDetails details);
+typedef GestureLongPressStartCallback = void Function(LongPressStartDetails details);
 
 /// Callback signature for [LongPressGestureRecognizer.onLongPressMoveUpdate].
 ///
 /// Called when a pointer is moving after being held in contact at the same
 /// location for a long period of time. Reports the new position and its offset
 /// from the original down position.
-typedef GestureLongPressMoveUpdateCallback = void Function(
-    LongPressMoveUpdateDetails details);
+typedef GestureLongPressMoveUpdateCallback = void Function(LongPressMoveUpdateDetails details);
 
 /// Callback signature for [LongPressGestureRecognizer.onLongPressEnd].
 ///
 /// Called when a pointer stops contacting the screen after a long press
 /// gesture was detected. Also reports the position where the pointer stopped
 /// contacting the screen.
-typedef GestureLongPressEndCallback = void Function(
-    LongPressEndDetails details);
+typedef GestureLongPressEndCallback = void Function(LongPressEndDetails details);
 
 /// Details for callbacks that use [GestureLongPressStartCallback].
 ///
@@ -55,11 +53,17 @@ class LongPressStartDetails {
   /// Creates the details for a [GestureLongPressStartCallback].
   ///
   /// The [globalPosition] argument must not be null.
-  const LongPressStartDetails({this.globalPosition = Offset.zero})
-      : assert(globalPosition != null);
+  const LongPressStartDetails({
+    this.globalPosition = Offset.zero,
+    Offset localPosition,
+  }) : assert(globalPosition != null),
+       localPosition = localPosition ?? globalPosition;
 
   /// The global position at which the pointer contacted the screen.
   final Offset globalPosition;
+
+  /// The local position at which the pointer contacted the screen.
+  final Offset localPosition;
 }
 
 /// Details for callbacks that use [GestureLongPressMoveUpdateCallback].
@@ -75,17 +79,29 @@ class LongPressMoveUpdateDetails {
   /// The [globalPosition] and [offsetFromOrigin] arguments must not be null.
   const LongPressMoveUpdateDetails({
     this.globalPosition = Offset.zero,
+    Offset localPosition,
     this.offsetFromOrigin = Offset.zero,
-  })  : assert(globalPosition != null),
-        assert(offsetFromOrigin != null);
+    Offset localOffsetFromOrigin,
+  }) : assert(globalPosition != null),
+       assert(offsetFromOrigin != null),
+       localPosition = localPosition ?? globalPosition,
+       localOffsetFromOrigin = localOffsetFromOrigin ?? offsetFromOrigin;
 
   /// The global position of the pointer when it triggered this update.
   final Offset globalPosition;
+
+  /// The local position of the pointer when it triggered this update.
+  final Offset localPosition;
 
   /// A delta offset from the point where the long press drag initially contacted
   /// the screen to the point where the pointer is currently located (the
   /// present [globalPosition]) when this callback is triggered.
   final Offset offsetFromOrigin;
+
+  /// A local delta offset from the point where the long press drag initially contacted
+  /// the screen to the point where the pointer is currently located (the
+  /// present [localPosition]) when this callback is triggered.
+  final Offset localOffsetFromOrigin;
 }
 
 /// Details for callbacks that use [GestureLongPressEndCallback].
@@ -99,11 +115,23 @@ class LongPressEndDetails {
   /// Creates the details for a [GestureLongPressEndCallback].
   ///
   /// The [globalPosition] argument must not be null.
-  const LongPressEndDetails({this.globalPosition = Offset.zero})
-      : assert(globalPosition != null);
+  const LongPressEndDetails({
+    this.globalPosition = Offset.zero,
+    Offset localPosition,
+    this.velocity = Velocity.zero,
+  }) : assert(globalPosition != null),
+       localPosition = localPosition ?? globalPosition;
 
   /// The global position at which the pointer lifted from the screen.
   final Offset globalPosition;
+
+  /// The local position at which the pointer contacted the screen.
+  final Offset localPosition;
+
+  /// The pointer's velocity when it stopped contacting the screen.
+  ///
+  /// Defaults to zero if not specified in the constructor.
+  final Velocity velocity;
 }
 
 /// Recognizes when the user has pressed down at the same location for a long
@@ -134,14 +162,14 @@ class LongPressGestureRecognizer extends PrimaryPointerGestureRecognizer {
     PointerDeviceKind kind,
     Object debugOwner,
   }) : super(
-          deadline: kLongPressTimeout,
-          postAcceptSlopTolerance: postAcceptSlopTolerance,
-          kind: kind,
-          debugOwner: debugOwner,
-        );
+    deadline: kLongPressTimeout,
+    postAcceptSlopTolerance: postAcceptSlopTolerance,
+    kind: kind,
+    debugOwner: debugOwner,
+  );
 
   bool _longPressAccepted = false;
-  Offset _longPressOrigin;
+  OffsetPair _longPressOrigin;
   // The buttons sent by `PointerDownEvent`. If a `PointerMoveEvent` comes with a
   // different set of buttons, the gesture is canceled.
   int _initialButtons;
@@ -194,6 +222,8 @@ class LongPressGestureRecognizer extends PrimaryPointerGestureRecognizer {
   ///    callback.
   GestureLongPressEndCallback onLongPressEnd;
 
+  VelocityTracker _velocityTracker;
+
   @override
   bool isPointerAllowed(PointerDownEvent event) {
     switch (event.buttons) {
@@ -202,7 +232,8 @@ class LongPressGestureRecognizer extends PrimaryPointerGestureRecognizer {
             onLongPress == null &&
             onLongPressMoveUpdate == null &&
             onLongPressEnd == null &&
-            onLongPressUp == null) return false;
+            onLongPressUp == null)
+          return false;
         break;
       default:
         return false;
@@ -221,6 +252,17 @@ class LongPressGestureRecognizer extends PrimaryPointerGestureRecognizer {
 
   @override
   void handlePrimaryPointer(PointerEvent event) {
+    if (!event.synthesized) {
+      if (event is PointerDownEvent) {
+        _velocityTracker = VelocityTracker();
+        _velocityTracker.addPosition(event.timeStamp, event.localPosition);
+      }
+      if (event is PointerMoveEvent) {
+        assert(_velocityTracker != null);
+        _velocityTracker.addPosition(event.timeStamp, event.localPosition);
+      }
+    }
+
     if (event is PointerUpEvent) {
       if (_longPressAccepted == true) {
         _checkLongPressEnd(event);
@@ -233,7 +275,7 @@ class LongPressGestureRecognizer extends PrimaryPointerGestureRecognizer {
       _reset();
     } else if (event is PointerDownEvent) {
       // The first touch.
-      _longPressOrigin = event.position;
+      _longPressOrigin = OffsetPair.fromEventPosition(event);
       _initialButtons = event.buttons;
     } else if (event is PointerMoveEvent) {
       if (event.buttons != _initialButtons) {
@@ -247,30 +289,43 @@ class LongPressGestureRecognizer extends PrimaryPointerGestureRecognizer {
 
   void _checkLongPressStart() {
     assert(_initialButtons == kPrimaryButton);
-    final LongPressStartDetails details = LongPressStartDetails(
-      globalPosition: _longPressOrigin,
-    );
-    if (onLongPressStart != null)
-      invokeCallback<void>('onLongPressStart', () => onLongPressStart(details));
-    if (onLongPress != null) invokeCallback<void>('onLongPress', onLongPress);
+    if (onLongPressStart != null) {
+      final LongPressStartDetails details = LongPressStartDetails(
+        globalPosition: _longPressOrigin.global,
+        localPosition: _longPressOrigin.local,
+      );
+      invokeCallback<void>('onLongPressStart',
+        () => onLongPressStart(details));
+    }
+    if (onLongPress != null)
+      invokeCallback<void>('onLongPress', onLongPress);
   }
 
   void _checkLongPressMoveUpdate(PointerEvent event) {
     assert(_initialButtons == kPrimaryButton);
     final LongPressMoveUpdateDetails details = LongPressMoveUpdateDetails(
       globalPosition: event.position,
-      offsetFromOrigin: event.position - _longPressOrigin,
+      localPosition: event.localPosition,
+      offsetFromOrigin: event.position - _longPressOrigin.global,
+      localOffsetFromOrigin: event.localPosition - _longPressOrigin.local,
     );
     if (onLongPressMoveUpdate != null)
-      invokeCallback<void>(
-          'onLongPressMoveUpdate', () => onLongPressMoveUpdate(details));
+      invokeCallback<void>('onLongPressMoveUpdate',
+        () => onLongPressMoveUpdate(details));
   }
 
   void _checkLongPressEnd(PointerEvent event) {
     assert(_initialButtons == kPrimaryButton);
+
+    final VelocityEstimate estimate = _velocityTracker.getVelocityEstimate();
+    final Velocity velocity = estimate == null ? Velocity.zero : Velocity(pixelsPerSecond: estimate.pixelsPerSecond);
     final LongPressEndDetails details = LongPressEndDetails(
       globalPosition: event.position,
+      localPosition: event.localPosition,
+      velocity: velocity,
     );
+
+    _velocityTracker = null;
     if (onLongPressEnd != null)
       invokeCallback<void>('onLongPressEnd', () => onLongPressEnd(details));
     if (onLongPressUp != null)
@@ -281,6 +336,7 @@ class LongPressGestureRecognizer extends PrimaryPointerGestureRecognizer {
     _longPressAccepted = false;
     _longPressOrigin = null;
     _initialButtons = null;
+    _velocityTracker = null;
   }
 
   @override

@@ -1,7 +1,7 @@
 // Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// Synced 2019-05-30T14:20:56.281299.
+// Synced. * Contains Web DELTA *
 
 import 'dart:math' as math;
 
@@ -143,15 +143,15 @@ class FloatingActionButton extends StatelessWidget {
     this.focusNode,
     this.materialTapTargetSize,
     this.isExtended = false,
-  })  : assert(elevation == null || elevation >= 0.0),
-        assert(focusElevation == null || focusElevation >= 0.0),
-        assert(hoverElevation == null || hoverElevation >= 0.0),
-        assert(highlightElevation == null || highlightElevation >= 0.0),
-        assert(disabledElevation == null || disabledElevation >= 0.0),
-        assert(mini != null),
-        assert(isExtended != null),
-        _sizeConstraints = mini ? _kMiniSizeConstraints : _kSizeConstraints,
-        super(key: key);
+  }) : assert(elevation == null || elevation >= 0.0),
+       assert(focusElevation == null || focusElevation >= 0.0),
+       assert(hoverElevation == null || hoverElevation >= 0.0),
+       assert(highlightElevation == null || highlightElevation >= 0.0),
+       assert(disabledElevation == null || disabledElevation >= 0.0),
+       assert(mini != null),
+       assert(isExtended != null),
+       _sizeConstraints = mini ? _kMiniSizeConstraints : _kSizeConstraints,
+       super(key: key);
 
   /// Creates a wider [StadiumBorder]-shaped floating action button with
   /// an optional [icon] and a [label].
@@ -180,33 +180,33 @@ class FloatingActionButton extends StatelessWidget {
     this.focusNode,
     Widget icon,
     @required Widget label,
-  })  : assert(elevation == null || elevation >= 0.0),
-        assert(focusElevation == null || focusElevation >= 0.0),
-        assert(hoverElevation == null || hoverElevation >= 0.0),
-        assert(highlightElevation == null || highlightElevation >= 0.0),
-        assert(disabledElevation == null || disabledElevation >= 0.0),
-        assert(isExtended != null),
-        _sizeConstraints = _kExtendedSizeConstraints,
-        mini = false,
-        child = _ChildOverflowBox(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: icon == null
-                ? <Widget>[
-                    const SizedBox(width: 20.0),
-                    label,
-                    const SizedBox(width: 20.0),
-                  ]
-                : <Widget>[
-                    const SizedBox(width: 16.0),
-                    icon,
-                    const SizedBox(width: 8.0),
-                    label,
-                    const SizedBox(width: 20.0),
-                  ],
-          ),
-        ),
-        super(key: key);
+  }) : assert(elevation == null || elevation >= 0.0),
+       assert(focusElevation == null || focusElevation >= 0.0),
+       assert(hoverElevation == null || hoverElevation >= 0.0),
+       assert(highlightElevation == null || highlightElevation >= 0.0),
+       assert(disabledElevation == null || disabledElevation >= 0.0),
+       assert(isExtended != null),
+       _sizeConstraints = _kExtendedSizeConstraints,
+       mini = false,
+       child = _ChildOverflowBox(
+         child: Row(
+           mainAxisSize: MainAxisSize.min,
+           children: icon == null
+             ? <Widget>[
+                 const SizedBox(width: 20.0),
+                 label,
+                 const SizedBox(width: 20.0),
+               ]
+             : <Widget>[
+                 const SizedBox(width: 16.0),
+                 icon,
+                 const SizedBox(width: 8.0),
+                 label,
+                 const SizedBox(width: 20.0),
+               ],
+         ),
+       ),
+       super(key: key);
 
   /// The widget below this widget in the tree.
   ///
@@ -392,46 +392,45 @@ class FloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final FloatingActionButtonThemeData floatingActionButtonTheme =
-        theme.floatingActionButtonTheme;
+    final FloatingActionButtonThemeData floatingActionButtonTheme = theme.floatingActionButtonTheme;
 
-    final Color foregroundColor = this.foregroundColor ??
-        floatingActionButtonTheme.foregroundColor ??
-        theme.accentIconTheme.color ??
-        theme.colorScheme.onSecondary;
-    final Color backgroundColor = this.backgroundColor ??
-        floatingActionButtonTheme.backgroundColor ??
-        theme.colorScheme.secondary;
-    final Color focusColor = this.focusColor ??
-        floatingActionButtonTheme.focusColor ??
-        theme.focusColor;
-    final Color hoverColor = this.hoverColor ??
-        floatingActionButtonTheme.hoverColor ??
-        theme.hoverColor;
-    final double elevation = this.elevation ??
-        floatingActionButtonTheme.elevation ??
-        _defaultElevation;
-    final double focusElevation = this.focusElevation ??
-        floatingActionButtonTheme.focusElevation ??
-        _defaultFocusElevation;
-    final double hoverElevation = this.hoverElevation ??
-        floatingActionButtonTheme.hoverElevation ??
-        _defaultHoverElevation;
-    final double disabledElevation = this.disabledElevation ??
-        floatingActionButtonTheme.disabledElevation ??
-        elevation;
-    final double highlightElevation = this.highlightElevation ??
-        floatingActionButtonTheme.highlightElevation ??
-        _defaultHighlightElevation;
-    final MaterialTapTargetSize materialTapTargetSize =
-        this.materialTapTargetSize ?? theme.materialTapTargetSize;
+    final Color foregroundColor = this.foregroundColor
+      ?? floatingActionButtonTheme.foregroundColor
+      ?? theme.accentIconTheme.color
+      ?? theme.colorScheme.onSecondary;
+    final Color backgroundColor = this.backgroundColor
+      ?? floatingActionButtonTheme.backgroundColor
+      ?? theme.colorScheme.secondary;
+    final Color focusColor = this.focusColor
+      ?? floatingActionButtonTheme.focusColor
+      ?? theme.focusColor;
+    final Color hoverColor = this.hoverColor
+      ?? floatingActionButtonTheme.hoverColor
+      ?? theme.hoverColor;
+    final double elevation = this.elevation
+      ?? floatingActionButtonTheme.elevation
+      ?? _defaultElevation;
+    final double focusElevation = this.focusElevation
+      ?? floatingActionButtonTheme.focusElevation
+      ?? _defaultFocusElevation;
+    final double hoverElevation = this.hoverElevation
+      ?? floatingActionButtonTheme.hoverElevation
+      ?? _defaultHoverElevation;
+    final double disabledElevation = this.disabledElevation
+      ?? floatingActionButtonTheme.disabledElevation
+      ?? elevation;
+    final double highlightElevation = this.highlightElevation
+      ?? floatingActionButtonTheme.highlightElevation
+      ?? _defaultHighlightElevation;
+    final MaterialTapTargetSize materialTapTargetSize = this.materialTapTargetSize
+      ?? theme.materialTapTargetSize;
     final TextStyle textStyle = theme.accentTextTheme.button.copyWith(
       color: foregroundColor,
       letterSpacing: 1.2,
     );
-    final ShapeBorder shape = this.shape ??
-        floatingActionButtonTheme.shape ??
-        (isExtended ? _defaultExtendedShape : _defaultShape);
+    final ShapeBorder shape = this.shape
+      ?? floatingActionButtonTheme.shape
+      ?? (isExtended ? _defaultExtendedShape : _defaultShape);
 
     Widget result;
 
@@ -464,11 +463,9 @@ class FloatingActionButton extends StatelessWidget {
     );
 
     if (tooltip != null) {
-      result = MergeSemantics(
-        child: Tooltip(
-          message: tooltip,
-          child: result,
-        ),
+      result = Tooltip(
+        message: tooltip,
+        child: result,
       );
     }
 
@@ -479,48 +476,28 @@ class FloatingActionButton extends StatelessWidget {
       );
     }
 
-    return result;
+    return MergeSemantics(child: result);
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<VoidCallback>('onPressed', onPressed,
-        ifNull: 'disabled'));
+    properties.add(ObjectFlagProperty<VoidCallback>('onPressed', onPressed, ifNull: 'disabled'));
     properties.add(StringProperty('tooltip', tooltip, defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>(
-        'foregroundColor', foregroundColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>(
-        'backgroundColor', backgroundColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>('focusColor', focusColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>('hoverColor', hoverColor,
-        defaultValue: null));
-    properties
-        .add(ObjectFlagProperty<Object>('heroTag', heroTag, ifPresent: 'hero'));
-    properties.add(DiagnosticsProperty<double>('elevation', elevation,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<double>('focusElevation', focusElevation,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<double>('hoverElevation', hoverElevation,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<double>(
-        'highlightElevation', highlightElevation,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<double>(
-        'disabledElevation', disabledElevation,
-        defaultValue: null));
-    properties.add(
-        DiagnosticsProperty<ShapeBorder>('shape', shape, defaultValue: null));
-    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode,
-        defaultValue: null));
-    properties
-        .add(FlagProperty('isExtended', value: isExtended, ifTrue: 'extended'));
-    properties.add(DiagnosticsProperty<MaterialTapTargetSize>(
-        'materialTapTargetSize', materialTapTargetSize,
-        defaultValue: null));
+    properties.add(ColorProperty('foregroundColor', foregroundColor, defaultValue: null));
+    properties.add(ColorProperty('backgroundColor', backgroundColor, defaultValue: null));
+    properties.add(ColorProperty('focusColor', focusColor, defaultValue: null));
+    properties.add(ColorProperty('hoverColor', hoverColor, defaultValue: null));
+    properties.add(ObjectFlagProperty<Object>('heroTag', heroTag, ifPresent: 'hero'));
+    properties.add(DoubleProperty('elevation', elevation, defaultValue: null));
+    properties.add(DoubleProperty('focusElevation', focusElevation, defaultValue: null));
+    properties.add(DoubleProperty('hoverElevation', hoverElevation, defaultValue: null));
+    properties.add(DoubleProperty('highlightElevation', highlightElevation, defaultValue: null));
+    properties.add(DoubleProperty('disabledElevation', disabledElevation, defaultValue: null));
+    properties.add(DiagnosticsProperty<ShapeBorder>('shape', shape, defaultValue: null));
+    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode, defaultValue: null));
+    properties.add(FlagProperty('isExtended', value: isExtended, ifTrue: 'extended'));
+    properties.add(DiagnosticsProperty<MaterialTapTargetSize>('materialTapTargetSize', materialTapTargetSize, defaultValue: null));
   }
 }
 
@@ -543,9 +520,9 @@ class _ChildOverflowBox extends SingleChildRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(
-      BuildContext context, _RenderChildOverflowBox renderObject) {
-    renderObject..textDirection = Directionality.of(context);
+  void updateRenderObject(BuildContext context, _RenderChildOverflowBox renderObject) {
+    renderObject
+      ..textDirection = Directionality.of(context);
   }
 }
 
@@ -553,10 +530,7 @@ class _RenderChildOverflowBox extends RenderAligningShiftedBox {
   _RenderChildOverflowBox({
     RenderBox child,
     TextDirection textDirection,
-  }) : super(
-            child: child,
-            alignment: Alignment.center,
-            textDirection: textDirection);
+  }) : super(child: child, alignment: Alignment.center, textDirection: textDirection);
 
   @override
   double computeMinIntrinsicWidth(double height) => 0.0;
@@ -569,10 +543,8 @@ class _RenderChildOverflowBox extends RenderAligningShiftedBox {
     if (child != null) {
       child.layout(const BoxConstraints(), parentUsesSize: true);
       size = Size(
-        math.max(constraints.minWidth,
-            math.min(constraints.maxWidth, child.size.width)),
-        math.max(constraints.minHeight,
-            math.min(constraints.maxHeight, child.size.height)),
+        math.max(constraints.minWidth, math.min(constraints.maxWidth, child.size.width)),
+        math.max(constraints.minHeight, math.min(constraints.maxHeight, child.size.height)),
       );
       alignChild();
     } else {

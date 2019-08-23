@@ -40,16 +40,14 @@ void main() {
 
     // The RenderFittedBox should not paint if it is empty.
     painted = false;
-    layout(makeFittedBox(const Size(1, 1)),
-        constraints: BoxConstraints.tight(Size.zero), phase: EnginePhase.paint);
+    layout(makeFittedBox(const Size(1, 1)), constraints: BoxConstraints.tight(Size.zero), phase: EnginePhase.paint);
     expect(painted, equals(false));
   });
 
   test('RenderPhysicalModel compositing on Fuchsia', () {
     debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
 
-    final RenderPhysicalModel root =
-        RenderPhysicalModel(color: const Color(0xffff00ff));
+    final RenderPhysicalModel root = RenderPhysicalModel(color: const Color(0xffff00ff));
     layout(root, phase: EnginePhase.composite);
     expect(root.needsCompositing, isTrue);
 
@@ -69,8 +67,7 @@ void main() {
   test('RenderPhysicalModel compositing on non-Fuchsia', () {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 
-    final RenderPhysicalModel root =
-        RenderPhysicalModel(color: const Color(0xffff00ff));
+    final RenderPhysicalModel root = RenderPhysicalModel(color: const Color(0xffff00ff));
     layout(root, phase: EnginePhase.composite);
     expect(root.needsCompositing, isTrue);
 
@@ -86,12 +83,10 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  test('RenderSemanticsGestureHandler adds/removes correct semantic actions',
-      () {
-    final RenderSemanticsGestureHandler renderObj =
-        RenderSemanticsGestureHandler(
-      onTap: () {},
-      onHorizontalDragUpdate: (DragUpdateDetails details) {},
+  test('RenderSemanticsGestureHandler adds/removes correct semantic actions', () {
+    final RenderSemanticsGestureHandler renderObj = RenderSemanticsGestureHandler(
+      onTap: () { },
+      onHorizontalDragUpdate: (DragUpdateDetails details) { },
     );
 
     SemanticsConfiguration config = SemanticsConfiguration();
@@ -101,10 +96,7 @@ void main() {
     expect(config.getActionHandler(SemanticsAction.scrollRight), isNotNull);
 
     config = SemanticsConfiguration();
-    renderObj.validActions = <SemanticsAction>{
-      SemanticsAction.tap,
-      SemanticsAction.scrollLeft
-    };
+    renderObj.validActions = <SemanticsAction>{SemanticsAction.tap, SemanticsAction.scrollLeft};
 
     renderObj.describeSemanticsConfiguration(config);
     expect(config.getActionHandler(SemanticsAction.tap), isNotNull);
@@ -157,8 +149,7 @@ void main() {
 
   test('RenderRepaintBoundary can capture images of itself', () async {
     RenderRepaintBoundary boundary = RenderRepaintBoundary();
-    layout(boundary,
-        constraints: BoxConstraints.tight(const Size(100.0, 200.0)));
+    layout(boundary, constraints: BoxConstraints.tight(const Size(100.0, 200.0)));
     pumpFrame(phase: EnginePhase.composite);
     ui.Image image = await boundary.toImage();
     expect(image.width, equals(100));
@@ -166,8 +157,7 @@ void main() {
 
     // Now with pixel ratio set to something other than 1.0.
     boundary = RenderRepaintBoundary();
-    layout(boundary,
-        constraints: BoxConstraints.tight(const Size(100.0, 200.0)));
+    layout(boundary, constraints: BoxConstraints.tight(const Size(100.0, 200.0)));
     pumpFrame(phase: EnginePhase.composite);
     image = await boundary.toImage(pixelRatio: 2.0);
     expect(image.width, equals(200));
@@ -209,7 +199,7 @@ void main() {
     expect(data.lengthInBytes, equals(20 * 20 * 4));
     expect(data.elementSizeInBytes, equals(1));
     expect(getPixel(0, 0), equals(0x00000080));
-    expect(getPixel(image.width - 1, 0), equals(0xffffffff));
+    expect(getPixel(image.width - 1, 0 ), equals(0xffffffff));
 
     final OffsetLayer layer = boundary.layer;
 
@@ -218,11 +208,10 @@ void main() {
     expect(image.height, equals(20));
     data = await image.toByteData();
     expect(getPixel(0, 0), equals(0x00000080));
-    expect(getPixel(image.width - 1, 0), equals(0xffffffff));
+    expect(getPixel(image.width - 1, 0 ), equals(0xffffffff));
 
     // non-zero offsets.
-    image = await layer
-        .toImage(const Offset(-10.0, -10.0) & const Size(30.0, 30.0));
+    image = await layer.toImage(const Offset(-10.0, -10.0) & const Size(30.0, 30.0));
     expect(image.width, equals(30));
     expect(image.height, equals(30));
     data = await image.toByteData();
@@ -232,9 +221,7 @@ void main() {
     expect(getPixel(image.width - 1, 10), equals(0xffffffff));
 
     // offset combined with a custom pixel ratio.
-    image = await layer.toImage(
-        const Offset(-10.0, -10.0) & const Size(30.0, 30.0),
-        pixelRatio: 2.0);
+    image = await layer.toImage(const Offset(-10.0, -10.0) & const Size(30.0, 30.0), pixelRatio: 2.0);
     expect(image.width, equals(60));
     expect(image.height, equals(60));
     data = await image.toByteData();
@@ -264,8 +251,7 @@ void main() {
     expect(renderOpacity.needsCompositing, false);
   });
 
-  test('RenderAnimatedOpacity does not composite if it is transparent',
-      () async {
+  test('RenderAnimatedOpacity does not composite if it is transparent', () async {
     final Animation<double> opacityAnimation = AnimationController(
       vsync: _FakeTickerProvider(),
     )..value = 0.0;
@@ -298,7 +284,7 @@ void main() {
 
 class _FakeTickerProvider implements TickerProvider {
   @override
-  Ticker createTicker(TickerCallback onTick, [bool disableAnimations = false]) {
+  Ticker createTicker(TickerCallback onTick, [ bool disableAnimations = false ]) {
     return _FakeTicker();
   }
 }
@@ -308,7 +294,7 @@ class _FakeTicker implements Ticker {
   bool muted;
 
   @override
-  void absorbTicker(Ticker originalTicker) {}
+  void absorbTicker(Ticker originalTicker) { }
 
   @override
   String get debugLabel => null;
@@ -326,10 +312,10 @@ class _FakeTicker implements Ticker {
   bool get shouldScheduleTick => null;
 
   @override
-  void dispose() {}
+  void dispose() { }
 
   @override
-  void scheduleTick({bool rescheduling = false}) {}
+  void scheduleTick({ bool rescheduling = false }) { }
 
   @override
   TickerFuture start() {
@@ -337,11 +323,11 @@ class _FakeTicker implements Ticker {
   }
 
   @override
-  void stop({bool canceled = false}) {}
+  void stop({ bool canceled = false }) { }
 
   @override
-  void unscheduleTick() {}
+  void unscheduleTick() { }
 
   @override
-  String toString({bool debugIncludeStack = false}) => super.toString();
+  String toString({ bool debugIncludeStack = false }) => super.toString();
 }

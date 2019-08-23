@@ -118,8 +118,7 @@ void main() {
   testWidgets('Rich text can be styled using TextSpans',
       (WidgetTester tester) async {
     const TextStyle normalStyle = TextStyle(fontSize: 20.0);
-    const TextStyle boldStyle =
-        TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold);
+    const TextStyle boldStyle = TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold);
     await tester.pumpWidget(
       Container(
         child: RichText(

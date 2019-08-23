@@ -34,8 +34,8 @@ class ScaleStartDetails {
   /// Creates details for [GestureScaleStartCallback].
   ///
   /// The [focalPoint] argument must not be null.
-  ScaleStartDetails({this.focalPoint = Offset.zero})
-      : assert(focalPoint != null);
+  ScaleStartDetails({ this.focalPoint = Offset.zero })
+    : assert(focalPoint != null);
 
   /// The initial focal point of the pointers in contact with the screen.
   /// Reported in global coordinates.
@@ -58,11 +58,11 @@ class ScaleUpdateDetails {
     this.horizontalScale = 1.0,
     this.verticalScale = 1.0,
     this.rotation = 0.0,
-  })  : assert(focalPoint != null),
-        assert(scale != null && scale >= 0.0),
-        assert(horizontalScale != null && horizontalScale >= 0.0),
-        assert(verticalScale != null && verticalScale >= 0.0),
-        assert(rotation != null);
+  }) : assert(focalPoint != null),
+       assert(scale != null && scale >= 0.0),
+       assert(horizontalScale != null && horizontalScale >= 0.0),
+       assert(verticalScale != null && verticalScale >= 0.0),
+       assert(rotation != null);
 
   /// The focal point of the pointers in contact with the screen.
   ///
@@ -109,8 +109,7 @@ class ScaleUpdateDetails {
   final double rotation;
 
   @override
-  String toString() =>
-      'ScaleUpdateDetails(focalPoint: $focalPoint, scale: $scale, horizontalScale: $horizontalScale, verticalScale: $verticalScale, rotation: $rotation)';
+  String toString() => 'ScaleUpdateDetails(focalPoint: $focalPoint, scale: $scale, horizontalScale: $horizontalScale, verticalScale: $verticalScale, rotation: $rotation)';
 }
 
 /// Details for [GestureScaleEndCallback].
@@ -118,7 +117,8 @@ class ScaleEndDetails {
   /// Creates details for [GestureScaleEndCallback].
   ///
   /// The [velocity] argument must not be null.
-  ScaleEndDetails({this.velocity = Velocity.zero}) : assert(velocity != null);
+  ScaleEndDetails({ this.velocity = Velocity.zero })
+    : assert(velocity != null);
 
   /// The velocity of the last pointer to be lifted off of the screen.
   final Velocity velocity;
@@ -144,11 +144,13 @@ bool _isFlingGesture(Velocity velocity) {
   return speedSquared > kMinFlingVelocity * kMinFlingVelocity;
 }
 
+
 /// Defines a line between two pointers on screen.
 ///
 /// [_LineBetweenPointers] is an abstraction of a line between two pointers in
 /// contact with the screen. Used to track the rotation of a scale gesture.
-class _LineBetweenPointers {
+class _LineBetweenPointers{
+
   /// Creates a [_LineBetweenPointers]. None of the [pointerStartLocation], [pointerStartId]
   /// [pointerEndLocation] and [pointerEndId] must be null. [pointerStartId] and [pointerEndId]
   /// should be different.
@@ -157,9 +159,9 @@ class _LineBetweenPointers {
     this.pointerStartId = 0,
     this.pointerEndLocation = Offset.zero,
     this.pointerEndId = 1,
-  })  : assert(pointerStartLocation != null && pointerEndLocation != null),
-        assert(pointerStartId != null && pointerEndId != null),
-        assert(pointerStartId != pointerEndId);
+  }) : assert(pointerStartLocation != null && pointerEndLocation != null),
+       assert(pointerStartId != null && pointerEndId != null),
+       assert(pointerStartId != pointerEndId);
 
   // The location and the id of the pointer that marks the start of the line.
   final Offset pointerStartLocation;
@@ -168,7 +170,9 @@ class _LineBetweenPointers {
   // The location and the id of the pointer that marks the end of the line.
   final Offset pointerEndLocation;
   final int pointerEndId;
+
 }
+
 
 /// Recognizes a scale gesture.
 ///
@@ -213,16 +217,11 @@ class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
   List<int> _pointerQueue; // A queue to sort pointers in order of entrance
   final Map<int, VelocityTracker> _velocityTrackers = <int, VelocityTracker>{};
 
-  double get _scaleFactor =>
-      _initialSpan > 0.0 ? _currentSpan / _initialSpan : 1.0;
+  double get _scaleFactor => _initialSpan > 0.0 ? _currentSpan / _initialSpan : 1.0;
 
-  double get _horizontalScaleFactor => _initialHorizontalSpan > 0.0
-      ? _currentHorizontalSpan / _initialHorizontalSpan
-      : 1.0;
+  double get _horizontalScaleFactor => _initialHorizontalSpan > 0.0 ? _currentHorizontalSpan / _initialHorizontalSpan : 1.0;
 
-  double get _verticalScaleFactor => _initialVerticalSpan > 0.0
-      ? _currentVerticalSpan / _initialVerticalSpan
-      : 1.0;
+  double get _verticalScaleFactor => _initialVerticalSpan > 0.0 ? _currentVerticalSpan / _initialVerticalSpan : 1.0;
 
   double _computeRotationFactor() {
     if (_initialLine == null || _currentLine == null) {
@@ -299,8 +298,7 @@ class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
     Offset focalPoint = Offset.zero;
     for (int pointer in _pointerLocations.keys)
       focalPoint += _pointerLocations[pointer];
-    _currentFocalPoint =
-        count > 0 ? focalPoint / count.toDouble() : Offset.zero;
+    _currentFocalPoint = count > 0 ? focalPoint / count.toDouble() : Offset.zero;
 
     // Span is the average deviation from focal point. Horizontal and vertical
     // spans are the average deviations from the focal point's horizontal and
@@ -309,12 +307,9 @@ class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
     double totalHorizontalDeviation = 0.0;
     double totalVerticalDeviation = 0.0;
     for (int pointer in _pointerLocations.keys) {
-      totalDeviation +=
-          (_currentFocalPoint - _pointerLocations[pointer]).distance;
-      totalHorizontalDeviation +=
-          (_currentFocalPoint.dx - _pointerLocations[pointer].dx).abs();
-      totalVerticalDeviation +=
-          (_currentFocalPoint.dy - _pointerLocations[pointer].dy).abs();
+      totalDeviation += (_currentFocalPoint - _pointerLocations[pointer]).distance;
+      totalHorizontalDeviation += (_currentFocalPoint.dx - _pointerLocations[pointer].dx).abs();
+      totalVerticalDeviation += (_currentFocalPoint.dy - _pointerLocations[pointer].dy).abs();
     }
     _currentSpan = count > 0 ? totalDeviation / count : 0.0;
     _currentHorizontalSpan = count > 0 ? totalHorizontalDeviation / count : 0.0;
@@ -326,13 +321,12 @@ class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
   void _updateLines() {
     final int count = _pointerLocations.keys.length;
     assert(_pointerQueue.length >= count);
-
     /// In case of just one pointer registered, reconfigure [_initialLine]
     if (count < 2) {
       _initialLine = _currentLine;
     } else if (_initialLine != null &&
-        _initialLine.pointerStartId == _pointerQueue[0] &&
-        _initialLine.pointerEndId == _pointerQueue[1]) {
+      _initialLine.pointerStartId == _pointerQueue[0] &&
+      _initialLine.pointerEndId == _pointerQueue[1]) {
       /// Rotation updated, set the [_currentLine]
       _currentLine = _LineBetweenPointers(
         pointerStartId: _pointerQueue[0],
@@ -366,16 +360,11 @@ class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
         Velocity velocity = tracker.getVelocity();
         if (_isFlingGesture(velocity)) {
           final Offset pixelsPerSecond = velocity.pixelsPerSecond;
-          if (pixelsPerSecond.distanceSquared >
-              kMaxFlingVelocity * kMaxFlingVelocity)
-            velocity = Velocity(
-                pixelsPerSecond: (pixelsPerSecond / pixelsPerSecond.distance) *
-                    kMaxFlingVelocity);
-          invokeCallback<void>(
-              'onEnd', () => onEnd(ScaleEndDetails(velocity: velocity)));
+          if (pixelsPerSecond.distanceSquared > kMaxFlingVelocity * kMaxFlingVelocity)
+            velocity = Velocity(pixelsPerSecond: (pixelsPerSecond / pixelsPerSecond.distance) * kMaxFlingVelocity);
+          invokeCallback<void>('onEnd', () => onEnd(ScaleEndDetails(velocity: velocity)));
         } else {
-          invokeCallback<void>(
-              'onEnd', () => onEnd(ScaleEndDetails(velocity: Velocity.zero)));
+          invokeCallback<void>('onEnd', () => onEnd(ScaleEndDetails(velocity: Velocity.zero)));
         }
       }
       _state = _ScaleState.accepted;
@@ -385,12 +374,12 @@ class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
   }
 
   void _advanceStateMachine(bool shouldStartIfAccepted) {
-    if (_state == _ScaleState.ready) _state = _ScaleState.possible;
+    if (_state == _ScaleState.ready)
+      _state = _ScaleState.possible;
 
     if (_state == _ScaleState.possible) {
       final double spanDelta = (_currentSpan - _initialSpan).abs();
-      final double focalPointDelta =
-          (_currentFocalPoint - _initialFocalPoint).distance;
+      final double focalPointDelta = (_currentFocalPoint - _initialFocalPoint).distance;
       if (spanDelta > kScaleSlop || focalPointDelta > kPanSlop)
         resolve(GestureDisposition.accepted);
     } else if (_state.index >= _ScaleState.accepted.index) {
@@ -417,8 +406,7 @@ class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
   void _dispatchOnStartCallbackIfNeeded() {
     assert(_state == _ScaleState.started);
     if (onStart != null)
-      invokeCallback<void>('onStart',
-          () => onStart(ScaleStartDetails(focalPoint: _currentFocalPoint)));
+      invokeCallback<void>('onStart', () => onStart(ScaleStartDetails(focalPoint: _currentFocalPoint)));
   }
 
   @override

@@ -20,16 +20,15 @@ const double _kQuarterTurnsInRadians = math.pi / 2.0;
 /// Unlike [RenderTransform], which applies a transform just prior to painting,
 /// this object applies its rotation prior to layout, which means the entire
 /// rotated box consumes only as much space as required by the rotated child.
-class RenderRotatedBox extends RenderBox
-    with RenderObjectWithChildMixin<RenderBox> {
+class RenderRotatedBox extends RenderBox with RenderObjectWithChildMixin<RenderBox> {
   /// Creates a rotated render box.
   ///
   /// The [quarterTurns] argument must not be null.
   RenderRotatedBox({
     @required int quarterTurns,
     RenderBox child,
-  })  : assert(quarterTurns != null),
-        _quarterTurns = quarterTurns {
+  }) : assert(quarterTurns != null),
+       _quarterTurns = quarterTurns {
     this.child = child;
   }
 
@@ -38,7 +37,8 @@ class RenderRotatedBox extends RenderBox
   int _quarterTurns;
   set quarterTurns(int value) {
     assert(value != null);
-    if (_quarterTurns == value) return;
+    if (_quarterTurns == value)
+      return;
     _quarterTurns = value;
     markNeedsLayout();
   }
@@ -47,34 +47,30 @@ class RenderRotatedBox extends RenderBox
 
   @override
   double computeMinIntrinsicWidth(double height) {
-    if (child == null) return 0.0;
-    return _isVertical
-        ? child.getMinIntrinsicHeight(height)
-        : child.getMinIntrinsicWidth(height);
+    if (child == null)
+      return 0.0;
+    return _isVertical ? child.getMinIntrinsicHeight(height) : child.getMinIntrinsicWidth(height);
   }
 
   @override
   double computeMaxIntrinsicWidth(double height) {
-    if (child == null) return 0.0;
-    return _isVertical
-        ? child.getMaxIntrinsicHeight(height)
-        : child.getMaxIntrinsicWidth(height);
+    if (child == null)
+      return 0.0;
+    return _isVertical ? child.getMaxIntrinsicHeight(height) : child.getMaxIntrinsicWidth(height);
   }
 
   @override
   double computeMinIntrinsicHeight(double width) {
-    if (child == null) return 0.0;
-    return _isVertical
-        ? child.getMinIntrinsicWidth(width)
-        : child.getMinIntrinsicHeight(width);
+    if (child == null)
+      return 0.0;
+    return _isVertical ? child.getMinIntrinsicWidth(width) : child.getMinIntrinsicHeight(width);
   }
 
   @override
   double computeMaxIntrinsicHeight(double width) {
-    if (child == null) return 0.0;
-    return _isVertical
-        ? child.getMaxIntrinsicWidth(width)
-        : child.getMaxIntrinsicHeight(width);
+    if (child == null)
+      return 0.0;
+    return _isVertical ? child.getMaxIntrinsicWidth(width) : child.getMaxIntrinsicHeight(width);
   }
 
   Matrix4 _paintTransform;
@@ -83,10 +79,8 @@ class RenderRotatedBox extends RenderBox
   void performLayout() {
     _paintTransform = null;
     if (child != null) {
-      child.layout(_isVertical ? constraints.flipped : constraints,
-          parentUsesSize: true);
-      size =
-          _isVertical ? Size(child.size.height, child.size.width) : child.size;
+      child.layout(_isVertical ? constraints.flipped : constraints, parentUsesSize: true);
+      size = _isVertical ? Size(child.size.height, child.size.width) : child.size;
       _paintTransform = Matrix4.identity()
         ..translate(size.width / 2.0, size.height / 2.0)
         ..rotateZ(_kQuarterTurnsInRadians * (quarterTurns % 4))
@@ -97,9 +91,10 @@ class RenderRotatedBox extends RenderBox
   }
 
   @override
-  bool hitTestChildren(BoxHitTestResult result, {Offset position}) {
+  bool hitTestChildren(BoxHitTestResult result, { Offset position }) {
     assert(_paintTransform != null || debugNeedsLayout || child == null);
-    if (child == null || _paintTransform == null) return false;
+    if (child == null || _paintTransform == null)
+      return false;
     return result.addWithPaintTransform(
       transform: _paintTransform,
       position: position,
@@ -116,13 +111,13 @@ class RenderRotatedBox extends RenderBox
   @override
   void paint(PaintingContext context, Offset offset) {
     if (child != null)
-      context.pushTransform(
-          needsCompositing, offset, _paintTransform, _paintChild);
+      context.pushTransform(needsCompositing, offset, _paintTransform, _paintChild);
   }
 
   @override
   void applyPaintTransform(RenderBox child, Matrix4 transform) {
-    if (_paintTransform != null) transform.multiply(_paintTransform);
+    if (_paintTransform != null)
+      transform.multiply(_paintTransform);
     super.applyPaintTransform(child, transform);
   }
 }

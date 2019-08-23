@@ -236,9 +236,7 @@ void main() {
     tap.dispose();
   });
 
-  testGesture(
-      'Inter-tap delay resets double tap, allowing third tap to be a double-tap',
-      (GestureTester tester) {
+  testGesture('Inter-tap delay resets double tap, allowing third tap to be a double-tap', (GestureTester tester) {
     final DoubleTapGestureRecognizer tap = DoubleTapGestureRecognizer();
 
     bool doubleTapRecognized = false;
@@ -284,8 +282,7 @@ void main() {
     tap.dispose();
   });
 
-  testGesture('Intra-tap delay does not cancel double tap',
-      (GestureTester tester) {
+  testGesture('Intra-tap delay does not cancel double tap', (GestureTester tester) {
     final DoubleTapGestureRecognizer tap = DoubleTapGestureRecognizer();
 
     bool doubleTapRecognized = false;
@@ -319,8 +316,7 @@ void main() {
     tap.dispose();
   });
 
-  testGesture('Should not recognize two overlapping taps',
-      (GestureTester tester) {
+  testGesture('Should not recognize two overlapping taps', (GestureTester tester) {
     final DoubleTapGestureRecognizer tap = DoubleTapGestureRecognizer();
 
     bool doubleTapRecognized = false;
@@ -353,8 +349,7 @@ void main() {
     tap.dispose();
   });
 
-  testGesture('Should recognize one tap of group followed by second tap',
-      (GestureTester tester) {
+  testGesture('Should recognize one tap of group followed by second tap', (GestureTester tester) {
     final DoubleTapGestureRecognizer tap = DoubleTapGestureRecognizer();
 
     bool doubleTapRecognized = false;
@@ -397,10 +392,10 @@ void main() {
     expect(doubleTapRecognized, isTrue);
 
     tap.dispose();
+
   });
 
-  testGesture('Should cancel on arena reject during first tap',
-      (GestureTester tester) {
+  testGesture('Should cancel on arena reject during first tap', (GestureTester tester) {
     final DoubleTapGestureRecognizer tap = DoubleTapGestureRecognizer();
 
     bool doubleTapRecognized = false;
@@ -410,8 +405,7 @@ void main() {
 
     tap.addPointer(down1);
     final TestGestureArenaMember member = TestGestureArenaMember();
-    final GestureArenaEntry entry =
-        GestureBinding.instance.gestureArena.add(1, member);
+    final GestureArenaEntry entry = GestureBinding.instance.gestureArena.add(1, member);
     tester.closeArena(1);
     expect(doubleTapRecognized, isFalse);
     tester.route(down1);
@@ -439,8 +433,7 @@ void main() {
     tap.dispose();
   });
 
-  testGesture('Should cancel on arena reject between taps',
-      (GestureTester tester) {
+  testGesture('Should cancel on arena reject between taps', (GestureTester tester) {
     final DoubleTapGestureRecognizer tap = DoubleTapGestureRecognizer();
 
     bool doubleTapRecognized = false;
@@ -450,8 +443,7 @@ void main() {
 
     tap.addPointer(down1);
     final TestGestureArenaMember member = TestGestureArenaMember();
-    final GestureArenaEntry entry =
-        GestureBinding.instance.gestureArena.add(1, member);
+    final GestureArenaEntry entry = GestureBinding.instance.gestureArena.add(1, member);
     tester.closeArena(1);
     expect(doubleTapRecognized, isFalse);
     tester.route(down1);
@@ -479,8 +471,7 @@ void main() {
     tap.dispose();
   });
 
-  testGesture('Should cancel on arena reject during last tap',
-      (GestureTester tester) {
+  testGesture('Should cancel on arena reject during last tap', (GestureTester tester) {
     final DoubleTapGestureRecognizer tap = DoubleTapGestureRecognizer();
 
     bool doubleTapRecognized = false;
@@ -490,8 +481,7 @@ void main() {
 
     tap.addPointer(down1);
     final TestGestureArenaMember member = TestGestureArenaMember();
-    final GestureArenaEntry entry =
-        GestureBinding.instance.gestureArena.add(1, member);
+    final GestureArenaEntry entry = GestureBinding.instance.gestureArena.add(1, member);
     tester.closeArena(1);
     expect(doubleTapRecognized, isFalse);
     tester.route(down1);
@@ -519,8 +509,7 @@ void main() {
     tap.dispose();
   });
 
-  testGesture('Passive gesture should trigger on double tap cancel',
-      (GestureTester tester) {
+  testGesture('Passive gesture should trigger on double tap cancel', (GestureTester tester) {
     final DoubleTapGestureRecognizer tap = DoubleTapGestureRecognizer();
 
     bool doubleTapRecognized = false;
@@ -552,8 +541,7 @@ void main() {
     tap.dispose();
   });
 
-  testGesture('Should not recognize two over-rapid taps',
-      (GestureTester tester) {
+  testGesture('Should not recognize two over-rapid taps', (GestureTester tester) {
     final DoubleTapGestureRecognizer tap = DoubleTapGestureRecognizer();
 
     bool doubleTapRecognized = false;
@@ -587,9 +575,7 @@ void main() {
     tap.dispose();
   });
 
-  testGesture(
-      'Over-rapid taps resets double tap, allowing third tap to be a double-tap',
-      (GestureTester tester) {
+  testGesture('Over-rapid taps resets double tap, allowing third tap to be a double-tap', (GestureTester tester) {
     final DoubleTapGestureRecognizer tap = DoubleTapGestureRecognizer();
 
     bool doubleTapRecognized = false;
@@ -636,8 +622,7 @@ void main() {
   });
 
   group('Enforce consistent-button restriction:', () {
-    testGesture('Button change should interrupt existing sequence',
-        (GestureTester tester) {
+    testGesture('Button change should interrupt existing sequence', (GestureTester tester) {
       // Down1 -> down6 (different button from 1) -> down2 (same button as 1)
       // Down1 and down2 could've been a double tap, but is interrupted by down 6.
 
@@ -680,8 +665,7 @@ void main() {
       tap.dispose();
     });
 
-    testGesture('Button change should start a valid sequence',
-        (GestureTester tester) {
+    testGesture('Button change should start a valid sequence', (GestureTester tester) {
       // Down6 -> down1 (different button from 6) -> down2 (same button as 1)
 
       const Duration interval = Duration(milliseconds: 100);
@@ -724,8 +708,7 @@ void main() {
     });
   });
 
-  group('Recognizers listening on different buttons do not form competition:',
-      () {
+  group('Recognizers listening on different buttons do not form competition:', () {
     // This test is assisted by tap recognizers. If a tap gesture has
     // no competing recognizers, a pointer down event triggers its onTapDown
     // immediately; if there are competitors, onTapDown is triggered after a
@@ -759,9 +742,7 @@ void main() {
       doubleTap.dispose();
     });
 
-    testGesture(
-        'A primary double tap recognizer does not form competition with a secondary tap recognizer',
-        (GestureTester tester) {
+    testGesture('A primary double tap recognizer does not form competition with a secondary tap recognizer', (GestureTester tester) {
       doubleTap.addPointer(down6);
       tapSecondary.addPointer(down6);
       tester.closeArena(down6.pointer);
@@ -770,9 +751,7 @@ void main() {
       expect(recognized, <String>['tapSecondary']);
     });
 
-    testGesture(
-        'A primary double tap recognizer forms competition with a primary tap recognizer',
-        (GestureTester tester) {
+    testGesture('A primary double tap recognizer forms competition with a primary tap recognizer', (GestureTester tester) {
       doubleTap.addPointer(down1);
       tapPrimary.addPointer(down1);
       tester.closeArena(down1.pointer);
@@ -785,8 +764,7 @@ void main() {
     });
   });
 
-  testGesture('A secondary double tap should not trigger primary',
-      (GestureTester tester) {
+  testGesture('A secondary double tap should not trigger primary', (GestureTester tester) {
     final List<String> recognized = <String>[];
     final DoubleTapGestureRecognizer doubleTap = DoubleTapGestureRecognizer()
       ..onDoubleTap = () {

@@ -45,8 +45,7 @@ void main() {
     expect(value, isTrue);
   });
 
-  testWidgets('Switch size is configurable by ThemeData.materialTapTargetSize',
-      (WidgetTester tester) async {
+  testWidgets('Switch size is configurable by ThemeData.materialTapTargetSize', (WidgetTester tester) async {
     await tester.pumpWidget(
       Theme(
         data: ThemeData(materialTapTargetSize: MaterialTapTargetSize.padded),
@@ -69,8 +68,7 @@ void main() {
 
     await tester.pumpWidget(
       Theme(
-        data:
-            ThemeData(materialTapTargetSize: MaterialTapTargetSize.shrinkWrap),
+        data: ThemeData(materialTapTargetSize: MaterialTapTargetSize.shrinkWrap),
         child: Directionality(
           textDirection: TextDirection.ltr,
           child: Material(
@@ -136,8 +134,7 @@ void main() {
     expect(value, isFalse);
   });
 
-  testWidgets('Switch can drag with dragStartBehavior',
-      (WidgetTester tester) async {
+  testWidgets('Switch can drag with dragStartBehavior', (WidgetTester tester) async {
     bool value = false;
 
     await tester.pumpWidget(
@@ -268,8 +265,7 @@ void main() {
     expect(value, isFalse);
   });
 
-  testWidgets('Switch has default colors when enabled',
-      (WidgetTester tester) async {
+  testWidgets('Switch has default colors when enabled', (WidgetTester tester) async {
     bool value = false;
     await tester.pumpWidget(
       Directionality(
@@ -325,8 +321,7 @@ void main() {
     );
   });
 
-  testWidgets('Switch has default colors when disabled',
-      (WidgetTester tester) async {
+  testWidgets('Switch has default colors when disabled', (WidgetTester tester) async {
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.rtl,
@@ -450,8 +445,7 @@ void main() {
     );
   });
 
-  testWidgets('Drag ends after animation completes',
-      (WidgetTester tester) async {
+  testWidgets('Drag ends after animation completes', (WidgetTester tester) async {
     // Regression test for https://github.com/flutter/flutter/issues/17773
 
     bool value = false;
@@ -481,8 +475,7 @@ void main() {
     expect(value, isFalse);
 
     final Rect switchRect = tester.getRect(find.byType(Switch));
-    final TestGesture gesture =
-        await tester.startGesture(switchRect.centerLeft);
+    final TestGesture gesture = await tester.startGesture(switchRect.centerLeft);
     await tester.pump();
     await gesture.moveBy(Offset(switchRect.width, 0.0));
     await tester.pump();
@@ -532,16 +525,13 @@ void main() {
       'nodeId': object.debugSemantics.id,
       'data': <String, dynamic>{},
     });
-    expect(
-        object.debugSemantics.getSemanticsData().hasAction(SemanticsAction.tap),
-        true);
+    expect(object.debugSemantics.getSemanticsData().hasAction(SemanticsAction.tap), true);
 
     semanticsTester.dispose();
     SystemChannels.accessibility.setMockMessageHandler(null);
   });
 
-  testWidgets('switch sends semantic events from parent if fully merged',
-      (WidgetTester tester) async {
+  testWidgets('switch sends semantic events from parent if fully merged', (WidgetTester tester) async {
     dynamic semanticEvent;
     bool value = false;
     SystemChannels.accessibility.setMockMessageHandler((dynamic message) async {
@@ -558,7 +548,6 @@ void main() {
                 value = newValue;
               });
             }
-
             return Material(
               child: MergeSemantics(
                 child: ListTile(
@@ -578,8 +567,7 @@ void main() {
       ),
     );
     await tester.tap(find.byType(MergeSemantics));
-    final RenderObject object =
-        tester.firstRenderObject(find.byType(MergeSemantics));
+    final RenderObject object = tester.firstRenderObject(find.byType(MergeSemantics));
 
     expect(value, true);
     expect(semanticEvent, <String, dynamic>{
@@ -587,9 +575,7 @@ void main() {
       'nodeId': object.debugSemantics.id,
       'data': <String, dynamic>{},
     });
-    expect(
-        object.debugSemantics.getSemanticsData().hasAction(SemanticsAction.tap),
-        true);
+    expect(object.debugSemantics.getSemanticsData().hasAction(SemanticsAction.tap), true);
 
     semanticsTester.dispose();
     SystemChannels.accessibility.setMockMessageHandler(null);
@@ -636,4 +622,5 @@ void main() {
 //    expect(value, isFalse);
 //
 //  });
+
 }

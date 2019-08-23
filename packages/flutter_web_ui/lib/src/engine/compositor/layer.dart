@@ -172,6 +172,42 @@ class ClipRRectLayer extends ContainerLayer {
   }
 }
 
+/// A layer that paints its children with the given opacity.
+class OpacityLayer extends ContainerLayer implements ui.OpacityEngineLayer {
+  final int _alpha;
+  final ui.Offset _offset;
+
+  OpacityLayer(this._alpha, this._offset);
+
+  @override
+  void preroll(PrerollContext prerollContext, Matrix4 matrix) {
+    final Matrix4 childMatrix = Matrix4.copy(matrix);
+    childMatrix.translate(_offset.dx, _offset.dy);
+    final ui.Rect childPaintBounds =
+        prerollChildren(prerollContext, childMatrix);
+    paintBounds = childPaintBounds.translate(_offset.dx, _offset.dy);
+  }
+
+  @override
+  void paint(PaintContext paintContext) {
+    assert(needsPainting);
+
+    final ui.Paint paint = ui.Paint();
+    paint.color = ui.Color.fromARGB(_alpha, 0, 0, 0);
+
+    paintContext.canvas.save();
+    paintContext.canvas.translate(_offset.dx, _offset.dy);
+
+    final ui.Rect saveLayerBounds = paintBounds.shift(-_offset);
+
+    paintContext.canvas.saveLayer(saveLayerBounds, paint);
+    paintChildren(paintContext);
+    // Restore twice: once for the translate and once for the saveLayer.
+    paintContext.canvas.restore();
+    paintContext.canvas.restore();
+  }
+}
+
 /// A layer that transforms its child layers by the given transform matrix.
 class TransformLayer extends ContainerLayer
     implements ui.OffsetEngineLayer, ui.TransformEngineLayer {

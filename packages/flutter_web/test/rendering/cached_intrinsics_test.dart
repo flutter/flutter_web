@@ -7,19 +7,11 @@ import '../flutter_test_alternative.dart';
 
 class RenderTestBox extends RenderBox {
   double value = 0.0;
-  double next() {
-    value += 1.0;
-    return value;
-  }
-
-  @override
-  double computeMinIntrinsicWidth(double height) => next();
-  @override
-  double computeMaxIntrinsicWidth(double height) => next();
-  @override
-  double computeMinIntrinsicHeight(double width) => next();
-  @override
-  double computeMaxIntrinsicHeight(double width) => next();
+  double next() { value += 1.0; return value; }
+  @override double computeMinIntrinsicWidth(double height) => next();
+  @override double computeMaxIntrinsicWidth(double height) => next();
+  @override double computeMinIntrinsicHeight(double width) => next();
+  @override double computeMaxIntrinsicHeight(double width) => next();
 }
 
 void main() {
@@ -67,5 +59,6 @@ void main() {
     expect(test.getMinIntrinsicWidth(200.0), equals(3.0));
     expect(test.getMinIntrinsicWidth(100.0), equals(2.0));
     expect(test.getMinIntrinsicWidth(0.0), equals(1.0));
+
   });
 }

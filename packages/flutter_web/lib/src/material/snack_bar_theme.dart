@@ -48,6 +48,7 @@ enum SnackBarBehavior {
 ///  * [ThemeData], which describes the overall theme information for the
 ///    application.
 class SnackBarThemeData extends Diagnosticable {
+
   /// Creates a theme that can be used for [ThemeData.snackBarTheme].
   ///
   /// The [elevation] must be null or non-negative.
@@ -109,8 +110,7 @@ class SnackBarThemeData extends Diagnosticable {
     return SnackBarThemeData(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       actionTextColor: actionTextColor ?? this.actionTextColor,
-      disabledActionTextColor:
-          disabledActionTextColor ?? this.disabledActionTextColor,
+      disabledActionTextColor: disabledActionTextColor ?? this.disabledActionTextColor,
       elevation: elevation ?? this.elevation,
       shape: shape ?? this.shape,
       behavior: behavior ?? this.behavior,
@@ -122,14 +122,12 @@ class SnackBarThemeData extends Diagnosticable {
   /// The argument `t` must not be null.
   ///
   /// {@macro dart.ui.shadow.lerp}
-  static SnackBarThemeData lerp(
-      SnackBarThemeData a, SnackBarThemeData b, double t) {
+  static SnackBarThemeData lerp(SnackBarThemeData a, SnackBarThemeData b, double t) {
     assert(t != null);
     return SnackBarThemeData(
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
       actionTextColor: Color.lerp(a?.actionTextColor, b?.actionTextColor, t),
-      disabledActionTextColor:
-          Color.lerp(a?.disabledActionTextColor, b?.disabledActionTextColor, t),
+      disabledActionTextColor: Color.lerp(a?.disabledActionTextColor, b?.disabledActionTextColor, t),
       elevation: lerpDouble(a?.elevation, b?.elevation, t),
       shape: ShapeBorder.lerp(a?.shape, b?.shape, t),
       behavior: t < 0.5 ? a.behavior : b.behavior,
@@ -150,34 +148,27 @@ class SnackBarThemeData extends Diagnosticable {
 
   @override
   bool operator ==(dynamic other) {
-    if (identical(this, other)) return true;
-    if (other.runtimeType != runtimeType) return false;
+    if (identical(this, other))
+      return true;
+    if (other.runtimeType != runtimeType)
+      return false;
     final SnackBarThemeData typedOther = other;
-    return typedOther.backgroundColor == backgroundColor &&
-        typedOther.actionTextColor == actionTextColor &&
-        typedOther.disabledActionTextColor == disabledActionTextColor &&
-        typedOther.elevation == elevation &&
-        typedOther.shape == shape &&
-        typedOther.behavior == behavior;
+    return typedOther.backgroundColor == backgroundColor
+        && typedOther.actionTextColor == actionTextColor
+        && typedOther.disabledActionTextColor == disabledActionTextColor
+        && typedOther.elevation == elevation
+        && typedOther.shape == shape
+        && typedOther.behavior == behavior;
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Color>(
-        'backgroundColor', backgroundColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>(
-        'actionTextColor', actionTextColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>(
-        'disabledActionTextColor', disabledActionTextColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<double>('elevation', elevation,
-        defaultValue: null));
-    properties.add(
-        DiagnosticsProperty<ShapeBorder>('shape', shape, defaultValue: null));
-    properties.add(DiagnosticsProperty<SnackBarBehavior>('behavior', behavior,
-        defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('backgroundColor', backgroundColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('actionTextColor', actionTextColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('disabledActionTextColor', disabledActionTextColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<double>('elevation', elevation, defaultValue: null));
+    properties.add(DiagnosticsProperty<ShapeBorder>('shape', shape, defaultValue: null));
+    properties.add(DiagnosticsProperty<SnackBarBehavior>('behavior', behavior, defaultValue: null));
   }
 }

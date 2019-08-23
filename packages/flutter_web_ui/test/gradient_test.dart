@@ -56,15 +56,15 @@ void main() {
       () {
     expect(
       () => Gradient.radial(
-        Offset.zero,
-        0.0,
-        <Color>[const Color(0xFFFFFFFF), const Color(0xFFFFFFFF)],
-        <double>[0.0, 1.0],
-        TileMode.mirror,
-        null,
-        Offset.zero,
-        1.0,
-      ),
+            Offset.zero,
+            0.0,
+            <Color>[const Color(0xFFFFFFFF), const Color(0xFFFFFFFF)],
+            <double>[0.0, 1.0],
+            TileMode.mirror,
+            null,
+            Offset.zero,
+            1.0,
+          ),
       throwsA(const TypeMatcher<AssertionError>()),
     );
   });

@@ -6,7 +6,7 @@ import 'package:flutter_web_test/flutter_web_test.dart';
 import 'package:flutter_web/widgets.dart';
 import 'package:flutter_web/rendering.dart';
 
-Future<void> test(WidgetTester tester, double offset, {double anchor = 0.0}) {
+Future<void> test(WidgetTester tester, double offset, { double anchor = 0.0 }) {
   return tester.pumpWidget(
     Directionality(
       textDirection: TextDirection.ltr,
@@ -25,18 +25,13 @@ Future<void> test(WidgetTester tester, double offset, {double anchor = 0.0}) {
   );
 }
 
-void verify(WidgetTester tester, List<Offset> idealPositions,
-    List<bool> idealVisibles) {
-  final List<Offset> actualPositions = tester
-      .renderObjectList<RenderBox>(find.byType(SizedBox, skipOffstage: false))
-      .map<Offset>(
-          (RenderBox target) => target.localToGlobal(const Offset(0.0, 0.0)))
-      .toList();
-  final List<bool> actualVisibles = tester
-      .renderObjectList<RenderSliverToBoxAdapter>(
-          find.byType(SliverToBoxAdapter, skipOffstage: false))
-      .map<bool>((RenderSliverToBoxAdapter target) => target.geometry.visible)
-      .toList();
+void verify(WidgetTester tester, List<Offset> idealPositions, List<bool> idealVisibles) {
+  final List<Offset> actualPositions = tester.renderObjectList<RenderBox>(find.byType(SizedBox, skipOffstage: false)).map<Offset>(
+    (RenderBox target) => target.localToGlobal(const Offset(0.0, 0.0))
+  ).toList();
+  final List<bool> actualVisibles = tester.renderObjectList<RenderSliverToBoxAdapter>(find.byType(SliverToBoxAdapter, skipOffstage: false)).map<bool>(
+    (RenderSliverToBoxAdapter target) => target.geometry.visible
+  ).toList();
   expect(actualPositions, equals(idealPositions));
   expect(actualVisibles, equals(idealVisibles));
 }
@@ -44,21 +39,14 @@ void verify(WidgetTester tester, List<Offset> idealPositions,
 void main() {
   testWidgets('Viewport basic test', (WidgetTester tester) async {
     await test(tester, 0.0);
-    expect(tester.renderObject<RenderBox>(find.byType(Viewport)).size,
-        equals(const Size(800.0, 600.0)));
+    expect(tester.renderObject<RenderBox>(find.byType(Viewport)).size, equals(const Size(800.0, 600.0)));
     verify(tester, <Offset>[
       const Offset(0.0, 0.0),
       const Offset(0.0, 400.0),
       const Offset(0.0, 800.0),
       const Offset(0.0, 1200.0),
       const Offset(0.0, 1600.0),
-    ], <bool>[
-      true,
-      true,
-      false,
-      false,
-      false
-    ]);
+    ], <bool>[true, true, false, false, false]);
 
     await test(tester, 200.0);
     verify(tester, <Offset>[
@@ -67,13 +55,7 @@ void main() {
       const Offset(0.0, 600.0),
       const Offset(0.0, 1000.0),
       const Offset(0.0, 1400.0),
-    ], <bool>[
-      true,
-      true,
-      false,
-      false,
-      false
-    ]);
+    ], <bool>[true, true, false, false, false]);
 
     await test(tester, 600.0);
     verify(tester, <Offset>[
@@ -82,13 +64,7 @@ void main() {
       const Offset(0.0, 200.0),
       const Offset(0.0, 600.0),
       const Offset(0.0, 1000.0),
-    ], <bool>[
-      false,
-      true,
-      true,
-      false,
-      false
-    ]);
+    ], <bool>[false, true, true, false, false]);
 
     await test(tester, 900.0);
     verify(tester, <Offset>[
@@ -97,32 +73,19 @@ void main() {
       const Offset(0.0, -100.0),
       const Offset(0.0, 300.0),
       const Offset(0.0, 700.0),
-    ], <bool>[
-      false,
-      false,
-      true,
-      true,
-      false
-    ]);
+    ], <bool>[false, false, true, true, false]);
   });
 
   testWidgets('Viewport anchor test', (WidgetTester tester) async {
     await test(tester, 0.0, anchor: 100.0);
-    expect(tester.renderObject<RenderBox>(find.byType(Viewport)).size,
-        equals(const Size(800.0, 600.0)));
+    expect(tester.renderObject<RenderBox>(find.byType(Viewport)).size, equals(const Size(800.0, 600.0)));
     verify(tester, <Offset>[
       const Offset(0.0, 100.0),
       const Offset(0.0, 500.0),
       const Offset(0.0, 900.0),
       const Offset(0.0, 1300.0),
       const Offset(0.0, 1700.0),
-    ], <bool>[
-      true,
-      true,
-      false,
-      false,
-      false
-    ]);
+    ], <bool>[true, true, false, false, false]);
 
     await test(tester, 200.0, anchor: 100.0);
     verify(tester, <Offset>[
@@ -131,13 +94,7 @@ void main() {
       const Offset(0.0, 700.0),
       const Offset(0.0, 1100.0),
       const Offset(0.0, 1500.0),
-    ], <bool>[
-      true,
-      true,
-      false,
-      false,
-      false
-    ]);
+    ], <bool>[true, true, false, false, false]);
 
     await test(tester, 600.0, anchor: 100.0);
     verify(tester, <Offset>[
@@ -146,13 +103,7 @@ void main() {
       const Offset(0.0, 300.0),
       const Offset(0.0, 700.0),
       const Offset(0.0, 1100.0),
-    ], <bool>[
-      false,
-      true,
-      true,
-      false,
-      false
-    ]);
+    ], <bool>[false, true, true, false, false]);
 
     await test(tester, 900.0, anchor: 100.0);
     verify(tester, <Offset>[
@@ -161,13 +112,7 @@ void main() {
       const Offset(0.0, 0.0),
       const Offset(0.0, 400.0),
       const Offset(0.0, 800.0),
-    ], <bool>[
-      false,
-      false,
-      true,
-      true,
-      false
-    ]);
+    ], <bool>[false, false, true, true, false]);
   });
 
   testWidgets('Multiple grids and lists', (WidgetTester tester) async {
@@ -226,8 +171,7 @@ void main() {
         ),
       ),
     );
-    final TestGesture gesture =
-        await tester.startGesture(const Offset(400.0, 300.0));
+    final TestGesture gesture = await tester.startGesture(const Offset(400.0, 300.0));
     expect(find.text('TOP'), findsOneWidget);
     expect(find.text('A'), findsNothing);
     expect(find.text('B'), findsNothing);

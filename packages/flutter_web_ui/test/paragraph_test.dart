@@ -1,12 +1,14 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 import 'package:flutter_web_ui/ui.dart';
 
-import 'package:flutter_web_test/flutter_web_test.dart';
+import 'package:test/test.dart';
 
-void main() {
+void main() async {
+  await webOnlyInitializeTestDomRenderer();
+
   // Ahem font uses a constant ideographic/alphabetic baseline ratio.
   const double kAhemBaselineRatio = 1.25;
 
@@ -20,7 +22,7 @@ void main() {
       ));
       builder.addText('Test');
       final Paragraph paragraph = builder.build();
-      paragraph.layout(ParagraphConstraints(width: 400.0));
+      paragraph.layout(const ParagraphConstraints(width: 400.0));
 
       expect(paragraph.height, closeTo(fontSize, 0.001));
       expect(paragraph.width, closeTo(400.0, 0.001));

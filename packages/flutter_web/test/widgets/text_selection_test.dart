@@ -20,46 +20,16 @@ void main() {
   int dragEndCount;
   const Offset forcePressOffset = Offset(400.0, 50.0);
 
-  void _handleTapDown(TapDownDetails details) {
-    tapCount++;
-  }
-
-  void _handleSingleTapUp(TapUpDetails details) {
-    singleTapUpCount++;
-  }
-
-  void _handleSingleTapCancel() {
-    singleTapCancelCount++;
-  }
-
-  void _handleSingleLongTapStart(LongPressStartDetails details) {
-    singleLongTapStartCount++;
-  }
-
-  void _handleDoubleTapDown(TapDownDetails details) {
-    doubleTapDownCount++;
-  }
-
-  void _handleForcePressStart(ForcePressDetails details) {
-    forcePressStartCount++;
-  }
-
-  void _handleForcePressEnd(ForcePressDetails details) {
-    forcePressEndCount++;
-  }
-
-  void _handleDragSelectionStart(DragStartDetails details) {
-    dragStartCount++;
-  }
-
-  void _handleDragSelectionUpdate(
-      DragStartDetails _, DragUpdateDetails details) {
-    dragUpdateCount++;
-  }
-
-  void _handleDragSelectionEnd(DragEndDetails details) {
-    dragEndCount++;
-  }
+  void _handleTapDown(TapDownDetails details) { tapCount++; }
+  void _handleSingleTapUp(TapUpDetails details) { singleTapUpCount++; }
+  void _handleSingleTapCancel() { singleTapCancelCount++; }
+  void _handleSingleLongTapStart(LongPressStartDetails details) { singleLongTapStartCount++; }
+  void _handleDoubleTapDown(TapDownDetails details) { doubleTapDownCount++; }
+  void _handleForcePressStart(ForcePressDetails details) { forcePressStartCount++; }
+  void _handleForcePressEnd(ForcePressDetails details) { forcePressEndCount++; }
+  void _handleDragSelectionStart(DragStartDetails details) { dragStartCount++; }
+  void _handleDragSelectionUpdate(DragStartDetails _, DragUpdateDetails details) { dragUpdateCount++; }
+  void _handleDragSelectionEnd(DragEndDetails details) { dragEndCount++; }
 
   setUp(() {
     tapCount = 0;
@@ -109,9 +79,7 @@ void main() {
     expect(tapCount, 6);
   });
 
-  testWidgets(
-      'in a series of rapid taps, onTapDown and onDoubleTapDown alternate',
-      (WidgetTester tester) async {
+  testWidgets('in a series of rapid taps, onTapDown and onDoubleTapDown alternate', (WidgetTester tester) async {
     await pumpGestureDetector(tester);
     await tester.tapAt(const Offset(200, 200));
     await tester.pump(const Duration(milliseconds: 50));
@@ -138,14 +106,12 @@ void main() {
     expect(tapCount, 6);
   });
 
-  testWidgets('quick tap-tap-hold is a double tap down',
-      (WidgetTester tester) async {
+  testWidgets('quick tap-tap-hold is a double tap down', (WidgetTester tester) async {
     await pumpGestureDetector(tester);
     await tester.tapAt(const Offset(200, 200));
     await tester.pump(const Duration(milliseconds: 50));
     expect(singleTapUpCount, 1);
-    final TestGesture gesture =
-        await tester.startGesture(const Offset(200, 200));
+    final TestGesture gesture = await tester.startGesture(const Offset(200, 200));
     await tester.pump(const Duration(milliseconds: 200));
     expect(singleTapUpCount, 1);
     // Every down is counted.
@@ -168,8 +134,7 @@ void main() {
 
   testWidgets('a very quick swipe is ignored', (WidgetTester tester) async {
     await pumpGestureDetector(tester);
-    final TestGesture gesture =
-        await tester.startGesture(const Offset(200, 200));
+    final TestGesture gesture = await tester.startGesture(const Offset(200, 200));
     await tester.pump(const Duration(milliseconds: 20));
     await gesture.moveBy(const Offset(100, 100));
     await tester.pump();
@@ -188,11 +153,9 @@ void main() {
     expect(singleLongTapStartCount, 0);
   });
 
-  testWidgets('a slower swipe has a tap down and a canceled tap',
-      (WidgetTester tester) async {
+  testWidgets('a slower swipe has a tap down and a canceled tap', (WidgetTester tester) async {
     await pumpGestureDetector(tester);
-    final TestGesture gesture =
-        await tester.startGesture(const Offset(200, 200));
+    final TestGesture gesture = await tester.startGesture(const Offset(200, 200));
     await tester.pump(const Duration(milliseconds: 120));
     await gesture.moveBy(const Offset(100, 100));
     await tester.pump();
@@ -203,8 +166,7 @@ void main() {
     expect(singleLongTapStartCount, 0);
   });
 
-  testWidgets('a force press intiates a force press',
-      (WidgetTester tester) async {
+  testWidgets('a force press intiates a force press', (WidgetTester tester) async {
     await pumpGestureDetector(tester);
 
     const int pointerValue = 1;
@@ -222,12 +184,7 @@ void main() {
       ),
     );
 
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(0.0, 0.0),
-        pressure: 0.5,
-        pressureMin: 0,
-        pressureMax: 1));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(0.0, 0.0), pressure: 0.5, pressureMin: 0, pressureMax: 1));
     await gesture.up();
     await tester.pumpAndSettle();
 
@@ -241,12 +198,7 @@ void main() {
         pressureMin: 0.0,
       ),
     );
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(0.0, 0.0),
-        pressure: 0.5,
-        pressureMin: 0,
-        pressureMax: 1));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(0.0, 0.0), pressure: 0.5, pressureMin: 0, pressureMax: 1));
     await gesture.up();
     await tester.pump(const Duration(milliseconds: 20));
 
@@ -260,12 +212,7 @@ void main() {
         pressureMin: 0.0,
       ),
     );
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(0.0, 0.0),
-        pressure: 0.5,
-        pressureMin: 0,
-        pressureMax: 1));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(0.0, 0.0), pressure: 0.5, pressureMin: 0, pressureMax: 1));
     await gesture.up();
     await tester.pump(const Duration(milliseconds: 20));
 
@@ -279,20 +226,13 @@ void main() {
         pressureMin: 0.0,
       ),
     );
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-        pointer: pointerValue,
-        position: Offset(0.0, 0.0),
-        pressure: 0.5,
-        pressureMin: 0,
-        pressureMax: 1));
+    await gesture.updateWithCustomEvent(const PointerMoveEvent(pointer: pointerValue, position: Offset(0.0, 0.0), pressure: 0.5, pressureMin: 0, pressureMax: 1));
     await gesture.up();
 
     expect(forcePressStartCount, 4);
   });
 
-  testWidgets(
-      'a tap and then force press intiates a force press and not a double tap',
-      (WidgetTester tester) async {
+  testWidgets('a tap and then force press intiates a force press and not a double tap', (WidgetTester tester) async {
     await pumpGestureDetector(tester);
 
     const int pointerValue = 1;
@@ -300,21 +240,24 @@ void main() {
     await gesture.downWithCustomEvent(
       forcePressOffset,
       const PointerDownEvent(
-        pointer: pointerValue,
-        position: forcePressOffset,
-        pressure: 0.0,
-        pressureMax: 6.0,
-        pressureMin: 0.0,
+          pointer: pointerValue,
+          position: forcePressOffset,
+          pressure: 0.0,
+          pressureMax: 6.0,
+          pressureMin: 0.0,
       ),
+
     );
     // Initiate a quick tap.
-    await gesture.updateWithCustomEvent(const PointerMoveEvent(
-      pointer: pointerValue,
-      position: Offset(0.0, 0.0),
-      pressure: 0.0,
-      pressureMin: 0,
-      pressureMax: 1,
-    ));
+    await gesture.updateWithCustomEvent(
+      const PointerMoveEvent(
+        pointer: pointerValue,
+        position: Offset(0.0, 0.0),
+        pressure: 0.0,
+        pressureMin: 0,
+        pressureMax: 1,
+      )
+    );
     await tester.pump(const Duration(milliseconds: 50));
     await gesture.up();
 
@@ -346,16 +289,12 @@ void main() {
     expect(doubleTapDownCount, 0);
   });
 
-  testWidgets(
-      'a long press from a touch device is recognized as a long single tap',
-      (WidgetTester tester) async {
+  testWidgets('a long press from a touch device is recognized as a long single tap', (WidgetTester tester) async {
     await pumpGestureDetector(tester);
 
     const int pointerValue = 1;
-    final TestGesture gesture = await tester.startGesture(
-        const Offset(200.0, 200.0),
-        pointer: pointerValue,
-        kind: PointerDeviceKind.touch);
+    final TestGesture gesture =
+        await tester.startGesture(const Offset(200.0, 200.0), pointer: pointerValue, kind: PointerDeviceKind.touch);
     await tester.pump(const Duration(seconds: 2));
     await gesture.up();
     await tester.pumpAndSettle();
@@ -365,15 +304,12 @@ void main() {
     expect(singleLongTapStartCount, 1);
   });
 
-  testWidgets('a long press from a mouse is just a tap',
-      (WidgetTester tester) async {
+  testWidgets('a long press from a mouse is just a tap', (WidgetTester tester) async {
     await pumpGestureDetector(tester);
 
     const int pointerValue = 1;
-    final TestGesture gesture = await tester.startGesture(
-        const Offset(200.0, 200.0),
-        pointer: pointerValue,
-        kind: PointerDeviceKind.mouse);
+    final TestGesture gesture =
+        await tester.startGesture(const Offset(200.0, 200.0), pointer: pointerValue, kind: PointerDeviceKind.mouse);
     await tester.pump(const Duration(seconds: 2));
     await gesture.up();
     await tester.pumpAndSettle();
@@ -385,15 +321,12 @@ void main() {
     await gesture.removePointer();
   });
 
-  testWidgets('a touch drag is not recognized for text selection',
-      (WidgetTester tester) async {
+  testWidgets('a touch drag is not recognized for text selection', (WidgetTester tester) async {
     await pumpGestureDetector(tester);
 
     const int pointerValue = 1;
-    final TestGesture gesture = await tester.startGesture(
-        const Offset(200.0, 200.0),
-        pointer: pointerValue,
-        kind: PointerDeviceKind.touch);
+    final TestGesture gesture =
+        await tester.startGesture(const Offset(200.0, 200.0), pointer: pointerValue, kind: PointerDeviceKind.touch);
     await tester.pump();
     await gesture.moveBy(const Offset(210.0, 200.0));
     await tester.pump();
@@ -409,15 +342,12 @@ void main() {
     await gesture.removePointer();
   });
 
-  testWidgets('a mouse drag is recognized for text selection',
-      (WidgetTester tester) async {
+  testWidgets('a mouse drag is recognized for text selection', (WidgetTester tester) async {
     await pumpGestureDetector(tester);
 
     const int pointerValue = 1;
-    final TestGesture gesture = await tester.startGesture(
-        const Offset(200.0, 200.0),
-        pointer: pointerValue,
-        kind: PointerDeviceKind.mouse);
+    final TestGesture gesture =
+        await tester.startGesture(const Offset(200.0, 200.0), pointer: pointerValue, kind: PointerDeviceKind.mouse);
     await tester.pump();
     await gesture.moveBy(const Offset(210.0, 200.0));
     await tester.pump();
@@ -433,15 +363,12 @@ void main() {
     await gesture.removePointer();
   });
 
-  testWidgets('a slow mouse drag is still recognized for text selection',
-      (WidgetTester tester) async {
+  testWidgets('a slow mouse drag is still recognized for text selection', (WidgetTester tester) async {
     await pumpGestureDetector(tester);
 
     const int pointerValue = 1;
-    final TestGesture gesture = await tester.startGesture(
-        const Offset(200.0, 200.0),
-        pointer: pointerValue,
-        kind: PointerDeviceKind.mouse);
+    final TestGesture gesture =
+        await tester.startGesture(const Offset(200.0, 200.0), pointer: pointerValue, kind: PointerDeviceKind.mouse);
     await tester.pump(const Duration(seconds: 2));
     await gesture.moveBy(const Offset(210.0, 200.0));
     await tester.pump();

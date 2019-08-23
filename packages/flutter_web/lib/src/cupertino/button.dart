@@ -1,7 +1,7 @@
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// Synced 2019-06-05T16:17:57.487088.
+// Synced 2019-08-12T13:26:26.189487.
 
 import 'package:flutter_web/foundation.dart';
 import 'package:flutter_web/widgets.dart';
@@ -38,10 +38,9 @@ class CupertinoButton extends StatefulWidget {
     this.pressedOpacity = 0.1,
     this.borderRadius = const BorderRadius.all(Radius.circular(8.0)),
     @required this.onPressed,
-  })  : assert(pressedOpacity == null ||
-            (pressedOpacity >= 0.0 && pressedOpacity <= 1.0)),
-        _filled = false,
-        super(key: key);
+  }) : assert(pressedOpacity == null || (pressedOpacity >= 0.0 && pressedOpacity <= 1.0)),
+       _filled = false,
+       super(key: key);
 
   /// Creates an iOS-style button with a filled background.
   ///
@@ -58,11 +57,10 @@ class CupertinoButton extends StatefulWidget {
     this.pressedOpacity = 0.1,
     this.borderRadius = const BorderRadius.all(Radius.circular(8.0)),
     @required this.onPressed,
-  })  : assert(pressedOpacity == null ||
-            (pressedOpacity >= 0.0 && pressedOpacity <= 1.0)),
-        color = null,
-        _filled = true,
-        super(key: key);
+  }) : assert(pressedOpacity == null || (pressedOpacity >= 0.0 && pressedOpacity <= 1.0)),
+       color = null,
+       _filled = true,
+       super(key: key);
 
   /// The widget below this widget in the tree.
   ///
@@ -129,13 +127,11 @@ class CupertinoButton extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties
-        .add(FlagProperty('enabled', value: enabled, ifFalse: 'disabled'));
+    properties.add(FlagProperty('enabled', value: enabled, ifFalse: 'disabled'));
   }
 }
 
-class _CupertinoButtonState extends State<CupertinoButton>
-    with SingleTickerProviderStateMixin {
+class _CupertinoButtonState extends State<CupertinoButton> with SingleTickerProviderStateMixin {
   // Eyeballed values. Feel free to tweak.
   static const Duration kFadeOutDuration = Duration(milliseconds: 10);
   static const Duration kFadeInDuration = Duration(milliseconds: 100);
@@ -153,8 +149,8 @@ class _CupertinoButtonState extends State<CupertinoButton>
       vsync: this,
     );
     _opacityAnimation = _animationController
-        .drive(CurveTween(curve: Curves.decelerate))
-        .drive(_opacityTween);
+      .drive(CurveTween(curve: Curves.decelerate))
+      .drive(_opacityTween);
     _setTween();
   }
 
@@ -199,13 +195,15 @@ class _CupertinoButtonState extends State<CupertinoButton>
   }
 
   void _animate() {
-    if (_animationController.isAnimating) return;
+    if (_animationController.isAnimating)
+      return;
     final bool wasHeldDown = _buttonHeldDown;
     final TickerFuture ticker = _buttonHeldDown
         ? _animationController.animateTo(1.0, duration: kFadeOutDuration)
         : _animationController.animateTo(0.0, duration: kFadeInDuration);
     ticker.then<void>((void value) {
-      if (mounted && wasHeldDown != _buttonHeldDown) _animate();
+      if (mounted && wasHeldDown != _buttonHeldDown)
+        _animate();
     });
   }
 
@@ -213,15 +211,14 @@ class _CupertinoButtonState extends State<CupertinoButton>
   Widget build(BuildContext context) {
     final bool enabled = widget.enabled;
     final Color primaryColor = CupertinoTheme.of(context).primaryColor;
-    final Color backgroundColor =
-        widget.color ?? (widget._filled ? primaryColor : null);
+    final Color backgroundColor = widget.color ?? (widget._filled ? primaryColor : null);
     final Color foregroundColor = backgroundColor != null
         ? CupertinoTheme.of(context).primaryContrastingColor
-        : enabled ? primaryColor : _kDisabledForeground;
-    final TextStyle textStyle = CupertinoTheme.of(context)
-        .textTheme
-        .textStyle
-        .copyWith(color: foregroundColor);
+        : enabled
+            ? primaryColor
+            : _kDisabledForeground;
+    final TextStyle textStyle =
+        CupertinoTheme.of(context).textTheme.textStyle.copyWith(color: foregroundColor);
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -233,25 +230,24 @@ class _CupertinoButtonState extends State<CupertinoButton>
         button: true,
         child: ConstrainedBox(
           constraints: widget.minSize == null
-              ? const BoxConstraints()
-              : BoxConstraints(
-                  minWidth: widget.minSize,
-                  minHeight: widget.minSize,
-                ),
+            ? const BoxConstraints()
+            : BoxConstraints(
+              minWidth: widget.minSize,
+              minHeight: widget.minSize,
+            ),
           child: FadeTransition(
             opacity: _opacityAnimation,
             child: DecoratedBox(
               decoration: BoxDecoration(
                 borderRadius: widget.borderRadius,
                 color: backgroundColor != null && !enabled
-                    ? widget.disabledColor ?? _kDisabledBackground
-                    : backgroundColor,
+                  ? widget.disabledColor ?? _kDisabledBackground
+                  : backgroundColor,
               ),
               child: Padding(
-                padding: widget.padding ??
-                    (backgroundColor != null
-                        ? _kBackgroundButtonPadding
-                        : _kButtonPadding),
+                padding: widget.padding ?? (backgroundColor != null
+                  ? _kBackgroundButtonPadding
+                  : _kButtonPadding),
                 child: Center(
                   widthFactor: 1.0,
                   heightFactor: 1.0,

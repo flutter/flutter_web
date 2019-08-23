@@ -9,8 +9,7 @@ import 'package:flutter_web/widgets.dart';
 const Color kTitleColor = Color(0xFF333333);
 const String kTitleString = 'Hello World';
 
-Future<void> pumpApp(WidgetTester tester,
-    {GenerateAppTitle onGenerateTitle}) async {
+Future<void> pumpApp(WidgetTester tester, { GenerateAppTitle onGenerateTitle }) async {
   await tester.pumpWidget(
     WidgetsApp(
       supportedLocales: const <Locale>[
@@ -21,25 +20,24 @@ Future<void> pumpApp(WidgetTester tester,
       color: kTitleColor,
       onGenerateTitle: onGenerateTitle,
       onGenerateRoute: (RouteSettings settings) {
-        return PageRouteBuilder<void>(pageBuilder: (BuildContext context,
-            Animation<double> animation, Animation<double> secondaryAnimation) {
-          return Container();
-        });
+        return PageRouteBuilder<void>(
+          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+            return Container();
+          }
+        );
       },
     ),
   );
 }
 
 void main() {
-  testWidgets('Specified title and color are used to build a Title',
-      (WidgetTester tester) async {
+  testWidgets('Specified title and color are used to build a Title', (WidgetTester tester) async {
     await pumpApp(tester);
     expect(tester.widget<Title>(find.byType(Title)).title, kTitleString);
     expect(tester.widget<Title>(find.byType(Title)).color, kTitleColor);
   });
 
-  testWidgets('onGenerateTitle handles changing locales',
-      (WidgetTester tester) async {
+  testWidgets('onGenerateTitle handles changing locales', (WidgetTester tester) async {
     String generateTitle(BuildContext context) {
       return Localizations.localeOf(context).toString();
     }
@@ -59,4 +57,5 @@ void main() {
     expect(tester.widget<Title>(find.byType(Title)).title, 'en_US');
     expect(tester.widget<Title>(find.byType(Title)).color, kTitleColor);
   });
+
 }

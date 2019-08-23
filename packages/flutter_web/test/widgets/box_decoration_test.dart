@@ -5,8 +5,7 @@
 
 import 'dart:async';
 import 'dart:typed_data';
-import 'package:flutter_web_ui/ui.dart' as ui
-    show Image, webOnlyInitializeTestDomRenderer;
+import 'package:flutter_web_ui/ui.dart' as ui show Image, webOnlyInitializeTestDomRenderer;
 
 import 'package:flutter_web/foundation.dart';
 import 'package:flutter_web/material.dart';
@@ -32,7 +31,8 @@ class TestImageProvider extends ImageProvider<TestImageProvider> {
   @override
   ImageStreamCompleter load(TestImageProvider key) {
     return OneFrameImageStreamCompleter(
-        future.then<ImageInfo>((void value) => ImageInfo(image: image)));
+      future.then<ImageInfo>((void value) => ImageInfo(image: image))
+    );
   }
 }
 
@@ -41,11 +41,9 @@ Future<void> main() async {
   // call.
   await ui.webOnlyInitializeTestDomRenderer();
   AutomatedTestWidgetsFlutterBinding();
-  TestImageProvider.image =
-      await decodeImageFromList(Uint8List.fromList(kTransparentImage));
+  TestImageProvider.image = await decodeImageFromList(Uint8List.fromList(kTransparentImage));
 
-  testWidgets('DecoratedBox handles loading images',
-      (WidgetTester tester) async {
+  testWidgets('DecoratedBox handles loading images', (WidgetTester tester) async {
     final GlobalKey key = GlobalKey();
     final Completer<void> completer = Completer<void>();
     await tester.pumpWidget(
@@ -98,34 +96,36 @@ Future<void> main() async {
   });
 
   testWidgets('Circles can have uniform borders', (WidgetTester tester) async {
-    await tester.pumpWidget(Container(
-      padding: const EdgeInsets.all(50.0),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(width: 10.0, color: const Color(0x80FF00FF)),
-        color: Colors.teal[600],
-      ),
-    ));
+    await tester.pumpWidget(
+      Container(
+        padding: const EdgeInsets.all(50.0),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(width: 10.0, color: const Color(0x80FF00FF)),
+          color: Colors.teal[600],
+        ),
+      )
+    );
   });
 
-  testWidgets('Bordered Container insets its child',
-      (WidgetTester tester) async {
+  testWidgets('Bordered Container insets its child', (WidgetTester tester) async {
     const Key key = Key('outerContainer');
-    await tester.pumpWidget(Center(
-      child: Container(
-        key: key,
-        decoration: BoxDecoration(border: Border.all(width: 10.0)),
+    await tester.pumpWidget(
+      Center(
         child: Container(
-          width: 25.0,
-          height: 25.0,
+          key: key,
+          decoration: BoxDecoration(border: Border.all(width: 10.0)),
+          child: Container(
+            width: 25.0,
+            height: 25.0,
+          ),
         ),
-      ),
-    ));
+      )
+    );
     expect(tester.getSize(find.byKey(key)), equals(const Size(45.0, 45.0)));
   });
 
-  testWidgets('BoxDecoration paints its border correctly',
-      (WidgetTester tester) async {
+  testWidgets('BoxDecoration paints its border correctly', (WidgetTester tester) async {
     // Regression test for https://github.com/flutter/flutter/issues/7672
 
     const Key key = Key('Container with BoxDecoration');
@@ -143,51 +143,39 @@ Future<void> main() async {
     const Color black = Color(0xFF000000);
 
     await tester.pumpWidget(buildFrame(Border.all()));
-    expect(
-        find.byKey(key),
-        paints
-          ..rect(color: black, style: PaintingStyle.stroke, strokeWidth: 1.0));
+    expect(find.byKey(key), paints
+      ..rect(color: black, style: PaintingStyle.stroke, strokeWidth: 1.0));
 
     await tester.pumpWidget(buildFrame(Border.all(width: 0.0)));
-    expect(
-        find.byKey(key),
-        paints
-          ..rect(color: black, style: PaintingStyle.stroke, strokeWidth: 0.0));
+    expect(find.byKey(key), paints
+      ..rect(color: black, style: PaintingStyle.stroke, strokeWidth: 0.0));
 
     const Color green = Color(0xFF00FF00);
     const BorderSide greenSide = BorderSide(color: green, width: 10.0);
 
     await tester.pumpWidget(buildFrame(const Border(top: greenSide)));
-    expect(
-        find.byKey(key), paints..path(color: green, style: PaintingStyle.fill));
+    expect(find.byKey(key), paints..path(color: green, style: PaintingStyle.fill));
 
     await tester.pumpWidget(buildFrame(const Border(left: greenSide)));
-    expect(
-        find.byKey(key), paints..path(color: green, style: PaintingStyle.fill));
+    expect(find.byKey(key), paints..path(color: green, style: PaintingStyle.fill));
 
     await tester.pumpWidget(buildFrame(const Border(right: greenSide)));
-    expect(
-        find.byKey(key), paints..path(color: green, style: PaintingStyle.fill));
+    expect(find.byKey(key), paints..path(color: green, style: PaintingStyle.fill));
 
     await tester.pumpWidget(buildFrame(const Border(bottom: greenSide)));
-    expect(
-        find.byKey(key), paints..path(color: green, style: PaintingStyle.fill));
+    expect(find.byKey(key), paints..path(color: green, style: PaintingStyle.fill));
 
     const Color blue = Color(0xFF0000FF);
     const BorderSide blueSide = BorderSide(color: blue, width: 0.0);
 
-    await tester.pumpWidget(buildFrame(
-        const Border(top: blueSide, right: greenSide, bottom: greenSide)));
-    expect(
-        find.byKey(key),
-        paints
-          ..path() // There's not much point checking the arguments to these calls because paintBorder
-          ..path() // reuses the same Paint object each time, configured differently, and so they will
-          ..path()); // all appear to have the same settings here (that of the last call).
+    await tester.pumpWidget(buildFrame(const Border(top: blueSide, right: greenSide, bottom: greenSide)));
+    expect(find.byKey(key), paints
+      ..path() // There's not much point checking the arguments to these calls because paintBorder
+      ..path() // reuses the same Paint object each time, configured differently, and so they will
+      ..path()); // all appear to have the same settings here (that of the last call).
   });
 
-  testWidgets('BoxDecoration paints its border correctly',
-      (WidgetTester tester) async {
+  testWidgets('BoxDecoration paints its border correctly', (WidgetTester tester) async {
     // Regression test for https://github.com/flutter/flutter/issues/12165
     await tester.pumpWidget(
       Column(
@@ -255,41 +243,34 @@ Future<void> main() async {
         ],
       ),
     );
-    expect(
-      find.byType(Column),
-      paints
-        ..path()
-        ..path()
-        ..path()
-        ..path()
-        ..rect(rect: const Rect.fromLTRB(355.0, 105.0, 445.0, 195.0))
-        ..drrect(
-          outer: RRect.fromLTRBAndCorners(
-            350.0,
-            200.0,
-            450.0,
-            300.0,
-            topLeft: Radius.zero,
-            topRight: const Radius.circular(10.0),
-            bottomRight: Radius.zero,
-            bottomLeft: Radius.zero,
-          ),
-          inner: RRect.fromLTRBAndCorners(
-            360.0,
-            210.0,
-            440.0,
-            290.0,
-            topLeft: const Radius.circular(-10.0),
-            topRight: Radius.zero,
-            bottomRight: const Radius.circular(-10.0),
-            bottomLeft: const Radius.circular(-10.0),
-          ),
-        )
-        ..circle(x: 400.0, y: 350.0, radius: 45.0),
+    expect(find.byType(Column), paints
+      ..path()
+      ..path()
+      ..path()
+      ..path()
+      ..rect(rect: const Rect.fromLTRB(355.0, 105.0, 445.0, 195.0))
+      ..drrect(
+        outer: RRect.fromLTRBAndCorners(
+          350.0, 200.0, 450.0, 300.0,
+          topLeft: Radius.zero,
+          topRight: const Radius.circular(10.0),
+          bottomRight: Radius.zero,
+          bottomLeft: Radius.zero,
+        ),
+        inner: RRect.fromLTRBAndCorners(
+          360.0, 210.0, 440.0, 290.0,
+          topLeft: const Radius.circular(-10.0),
+          topRight: Radius.zero,
+          bottomRight: const Radius.circular(-10.0),
+          bottomLeft: const Radius.circular(-10.0),
+        ),
+      )
+      ..circle(x: 400.0, y: 350.0, radius: 45.0),
     );
   });
 
   testWidgets('Can hit test on BoxDecoration', (WidgetTester tester) async {
+
     List<int> itemsTapped;
 
     const Key key = Key('Container with BoxDecoration');
@@ -318,14 +299,15 @@ Future<void> main() async {
     expect(itemsTapped, <int>[1]);
 
     await tester.tapAt(const Offset(350.0, 275.0));
-    expect(itemsTapped, <int>[1, 1]);
+    expect(itemsTapped, <int>[1,1]);
 
     await tester.tapAt(const Offset(449.0, 324.0));
-    expect(itemsTapped, <int>[1, 1, 1]);
+    expect(itemsTapped, <int>[1,1,1]);
+
   });
 
-  testWidgets('Can hit test on BoxDecoration circle',
-      (WidgetTester tester) async {
+  testWidgets('Can hit test on BoxDecoration circle', (WidgetTester tester) async {
+
     List<int> itemsTapped;
 
     const Key key = Key('Container with BoxDecoration');
@@ -333,8 +315,8 @@ Future<void> main() async {
       itemsTapped = <int>[];
       return Center(
         child: GestureDetector(
-          behavior: HitTestBehavior.deferToChild,
-          child: Container(
+            behavior: HitTestBehavior.deferToChild,
+            child: Container(
             key: key,
             width: 100.0,
             height: 50.0,
@@ -360,6 +342,8 @@ Future<void> main() async {
     expect(itemsTapped, <int>[1]);
 
     await tester.tap(find.byKey(key));
-    expect(itemsTapped, <int>[1, 1]);
+    expect(itemsTapped, <int>[1,1]);
+
   });
+
 }

@@ -6,8 +6,7 @@ import 'package:flutter_web_test/flutter_web_test.dart';
 import 'package:flutter_web/widgets.dart';
 
 class TestUniqueWidget extends UniqueWidget<TestUniqueWidgetState> {
-  const TestUniqueWidget({GlobalKey<TestUniqueWidgetState> key})
-      : super(key: key);
+  const TestUniqueWidget({ GlobalKey<TestUniqueWidgetState> key }) : super(key: key);
 
   @override
   TestUniqueWidgetState createState() => TestUniqueWidgetState();
@@ -20,8 +19,7 @@ class TestUniqueWidgetState extends State<TestUniqueWidget> {
 
 void main() {
   testWidgets('Unique widget control test', (WidgetTester tester) async {
-    final TestUniqueWidget widget =
-        TestUniqueWidget(key: GlobalKey<TestUniqueWidgetState>());
+    final TestUniqueWidget widget = TestUniqueWidget(key: GlobalKey<TestUniqueWidgetState>());
 
     await tester.pumpWidget(widget);
 

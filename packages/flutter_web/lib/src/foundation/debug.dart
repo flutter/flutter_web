@@ -21,12 +21,12 @@ import 'print.dart';
 ///
 /// See [the foundation library](foundation/foundation-library.html)
 /// for a complete list.
-bool debugAssertAllFoundationVarsUnset(String reason,
-    {DebugPrintCallback debugPrintOverride = debugPrintThrottled}) {
+bool debugAssertAllFoundationVarsUnset(String reason, { DebugPrintCallback debugPrintOverride = debugPrintThrottled }) {
   assert(() {
     if (debugPrint != debugPrintOverride ||
         debugDefaultTargetPlatformOverride != null ||
-        debugDoublePrecision != null) throw FlutterError(reason);
+        debugDoublePrecision != null)
+      throw FlutterError(reason);
     return true;
   }());
   return true;
@@ -52,10 +52,7 @@ bool debugInstrumentationEnabled = false;
 ///    implicitly add any timeline events.
 Future<T> debugInstrumentAction<T>(String description, Future<T> action()) {
   bool instrument = false;
-  assert(() {
-    instrument = debugInstrumentationEnabled;
-    return true;
-  }());
+  assert(() { instrument = debugInstrumentationEnabled; return true; }());
   if (instrument) {
     final Stopwatch stopwatch = Stopwatch()..start();
     return action().whenComplete(() {

@@ -1,6 +1,7 @@
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// Synced 2019-08-12T13:26:26.248517.
 
 import 'package:flutter_web/foundation.dart';
 import 'package:flutter_web/services.dart' show Brightness;
@@ -83,6 +84,46 @@ const TextStyle _kDefaultLargeTitleDarkTextStyle = TextStyle(
   color: CupertinoColors.white,
 );
 
+// Eyeballed value since it's not documented in https://developer.apple.com/design/resources/.
+const TextStyle _kDefaultPickerLightTextStyle = TextStyle(
+  inherit: false,
+  fontFamily: '.SF Pro Display',
+  fontSize: 25.0,
+  fontWeight: FontWeight.w400,
+  letterSpacing: -0.41,
+  color: CupertinoColors.black,
+);
+
+// Eyeballed value since it's not documented in https://developer.apple.com/design/resources/.
+const TextStyle _kDefaultPickerDarkTextStyle = TextStyle(
+  inherit: false,
+  fontFamily: '.SF Pro Display',
+  fontSize: 25.0,
+  fontWeight: FontWeight.w400,
+  letterSpacing: -0.41,
+  color: CupertinoColors.white,
+);
+
+// Eyeballed value since it's not documented in https://developer.apple.com/design/resources/.
+const TextStyle _kDefaultDateTimePickerLightTextStyle = TextStyle(
+  inherit: false,
+  fontFamily: '.SF Pro Display',
+  fontSize: 21,
+  fontWeight: FontWeight.w300,
+  letterSpacing: -1.05,
+  color: CupertinoColors.black,
+);
+
+// Eyeballed value since it's not documented in https://developer.apple.com/design/resources/.
+const TextStyle _kDefaultDateTimePickerDarkTextStyle = TextStyle(
+  inherit: false,
+  fontFamily: '.SF Pro Display',
+  fontSize: 21,
+  fontWeight: FontWeight.w300,
+  letterSpacing: -1.05,
+  color: CupertinoColors.white,
+);
+
 /// Cupertino typography theme in a [CupertinoThemeData].
 @immutable
 class CupertinoTextThemeData extends Diagnosticable {
@@ -104,70 +145,73 @@ class CupertinoTextThemeData extends Diagnosticable {
     TextStyle navTitleTextStyle,
     TextStyle navLargeTitleTextStyle,
     TextStyle navActionTextStyle,
-  })  : _primaryColor = primaryColor ?? CupertinoColors.activeBlue,
-        _brightness = brightness,
-        _textStyle = textStyle,
-        _actionTextStyle = actionTextStyle,
-        _tabLabelTextStyle = tabLabelTextStyle,
-        _navTitleTextStyle = navTitleTextStyle,
-        _navLargeTitleTextStyle = navLargeTitleTextStyle,
-        _navActionTextStyle = navActionTextStyle;
+    TextStyle pickerTextStyle,
+    TextStyle dateTimePickerTextStyle,
+  }) : _primaryColor = primaryColor ?? CupertinoColors.activeBlue,
+       _brightness = brightness,
+       _textStyle = textStyle,
+       _actionTextStyle = actionTextStyle,
+       _tabLabelTextStyle = tabLabelTextStyle,
+       _navTitleTextStyle = navTitleTextStyle,
+       _navLargeTitleTextStyle = navLargeTitleTextStyle,
+       _navActionTextStyle = navActionTextStyle,
+       _pickerTextStyle = pickerTextStyle,
+       _dateTimePickerTextStyle = dateTimePickerTextStyle;
 
   final Color _primaryColor;
   final Brightness _brightness;
   bool get _isLight => _brightness != Brightness.dark;
 
   final TextStyle _textStyle;
-
   /// Typography of general text content for Cupertino widgets.
-  TextStyle get textStyle =>
-      _textStyle ??
-      (_isLight ? _kDefaultLightTextStyle : _kDefaultDarkTextStyle);
+  TextStyle get textStyle => _textStyle ?? (_isLight ? _kDefaultLightTextStyle : _kDefaultDarkTextStyle);
 
   final TextStyle _actionTextStyle;
-
   /// Typography of interactive text content such as text in a button without background.
   TextStyle get actionTextStyle {
-    return _actionTextStyle ??
-        _kDefaultActionTextStyle.copyWith(
-          color: _primaryColor,
-        );
+    return _actionTextStyle ?? _kDefaultActionTextStyle.copyWith(
+      color: _primaryColor,
+    );
   }
 
   final TextStyle _tabLabelTextStyle;
-
   /// Typography of unselected tabs.
-  TextStyle get tabLabelTextStyle =>
-      _tabLabelTextStyle ?? _kDefaultTabLabelTextStyle;
+  TextStyle get tabLabelTextStyle => _tabLabelTextStyle ?? _kDefaultTabLabelTextStyle;
 
   final TextStyle _navTitleTextStyle;
-
   /// Typography of titles in standard navigation bars.
   TextStyle get navTitleTextStyle {
     return _navTitleTextStyle ??
-        (_isLight
-            ? _kDefaultMiddleTitleLightTextStyle
-            : _kDefaultMiddleTitleDarkTextStyle);
+        (_isLight ? _kDefaultMiddleTitleLightTextStyle : _kDefaultMiddleTitleDarkTextStyle);
   }
 
   final TextStyle _navLargeTitleTextStyle;
-
   /// Typography of large titles in sliver navigation bars.
   TextStyle get navLargeTitleTextStyle {
     return _navLargeTitleTextStyle ??
-        (_isLight
-            ? _kDefaultLargeTitleLightTextStyle
-            : _kDefaultLargeTitleDarkTextStyle);
+        (_isLight ? _kDefaultLargeTitleLightTextStyle : _kDefaultLargeTitleDarkTextStyle);
   }
 
   final TextStyle _navActionTextStyle;
-
-  /// Typography of interative text content in navigation bars.
+  /// Typography of interactive text content in navigation bars.
   TextStyle get navActionTextStyle {
-    return _navActionTextStyle ??
-        _kDefaultActionTextStyle.copyWith(
-          color: _primaryColor,
-        );
+    return _navActionTextStyle ?? _kDefaultActionTextStyle.copyWith(
+      color: _primaryColor,
+    );
+  }
+
+  final TextStyle _pickerTextStyle;
+  /// Typography of pickers.
+  TextStyle get pickerTextStyle {
+    return _pickerTextStyle ??
+        (_isLight ? _kDefaultPickerLightTextStyle : _kDefaultPickerDarkTextStyle);
+  }
+
+  final TextStyle _dateTimePickerTextStyle;
+  /// Typography of date time pickers.
+  TextStyle get dateTimePickerTextStyle {
+    return _dateTimePickerTextStyle ??
+        (_isLight ? _kDefaultDateTimePickerLightTextStyle : _kDefaultDateTimePickerDarkTextStyle);
   }
 
   /// Returns a copy of the current [CupertinoTextThemeData] instance with
@@ -181,6 +225,8 @@ class CupertinoTextThemeData extends Diagnosticable {
     TextStyle navTitleTextStyle,
     TextStyle navLargeTitleTextStyle,
     TextStyle navActionTextStyle,
+    TextStyle pickerTextStyle,
+    TextStyle dateTimePickerTextStyle,
   }) {
     return CupertinoTextThemeData(
       primaryColor: primaryColor ?? _primaryColor,
@@ -191,6 +237,8 @@ class CupertinoTextThemeData extends Diagnosticable {
       navTitleTextStyle: navTitleTextStyle ?? _navTitleTextStyle,
       navLargeTitleTextStyle: navLargeTitleTextStyle ?? _navLargeTitleTextStyle,
       navActionTextStyle: navActionTextStyle ?? _navActionTextStyle,
+      pickerTextStyle: pickerTextStyle ?? _pickerTextStyle,
+      dateTimePickerTextStyle: dateTimePickerTextStyle ?? _dateTimePickerTextStyle,
     );
   }
 }

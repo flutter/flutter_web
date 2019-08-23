@@ -1,7 +1,7 @@
 // Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// Synced 2019-05-30T14:20:56.809545.
+// Synced 2019-08-07T09:50:32.706568.
 
 export 'package:vector_math/vector_math_64.dart' show Matrix4;
 
@@ -102,4 +102,5 @@ export 'src/widgets/viewport.dart';
 export 'src/widgets/visibility.dart';
 export 'src/widgets/web_navigator.dart';
 export 'src/widgets/widget_inspector.dart';
+export 'src/widgets/widget_span.dart';
 export 'src/widgets/will_pop_scope.dart';

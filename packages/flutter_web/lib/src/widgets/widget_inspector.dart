@@ -55,7 +55,8 @@ class _ProxyLayer extends Layer {
   final Layer _layer;
 
   @override
-  void addToScene(ui.SceneBuilder builder, [Offset layerOffset = Offset.zero]) {
+  void addToScene(ui.SceneBuilder builder,
+      [Offset layerOffset = Offset.zero]) {
     _layer.addToScene(builder, layerOffset);
   }
 

@@ -46,11 +46,11 @@ class MaterialPageRoute<T> extends PageRoute<T> {
     RouteSettings settings,
     this.maintainState = true,
     bool fullscreenDialog = false,
-  })  : assert(builder != null),
-        assert(maintainState != null),
-        assert(fullscreenDialog != null),
-        assert(opaque),
-        super(settings: settings, fullscreenDialog: fullscreenDialog);
+  }) : assert(builder != null),
+       assert(maintainState != null),
+       assert(fullscreenDialog != null),
+       assert(opaque),
+       super(settings: settings, fullscreenDialog: fullscreenDialog);
 
   /// Builds the primary contents of the route.
   final WidgetBuilder builder;
@@ -69,15 +69,14 @@ class MaterialPageRoute<T> extends PageRoute<T> {
 
   @override
   bool canTransitionFrom(TransitionRoute<dynamic> previousRoute) {
-    return previousRoute is MaterialPageRoute ||
-        previousRoute is CupertinoPageRoute;
+    return previousRoute is MaterialPageRoute || previousRoute is CupertinoPageRoute;
   }
 
   @override
   bool canTransitionTo(TransitionRoute<dynamic> nextRoute) {
     // Don't perform outgoing animation if the next route is a fullscreen dialog.
-    return (nextRoute is MaterialPageRoute && !nextRoute.fullscreenDialog) ||
-        (nextRoute is CupertinoPageRoute && !nextRoute.fullscreenDialog);
+    return (nextRoute is MaterialPageRoute && !nextRoute.fullscreenDialog)
+        || (nextRoute is CupertinoPageRoute && !nextRoute.fullscreenDialog);
   }
 
   @override
@@ -90,8 +89,9 @@ class MaterialPageRoute<T> extends PageRoute<T> {
     assert(() {
       if (result == null) {
         throw FlutterError(
-            'The builder for route "${settings.name}" returned null.\n'
-            'Route builders must never return null.');
+          'The builder for route "${settings.name}" returned null.\n'
+          'Route builders must never return null.'
+        );
       }
       return true;
     }());
@@ -103,11 +103,9 @@ class MaterialPageRoute<T> extends PageRoute<T> {
   }
 
   @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
     final PageTransitionsTheme theme = Theme.of(context).pageTransitionsTheme;
-    return theme.buildTransitions<T>(
-        this, context, animation, secondaryAnimation, child);
+    return theme.buildTransitions<T>(this, context, animation, secondaryAnimation, child);
   }
 
   @override

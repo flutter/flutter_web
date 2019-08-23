@@ -6,8 +6,7 @@ import 'package:flutter_web_test/flutter_web_test.dart';
 import 'package:flutter_web/widgets.dart';
 
 class TestItem extends StatelessWidget {
-  const TestItem({Key key, this.item, this.width, this.height})
-      : super(key: key);
+  const TestItem({ Key key, this.item, this.width, this.height }) : super(key: key);
   final int item;
   final double width;
   final double height;
@@ -22,8 +21,7 @@ class TestItem extends StatelessWidget {
   }
 }
 
-Widget buildFrame(
-    {int count, double width, double height, Axis scrollDirection}) {
+Widget buildFrame({ int count, double width, double height, Axis scrollDirection }) {
   return Directionality(
     textDirection: TextDirection.ltr,
     child: CustomScrollView(
@@ -42,8 +40,7 @@ Widget buildFrame(
 }
 
 void main() {
-  testWidgets('SliverPrototypeExtentList vertical scrolling basics',
-      (WidgetTester tester) async {
+  testWidgets('SliverPrototypeExtentList vertical scrolling basics', (WidgetTester tester) async {
     await tester.pumpWidget(buildFrame(count: 20, height: 100.0));
 
     // The viewport is 600 pixels high, lazily created items are 100 pixels high.
@@ -53,7 +50,8 @@ void main() {
       expect(tester.getTopLeft(item).dy, i * 100.0);
       expect(tester.getSize(item).height, 100.0);
     }
-    for (int i = 7; i < 20; i += 1) expect(find.text('Item $i'), findsNothing);
+    for (int i = 7; i < 20; i += 1)
+      expect(find.text('Item $i'), findsNothing);
 
     // Fling scroll to the end.
     await tester.fling(find.text('Item 2'), const Offset(0.0, -200.0), 5000.0);
@@ -61,13 +59,12 @@ void main() {
 
     for (int i = 19; i >= 14; i -= 1)
       expect(find.text('Item $i'), findsOneWidget);
-    for (int i = 13; i >= 0; i -= 1) expect(find.text('Item $i'), findsNothing);
+    for (int i = 13; i >= 0; i -= 1)
+      expect(find.text('Item $i'), findsNothing);
   });
 
-  testWidgets('SliverPrototypeExtentList horizontal scrolling basics',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-        buildFrame(count: 20, width: 100.0, scrollDirection: Axis.horizontal));
+  testWidgets('SliverPrototypeExtentList horizontal scrolling basics', (WidgetTester tester) async {
+    await tester.pumpWidget(buildFrame(count: 20, width: 100.0, scrollDirection: Axis.horizontal));
 
     // The viewport is 800 pixels wide, lazily created items are 100 pixels wide.
     for (int i = 0; i < 8; i += 1) {
@@ -76,7 +73,8 @@ void main() {
       expect(tester.getTopLeft(item).dx, i * 100.0);
       expect(tester.getSize(item).width, 100.0);
     }
-    for (int i = 9; i < 20; i += 1) expect(find.text('Item $i'), findsNothing);
+    for (int i = 9; i < 20; i += 1)
+      expect(find.text('Item $i'), findsNothing);
 
     // Fling scroll to the end.
     await tester.fling(find.text('Item 3'), const Offset(-200.0, 0.0), 5000.0);
@@ -84,11 +82,11 @@ void main() {
 
     for (int i = 19; i >= 12; i -= 1)
       expect(find.text('Item $i'), findsOneWidget);
-    for (int i = 11; i >= 0; i -= 1) expect(find.text('Item $i'), findsNothing);
+    for (int i = 11; i >= 0; i -= 1)
+      expect(find.text('Item $i'), findsNothing);
   });
 
-  testWidgets('SliverPrototypeExtentList change the prototype item',
-      (WidgetTester tester) async {
+  testWidgets('SliverPrototypeExtentList change the prototype item', (WidgetTester tester) async {
     await tester.pumpWidget(buildFrame(count: 10, height: 60.0));
 
     // The viewport is 600 pixels high, each of the 10 items is 60 pixels high
@@ -98,8 +96,10 @@ void main() {
     await tester.pumpWidget(buildFrame(count: 10, height: 120.0));
 
     // Now the items are 120 pixels high, so only 5 fit.
-    for (int i = 0; i < 5; i += 1) expect(find.text('Item $i'), findsOneWidget);
-    for (int i = 5; i < 10; i += 1) expect(find.text('Item $i'), findsNothing);
+    for (int i = 0; i < 5; i += 1)
+      expect(find.text('Item $i'), findsOneWidget);
+    for (int i = 5; i < 10; i += 1)
+      expect(find.text('Item $i'), findsNothing);
 
     await tester.pumpWidget(buildFrame(count: 10, height: 60.0));
 
@@ -108,13 +108,9 @@ void main() {
       expect(find.text('Item $i'), findsOneWidget);
   });
 
-  testWidgets('SliverPrototypeExtentList first item is also the prototype',
-      (WidgetTester tester) async {
+  testWidgets('SliverPrototypeExtentList first item is also the prototype', (WidgetTester tester) async {
     final List<Widget> items = List<Widget>.generate(10, (int index) {
-      return TestItem(
-          key: ValueKey<int>(index),
-          item: index,
-          height: index == 0 ? 60.0 : null);
+      return TestItem(key: ValueKey<int>(index), item: index, height: index == 0 ? 60.0 : null);
     }).toList();
 
     await tester.pumpWidget(
@@ -135,8 +131,7 @@ void main() {
     );
 
     // Item 0 exists in the list and as the prototype item.
-    expect(
-        tester.widgetList(find.text('Item 0', skipOffstage: false)).length, 2);
+    expect(tester.widgetList(find.text('Item 0', skipOffstage: false)).length, 2);
 
     for (int i = 1; i < 10; i += 1)
       expect(find.text('Item $i'), findsOneWidget);

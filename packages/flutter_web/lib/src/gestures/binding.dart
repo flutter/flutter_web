@@ -1,7 +1,7 @@
 // Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// Synced 2019-05-30T14:20:56.180455.
+// Synced 2019-08-15T10:04:31.507614.
 
 import 'dart:async';
 import 'dart:collection';
@@ -59,8 +59,7 @@ import 'pointer_signal_resolver.dart';
 ///
 /// When a [PointerUpEvent] is received, the [GestureArenaManager.sweep] method
 /// is invoked to force the gesture arena logic to terminate if necessary.
-mixin GestureBinding on BindingBase
-    implements HitTestable, HitTestDispatcher, HitTestTarget {
+mixin GestureBinding on BindingBase implements HitTestable, HitTestDispatcher, HitTestTarget {
   @override
   void initInstances() {
     super.initInstances();
@@ -83,9 +82,9 @@ mixin GestureBinding on BindingBase
   void _handlePointerDataPacket(ui.PointerDataPacket packet) {
     // We convert pointer data to logical pixels so that e.g. the touch slop can be
     // defined in a device-independent manner.
-    _pendingPointerEvents.addAll(
-        PointerEventConverter.expand(packet.data, window.devicePixelRatio));
-    if (!locked) _flushPointerEventQueue();
+    _pendingPointerEvents.addAll(PointerEventConverter.expand(packet.data, window.devicePixelRatio));
+    if (!locked)
+      _flushPointerEventQueue();
   }
 
   /// Dispatch a [PointerCancelEvent] for the given pointer soon.
@@ -132,7 +131,8 @@ mixin GestureBinding on BindingBase
         _hitTests[event.pointer] = hitTestResult;
       }
       assert(() {
-        if (debugPrintHitTestResults) debugPrint('$event: $hitTestResult');
+        if (debugPrintHitTestResults)
+          debugPrint('$event: $hitTestResult');
         return true;
       }());
     } else if (event is PointerUpEvent || event is PointerCancelEvent) {
@@ -176,9 +176,7 @@ mixin GestureBinding on BindingBase
     // No hit test information implies that this is a hover or pointer
     // add/remove event.
     if (hitTestResult == null) {
-      assert(event is PointerHoverEvent ||
-          event is PointerAddedEvent ||
-          event is PointerRemovedEvent);
+      assert(event is PointerHoverEvent || event is PointerAddedEvent || event is PointerRemovedEvent);
       try {
         pointerRouter.route(event);
       } catch (exception, stack) {
@@ -186,13 +184,11 @@ mixin GestureBinding on BindingBase
           exception: exception,
           stack: stack,
           library: 'gesture library',
-          context: ErrorDescription(
-              'while dispatching a non-hit-tested pointer event'),
+          context: ErrorDescription('while dispatching a non-hit-tested pointer event'),
           event: event,
           hitTestEntry: null,
           informationCollector: () sync* {
-            yield DiagnosticsProperty<PointerEvent>('Event', event,
-                style: DiagnosticsTreeStyle.errorProperty);
+            yield DiagnosticsProperty<PointerEvent>('Event', event, style: DiagnosticsTreeStyle.errorProperty);
           },
         ));
       }
@@ -200,7 +196,7 @@ mixin GestureBinding on BindingBase
     }
     for (HitTestEntry entry in hitTestResult.path) {
       try {
-        entry.target.handleEvent(event, entry);
+        entry.target.handleEvent(event.transformed(entry.transform), entry);
       } catch (exception, stack) {
         FlutterError.reportError(FlutterErrorDetailsForPointerEventDispatcher(
           exception: exception,
@@ -210,10 +206,8 @@ mixin GestureBinding on BindingBase
           event: event,
           hitTestEntry: entry,
           informationCollector: () sync* {
-            yield DiagnosticsProperty<PointerEvent>('Event', event,
-                style: DiagnosticsTreeStyle.errorProperty);
-            yield DiagnosticsProperty<HitTestTarget>('Target', entry.target,
-                style: DiagnosticsTreeStyle.errorProperty);
+            yield DiagnosticsProperty<PointerEvent>('Event', event, style: DiagnosticsTreeStyle.errorProperty);
+            yield DiagnosticsProperty<HitTestTarget>('Target', entry.target, style: DiagnosticsTreeStyle.errorProperty);
           },
         ));
       }
@@ -254,12 +248,13 @@ class FlutterErrorDetailsForPointerEventDispatcher extends FlutterErrorDetails {
     InformationCollector informationCollector,
     bool silent = false,
   }) : super(
-            exception: exception,
-            stack: stack,
-            library: library,
-            context: context,
-            informationCollector: informationCollector,
-            silent: silent);
+    exception: exception,
+    stack: stack,
+    library: library,
+    context: context,
+    informationCollector: informationCollector,
+    silent: silent
+  );
 
   /// The pointer event that was being routed when the exception was raised.
   final PointerEvent event;

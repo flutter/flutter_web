@@ -1,7 +1,7 @@
 // Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// Synced 2019-05-30T14:20:56.396184.
+// Synced 2019-08-12T13:26:26.798246.
 
 import 'dart:math' as math;
 
@@ -39,24 +39,21 @@ class _TextSelectionToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> items = <Widget>[];
-    final MaterialLocalizations localizations =
-        MaterialLocalizations.of(context);
+    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
 
     if (handleCut != null)
-      items.add(FlatButton(
-          child: Text(localizations.cutButtonLabel), onPressed: handleCut));
+      items.add(FlatButton(child: Text(localizations.cutButtonLabel), onPressed: handleCut));
     if (handleCopy != null)
-      items.add(FlatButton(
-          child: Text(localizations.copyButtonLabel), onPressed: handleCopy));
+      items.add(FlatButton(child: Text(localizations.copyButtonLabel), onPressed: handleCopy));
     if (handlePaste != null)
-      items.add(FlatButton(
-        child: Text(localizations.pasteButtonLabel),
-        onPressed: handlePaste,
-      ));
+      items.add(FlatButton(child: Text(localizations.pasteButtonLabel), onPressed: handlePaste,));
     if (handleSelectAll != null)
-      items.add(FlatButton(
-          child: Text(localizations.selectAllButtonLabel),
-          onPressed: handleSelectAll));
+      items.add(FlatButton(child: Text(localizations.selectAllButtonLabel), onPressed: handleSelectAll));
+
+    // If there is no option available, build an empty widget.
+    if (items.isEmpty) {
+      return Container(width: 0.0, height: 0.0);
+    }
 
     return Material(
       elevation: 1.0,
@@ -71,8 +68,7 @@ class _TextSelectionToolbar extends StatelessWidget {
 /// Centers the toolbar around the given position, ensuring that it remains on
 /// screen.
 class _TextSelectionToolbarLayout extends SingleChildLayoutDelegate {
-  _TextSelectionToolbarLayout(
-      this.screenSize, this.globalEditableRegion, this.position);
+  _TextSelectionToolbarLayout(this.screenSize, this.globalEditableRegion, this.position);
 
   /// The size of the screen at the time that the toolbar was last laid out.
   final Size screenSize;
@@ -118,14 +114,14 @@ class _TextSelectionToolbarLayout extends SingleChildLayoutDelegate {
 
 /// Draws a single text selection handle which points up and to the left.
 class _TextSelectionHandlePainter extends CustomPainter {
-  _TextSelectionHandlePainter({this.color});
+  _TextSelectionHandlePainter({ this.color });
 
   final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paint = Paint()..color = color;
-    final double radius = size.width / 2.0;
+    final double radius = size.width/2.0;
     canvas.drawCircle(Offset(radius, radius), radius, paint);
     canvas.drawRect(Rect.fromLTWH(0.0, 0.0, radius, radius), paint);
   }
@@ -137,14 +133,16 @@ class _TextSelectionHandlePainter extends CustomPainter {
 }
 
 class _MaterialTextSelectionControls extends TextSelectionControls {
+  /// Returns the size of the Material handle.
   @override
-  Size handleSize = const Size(_kHandleSize, _kHandleSize);
+  Size getHandleSize(double textLineHeight) => const Size(_kHandleSize, _kHandleSize);
 
   /// Builder for material-style copy/paste text selection toolbar.
   @override
   Widget buildToolbar(
     BuildContext context,
     Rect globalEditableRegion,
+    double textLineHeight,
     Offset position,
     List<TextSelectionPoint> endpoints,
     TextSelectionDelegate delegate,
@@ -155,20 +153,16 @@ class _MaterialTextSelectionControls extends TextSelectionControls {
     // The toolbar should appear below the TextField
     // when there is not enough space above the TextField to show it.
     final TextSelectionPoint startTextSelectionPoint = endpoints[0];
-    final TextSelectionPoint endTextSelectionPoint =
-        (endpoints.length > 1) ? endpoints[1] : null;
+    final TextSelectionPoint endTextSelectionPoint = (endpoints.length > 1)
+        ? endpoints[1]
+        : null;
     final double x = (endTextSelectionPoint == null)
         ? startTextSelectionPoint.point.dx
-        : (startTextSelectionPoint.point.dx + endTextSelectionPoint.point.dx) /
-            2.0;
-    final double availableHeight = globalEditableRegion.top -
-        MediaQuery.of(context).padding.top -
-        _kToolbarScreenPadding;
+        : (startTextSelectionPoint.point.dx + endTextSelectionPoint.point.dx) / 2.0;
+    final double availableHeight
+        = globalEditableRegion.top - MediaQuery.of(context).padding.top - _kToolbarScreenPadding;
     final double y = (availableHeight < _kToolbarHeight)
-        ? startTextSelectionPoint.point.dy +
-            globalEditableRegion.height +
-            _kToolbarHeight +
-            _kToolbarScreenPadding
+        ? startTextSelectionPoint.point.dy + globalEditableRegion.height + _kToolbarHeight + _kToolbarScreenPadding
         : startTextSelectionPoint.point.dy - globalEditableRegion.height;
     final Offset preciseMidpoint = Offset(x, y);
 
@@ -184,8 +178,7 @@ class _MaterialTextSelectionControls extends TextSelectionControls {
           handleCut: canCut(delegate) ? () => handleCut(delegate) : null,
           handleCopy: canCopy(delegate) ? () => handleCopy(delegate) : null,
           handlePaste: canPaste(delegate) ? () => handlePaste(delegate) : null,
-          handleSelectAll:
-              canSelectAll(delegate) ? () => handleSelectAll(delegate) : null,
+          handleSelectAll: canSelectAll(delegate) ? () => handleSelectAll(delegate) : null,
         ),
       ),
     );
@@ -193,16 +186,13 @@ class _MaterialTextSelectionControls extends TextSelectionControls {
 
   /// Builder for material-style text selection handles.
   @override
-  Widget buildHandle(
-      BuildContext context, TextSelectionHandleType type, double textHeight) {
-    final Widget handle = Padding(
-      padding: const EdgeInsets.only(right: 26.0, bottom: 26.0),
-      child: SizedBox(
-        width: _kHandleSize,
-        height: _kHandleSize,
-        child: CustomPaint(
-          painter: _TextSelectionHandlePainter(
-              color: Theme.of(context).textSelectionHandleColor),
+  Widget buildHandle(BuildContext context, TextSelectionHandleType type, double textHeight) {
+    final Widget handle = SizedBox(
+      width: _kHandleSize,
+      height: _kHandleSize,
+      child: CustomPaint(
+        painter: _TextSelectionHandlePainter(
+          color: Theme.of(context).textSelectionHandleColor
         ),
       ),
     );
@@ -212,23 +202,46 @@ class _MaterialTextSelectionControls extends TextSelectionControls {
     // straight up or up-right depending on the handle type.
     switch (type) {
       case TextSelectionHandleType.left: // points up-right
-        return Transform(
-          transform: Matrix4.rotationZ(math.pi / 2.0),
+        return Transform.rotate(
+          angle: math.pi / 2.0,
           child: handle,
         );
       case TextSelectionHandleType.right: // points up-left
         return handle;
       case TextSelectionHandleType.collapsed: // points up
-        return Transform(
-          transform: Matrix4.rotationZ(math.pi / 4.0),
+        return Transform.rotate(
+          angle: math.pi / 4.0,
           child: handle,
         );
     }
     assert(type != null);
     return null;
   }
+
+  /// Gets anchor for material-style text selection handles.
+  ///
+  /// See [TextSelectionControls.getHandleAnchor].
+  @override
+  Offset getHandleAnchor(TextSelectionHandleType type, double textLineHeight) {
+    switch (type) {
+      case TextSelectionHandleType.left:
+        return const Offset(_kHandleSize, 0);
+      case TextSelectionHandleType.right:
+        return Offset.zero;
+      default:
+        return const Offset(_kHandleSize / 2, -4);
+    }
+  }
+
+  @override
+  bool canSelectAll(TextSelectionDelegate delegate) {
+    // Android allows SelectAll when selection is not collapsed, unless
+    // everything has already been selected.
+    final TextEditingValue value = delegate.textEditingValue;
+    return value.text.isNotEmpty &&
+      !(value.selection.start == 0 && value.selection.end == value.text.length);
+  }
 }
 
 /// Text selection controls that follow the Material Design specification.
-final TextSelectionControls materialTextSelectionControls =
-    _MaterialTextSelectionControls();
+final TextSelectionControls materialTextSelectionControls = _MaterialTextSelectionControls();

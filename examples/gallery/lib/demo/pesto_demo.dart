@@ -379,11 +379,11 @@ class _RecipePageState extends State<RecipePage> {
                     onSelected: (String item) {},
                     itemBuilder: (BuildContext context) =>
                         <PopupMenuItem<String>>[
-                      _buildMenuItem(Icons.share, 'Tweet recipe'),
-                      _buildMenuItem(Icons.email, 'Email recipe'),
-                      _buildMenuItem(Icons.message, 'Message recipe'),
-                      _buildMenuItem(Icons.people, 'Share on Facebook'),
-                    ],
+                          _buildMenuItem(Icons.share, 'Tweet recipe'),
+                          _buildMenuItem(Icons.email, 'Email recipe'),
+                          _buildMenuItem(Icons.message, 'Message recipe'),
+                          _buildMenuItem(Icons.people, 'Share on Facebook'),
+                        ],
                   ),
                 ],
                 flexibleSpace: const FlexibleSpaceBar(
@@ -478,7 +478,8 @@ class RecipeSheet extends StatelessWidget {
               TableRow(children: <Widget>[
                 TableCell(
                     verticalAlignment: TableCellVerticalAlignment.middle,
-                    child: Image.asset('${recipe.ingredientsImagePath}',
+                    child: Image.asset(
+                        '${recipe.ingredientsImagePath}',
                         package: recipe.ingredientsImagePackage,
                         width: 32.0,
                         height: 32.0,

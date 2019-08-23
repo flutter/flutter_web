@@ -1,7 +1,7 @@
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// Synced 2019-05-30T14:20:56.217457.
+// Synced 2019-08-15T10:04:31.524247.
 
 import 'package:flutter_web/foundation.dart';
 
@@ -27,8 +27,7 @@ class PointerSignalResolver {
   PointerSignalEvent _currentEvent;
 
   /// Registers interest in handling [event].
-  void register(
-      PointerSignalEvent event, PointerSignalResolvedCallback callback) {
+  void register(PointerSignalEvent event, PointerSignalResolvedCallback callback) {
     assert(event != null);
     assert(callback != null);
     assert(_currentEvent == null || _currentEvent == event);
@@ -49,9 +48,9 @@ class PointerSignalResolver {
       assert(_currentEvent == null);
       return;
     }
-    assert(_currentEvent == event);
+    assert((_currentEvent.original ?? _currentEvent) == event);
     try {
-      _firstRegisteredCallback(event);
+    _firstRegisteredCallback(_currentEvent);
     } catch (exception, stack) {
       FlutterError.reportError(FlutterErrorDetails(
         exception: exception,
@@ -59,8 +58,7 @@ class PointerSignalResolver {
         library: 'gesture library',
         context: ErrorDescription('while resolving a PointerSignalEvent'),
         informationCollector: () sync* {
-          yield DiagnosticsProperty<PointerSignalEvent>('Event', event,
-              style: DiagnosticsTreeStyle.errorProperty);
+          yield DiagnosticsProperty<PointerSignalEvent>('Event', event, style: DiagnosticsTreeStyle.errorProperty);
         },
       ));
     }

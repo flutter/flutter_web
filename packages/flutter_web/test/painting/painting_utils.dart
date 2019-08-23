@@ -9,8 +9,7 @@ import 'package:flutter_web/foundation.dart';
 import 'package:flutter_web/painting.dart';
 import 'package:flutter_web/services.dart';
 
-class PaintingBindingSpy extends BindingBase
-    with ServicesBinding, PaintingBinding {
+class PaintingBindingSpy extends BindingBase with ServicesBinding, PaintingBinding {
   int counter = 0;
   int get instantiateImageCodecCalledCount => counter;
 

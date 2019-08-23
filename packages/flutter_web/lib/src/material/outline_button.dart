@@ -79,25 +79,25 @@ class OutlineButton extends MaterialButton {
     Clip clipBehavior,
     FocusNode focusNode,
     Widget child,
-  })  : assert(highlightElevation == null || highlightElevation >= 0.0),
-        super(
-          key: key,
-          onPressed: onPressed,
-          textTheme: textTheme,
-          textColor: textColor,
-          disabledTextColor: disabledTextColor,
-          color: color,
-          focusColor: focusColor,
-          hoverColor: hoverColor,
-          highlightColor: highlightColor,
-          splashColor: splashColor,
-          highlightElevation: highlightElevation,
-          padding: padding,
-          shape: shape,
-          clipBehavior: clipBehavior,
-          focusNode: focusNode,
-          child: child,
-        );
+  }) : assert(highlightElevation == null || highlightElevation >= 0.0),
+       super(
+         key: key,
+         onPressed: onPressed,
+         textTheme: textTheme,
+         textColor: textColor,
+         disabledTextColor: disabledTextColor,
+         color: color,
+         focusColor: focusColor,
+         hoverColor: hoverColor,
+         highlightColor: highlightColor,
+         splashColor: splashColor,
+         highlightElevation: highlightElevation,
+         padding: padding,
+         shape: shape,
+         clipBehavior: clipBehavior,
+         focusNode: focusNode,
+         child: child,
+       );
 
   /// Create an outline button from a pair of widgets that serve as the button's
   /// [icon] and [label].
@@ -169,8 +169,7 @@ class OutlineButton extends MaterialButton {
       highlightElevation: buttonTheme.getHighlightElevation(this),
       borderSide: borderSide,
       disabledBorderColor: disabledBorderColor,
-      highlightedBorderColor:
-          highlightedBorderColor ?? buttonTheme.colorScheme.primary,
+      highlightedBorderColor: highlightedBorderColor ?? buttonTheme.colorScheme.primary,
       padding: buttonTheme.getPadding(this),
       shape: buttonTheme.getShape(this),
       clipBehavior: clipBehavior,
@@ -182,14 +181,9 @@ class OutlineButton extends MaterialButton {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<BorderSide>('borderSide', borderSide,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>(
-        'disabledBorderColor', disabledBorderColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>(
-        'highlightedBorderColor', highlightedBorderColor,
-        defaultValue: null));
+    properties.add(DiagnosticsProperty<BorderSide>('borderSide', borderSide, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('disabledBorderColor', disabledBorderColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('highlightedBorderColor', highlightedBorderColor, defaultValue: null));
   }
 }
 
@@ -197,8 +191,7 @@ class OutlineButton extends MaterialButton {
 //
 // This class only exists to give OutlineButtons created with OutlineButton.icon
 // a distinct class for the sake of ButtonTheme. It can not be instantiated.
-class _OutlineButtonWithIcon extends OutlineButton
-    with MaterialButtonWithIconMixin {
+class _OutlineButtonWithIcon extends OutlineButton with MaterialButtonWithIconMixin {
   _OutlineButtonWithIcon({
     Key key,
     @required VoidCallback onPressed,
@@ -220,37 +213,37 @@ class _OutlineButtonWithIcon extends OutlineButton
     FocusNode focusNode,
     @required Widget icon,
     @required Widget label,
-  })  : assert(highlightElevation == null || highlightElevation >= 0.0),
-        assert(icon != null),
-        assert(label != null),
-        super(
-          key: key,
-          onPressed: onPressed,
-          textTheme: textTheme,
-          textColor: textColor,
-          disabledTextColor: disabledTextColor,
-          color: color,
-          focusColor: focusColor,
-          hoverColor: hoverColor,
-          highlightColor: highlightColor,
-          splashColor: splashColor,
-          highlightElevation: highlightElevation,
-          disabledBorderColor: disabledBorderColor,
-          highlightedBorderColor: highlightedBorderColor,
-          borderSide: borderSide,
-          padding: padding,
-          shape: shape,
-          clipBehavior: clipBehavior,
-          focusNode: focusNode,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              icon,
-              const SizedBox(width: 8.0),
-              label,
-            ],
-          ),
-        );
+  }) : assert(highlightElevation == null || highlightElevation >= 0.0),
+       assert(icon != null),
+       assert(label != null),
+       super(
+         key: key,
+         onPressed: onPressed,
+         textTheme: textTheme,
+         textColor: textColor,
+         disabledTextColor: disabledTextColor,
+         color: color,
+         focusColor: focusColor,
+         hoverColor: hoverColor,
+         highlightColor: highlightColor,
+         splashColor: splashColor,
+         highlightElevation: highlightElevation,
+         disabledBorderColor: disabledBorderColor,
+         highlightedBorderColor: highlightedBorderColor,
+         borderSide: borderSide,
+         padding: padding,
+         shape: shape,
+         clipBehavior: clipBehavior,
+         focusNode: focusNode,
+         child: Row(
+           mainAxisSize: MainAxisSize.min,
+           children: <Widget>[
+             icon,
+             const SizedBox(width: 8.0),
+             label,
+           ],
+         ),
+       );
 }
 
 class _OutlineButton extends StatefulWidget {
@@ -275,9 +268,9 @@ class _OutlineButton extends StatefulWidget {
     this.clipBehavior,
     this.focusNode,
     this.child,
-  })  : assert(highlightElevation != null && highlightElevation >= 0.0),
-        assert(highlightedBorderColor != null),
-        super(key: key);
+  }) : assert(highlightElevation != null && highlightElevation >= 0.0),
+       assert(highlightedBorderColor != null),
+       super(key: key);
 
   final VoidCallback onPressed;
   final Brightness brightness;
@@ -305,8 +298,8 @@ class _OutlineButton extends StatefulWidget {
   _OutlineButtonState createState() => _OutlineButtonState();
 }
 
-class _OutlineButtonState extends State<_OutlineButton>
-    with SingleTickerProviderStateMixin {
+
+class _OutlineButtonState extends State<_OutlineButton> with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> _fillAnimation;
   Animation<double> _elevationAnimation;
@@ -330,9 +323,7 @@ class _OutlineButtonState extends State<_OutlineButton>
     );
     _fillAnimation = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(
-        0.0,
-        0.5,
+      curve: const Interval(0.0, 0.5,
         curve: Curves.fastOutSlowIn,
       ),
     );
@@ -353,7 +344,8 @@ class _OutlineButtonState extends State<_OutlineButton>
   }
 
   void _handleHighlightChanged(bool value) {
-    if (_pressed == value) return;
+    if (_pressed == value)
+      return;
     setState(() {
       _pressed = value;
       if (value)
@@ -381,15 +373,14 @@ class _OutlineButtonState extends State<_OutlineButton>
   }
 
   BorderSide _getOutline() {
-    if (widget.borderSide?.style == BorderStyle.none) return widget.borderSide;
+    if (widget.borderSide?.style == BorderStyle.none)
+      return widget.borderSide;
 
     final Color specifiedColor = widget.enabled
-        ? (_pressed ? widget.highlightedBorderColor : null) ??
-            widget.borderSide?.color
-        : widget.disabledBorderColor;
+      ? (_pressed ? widget.highlightedBorderColor : null) ?? widget.borderSide?.color
+      : widget.disabledBorderColor;
 
-    final Color themeColor =
-        Theme.of(context).colorScheme.onSurface.withOpacity(0.12);
+    final Color themeColor = Theme.of(context).colorScheme.onSurface.withOpacity(0.12);
 
     return BorderSide(
       color: specifiedColor ?? themeColor,
@@ -448,8 +439,8 @@ class _OutlineBorder extends ShapeBorder {
   const _OutlineBorder({
     @required this.shape,
     @required this.side,
-  })  : assert(shape != null),
-        assert(side != null);
+  }) : assert(shape != null),
+       assert(side != null);
 
   final ShapeBorder shape;
   final BorderSide side;
@@ -492,31 +483,31 @@ class _OutlineBorder extends ShapeBorder {
   }
 
   @override
-  Path getInnerPath(Rect rect, {TextDirection textDirection}) {
-    return shape.getInnerPath(rect.deflate(side.width),
-        textDirection: textDirection);
+  Path getInnerPath(Rect rect, { TextDirection textDirection }) {
+    return shape.getInnerPath(rect.deflate(side.width), textDirection: textDirection);
   }
 
   @override
-  Path getOuterPath(Rect rect, {TextDirection textDirection}) {
+  Path getOuterPath(Rect rect, { TextDirection textDirection }) {
     return shape.getOuterPath(rect, textDirection: textDirection);
   }
 
   @override
-  void paint(Canvas canvas, Rect rect, {TextDirection textDirection}) {
+  void paint(Canvas canvas, Rect rect, { TextDirection textDirection }) {
     switch (side.style) {
       case BorderStyle.none:
         break;
       case BorderStyle.solid:
-        canvas.drawPath(shape.getOuterPath(rect, textDirection: textDirection),
-            side.toPaint());
+        canvas.drawPath(shape.getOuterPath(rect, textDirection: textDirection), side.toPaint());
     }
   }
 
   @override
   bool operator ==(dynamic other) {
-    if (identical(this, other)) return true;
-    if (runtimeType != other.runtimeType) return false;
+    if (identical(this, other))
+      return true;
+    if (runtimeType != other.runtimeType)
+      return false;
     final _OutlineBorder typedOther = other;
     return side == typedOther.side && shape == typedOther.shape;
   }

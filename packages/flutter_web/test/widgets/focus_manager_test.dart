@@ -75,18 +75,14 @@ void main() {
       FocusNode(
         debugLabel: 'Label',
       ).debugFillProperties(builder);
-      final List<String> description = builder.properties
-          .where((DiagnosticsNode n) => !n.isFiltered(DiagnosticLevel.info))
-          .map((DiagnosticsNode n) => n.toString())
-          .toList();
+      final List<String> description = builder.properties.where((DiagnosticsNode n) => !n.isFiltered(DiagnosticLevel.info)).map((DiagnosticsNode n) => n.toString()).toList();
       expect(description, <String>[
         'debugLabel: "Label"',
       ]);
     });
   });
   group(FocusScopeNode, () {
-    testWidgets('Can setFirstFocus on a scope with no manager.',
-        (WidgetTester tester) async {
+    testWidgets('Can setFirstFocus on a scope with no manager.', (WidgetTester tester) async {
       final BuildContext context = await setupWidget(tester);
       final FocusScopeNode scope = FocusScopeNode(debugLabel: 'Scope');
       scope.attach(context);
@@ -110,8 +106,7 @@ void main() {
       expect(scope.hasFocus, isFalse);
       expect(scope.focusedChild, equals(parent));
     });
-    testWidgets('Removing a node removes it from scope.',
-        (WidgetTester tester) async {
+    testWidgets('Removing a node removes it from scope.', (WidgetTester tester) async {
       final BuildContext context = await setupWidget(tester);
       final FocusScopeNode scope = FocusScopeNode();
       final FocusAttachment scopeAttachment = scope.attach(context);
@@ -135,8 +130,7 @@ void main() {
       expect(scope.hasFocus, isFalse);
       expect(scope.focusedChild, isNull);
     });
-    testWidgets('Can add children to scope and focus',
-        (WidgetTester tester) async {
+    testWidgets('Can add children to scope and focus', (WidgetTester tester) async {
       final BuildContext context = await setupWidget(tester);
       final FocusScopeNode scope = FocusScopeNode();
       final FocusAttachment scopeAttachment = scope.attach(context);
@@ -211,9 +205,7 @@ void main() {
       expect(child2.hasFocus, isFalse);
       expect(child2.hasPrimaryFocus, isFalse);
     });
-    testWidgets(
-        'Adding a focusedChild to a scope sets scope as focusedChild in parent scope',
-        (WidgetTester tester) async {
+    testWidgets('Adding a focusedChild to a scope sets scope as focusedChild in parent scope', (WidgetTester tester) async {
       final BuildContext context = await setupWidget(tester);
       final FocusScopeNode scope1 = FocusScopeNode();
       final FocusAttachment scope1Attachment = scope1.attach(context);
@@ -244,8 +236,7 @@ void main() {
       expect(child2.hasFocus, isFalse);
       expect(child2.hasPrimaryFocus, isFalse);
     });
-    testWidgets('Can move node with focus without losing focus',
-        (WidgetTester tester) async {
+    testWidgets('Can move node with focus without losing focus', (WidgetTester tester) async {
       final BuildContext context = await setupWidget(tester);
       final FocusScopeNode scope = FocusScopeNode(debugLabel: 'Scope');
       final FocusAttachment scopeAttachment = scope.attach(context);
@@ -281,11 +272,9 @@ void main() {
       expect(parent1.children.first, equals(child2));
       expect(parent2.children.first, equals(child1));
     });
-    testWidgets('Can move node between scopes and lose scope focus',
-        (WidgetTester tester) async {
+    testWidgets('Can move node between scopes and lose scope focus', (WidgetTester tester) async {
       final BuildContext context = await setupWidget(tester);
-      final FocusScopeNode scope1 = FocusScopeNode(debugLabel: 'scope1')
-        ..attach(context);
+      final FocusScopeNode scope1 = FocusScopeNode(debugLabel: 'scope1')..attach(context);
       final FocusAttachment scope1Attachment = scope1.attach(context);
       final FocusScopeNode scope2 = FocusScopeNode(debugLabel: 'scope2');
       final FocusAttachment scope2Attachment = scope2.attach(context);
@@ -320,8 +309,7 @@ void main() {
       expect(scope1.focusedChild, isNull);
       expect(parent2.children.contains(child1), isTrue);
     });
-    testWidgets('Can move focus between scopes and keep focus',
-        (WidgetTester tester) async {
+    testWidgets('Can move focus between scopes and keep focus', (WidgetTester tester) async {
       final BuildContext context = await setupWidget(tester);
       final FocusScopeNode scope1 = FocusScopeNode();
       final FocusAttachment scope1Attachment = scope1.attach(context);
@@ -427,8 +415,7 @@ void main() {
       expect(child1.hasPrimaryFocus, isFalse);
       expect(scope1.hasFocus, isFalse);
     });
-    testWidgets('Key handling bubbles up and terminates when handled.',
-        (WidgetTester tester) async {
+    testWidgets('Key handling bubbles up and terminates when handled.', (WidgetTester tester) async {
       final Set<FocusNode> receivedAnEvent = <FocusNode>{};
       final Set<FocusNode> shouldHandle = <FocusNode>{};
       bool handleEvent(FocusNode node, RawKeyEvent event) {
@@ -452,29 +439,21 @@ void main() {
 
       final BuildContext context = await setupWidget(tester);
       final FocusScopeNode scope1 = FocusScopeNode(debugLabel: 'Scope 1');
-      final FocusAttachment scope1Attachment =
-          scope1.attach(context, onKey: handleEvent);
+      final FocusAttachment scope1Attachment = scope1.attach(context, onKey: handleEvent);
       final FocusScopeNode scope2 = FocusScopeNode(debugLabel: 'Scope 2');
-      final FocusAttachment scope2Attachment =
-          scope2.attach(context, onKey: handleEvent);
-      final FocusNode parent1 =
-          FocusNode(debugLabel: 'Parent 1', onKey: handleEvent);
+      final FocusAttachment scope2Attachment = scope2.attach(context, onKey: handleEvent);
+      final FocusNode parent1 = FocusNode(debugLabel: 'Parent 1', onKey: handleEvent);
       final FocusAttachment parent1Attachment = parent1.attach(context);
-      final FocusNode parent2 =
-          FocusNode(debugLabel: 'Parent 2', onKey: handleEvent);
+      final FocusNode parent2 = FocusNode(debugLabel: 'Parent 2', onKey: handleEvent);
       final FocusAttachment parent2Attachment = parent2.attach(context);
       final FocusNode child1 = FocusNode(debugLabel: 'Child 1');
-      final FocusAttachment child1Attachment =
-          child1.attach(context, onKey: handleEvent);
+      final FocusAttachment child1Attachment = child1.attach(context, onKey: handleEvent);
       final FocusNode child2 = FocusNode(debugLabel: 'Child 2');
-      final FocusAttachment child2Attachment =
-          child2.attach(context, onKey: handleEvent);
+      final FocusAttachment child2Attachment = child2.attach(context, onKey: handleEvent);
       final FocusNode child3 = FocusNode(debugLabel: 'Child 3');
-      final FocusAttachment child3Attachment =
-          child3.attach(context, onKey: handleEvent);
+      final FocusAttachment child3Attachment = child3.attach(context, onKey: handleEvent);
       final FocusNode child4 = FocusNode(debugLabel: 'Child 4');
-      final FocusAttachment child4Attachment =
-          child4.attach(context, onKey: handleEvent);
+      final FocusAttachment child4Attachment = child4.attach(context, onKey: handleEvent);
       scope1Attachment.reparent(parent: tester.binding.focusManager.rootScope);
       scope2Attachment.reparent(parent: tester.binding.focusManager.rootScope);
       parent1Attachment.reparent(parent: scope1);
@@ -510,21 +489,16 @@ void main() {
       FocusScopeNode(
         debugLabel: 'Scope Label',
       ).debugFillProperties(builder);
-      final List<String> description = builder.properties
-          .where((DiagnosticsNode n) => !n.isFiltered(DiagnosticLevel.info))
-          .map((DiagnosticsNode n) => n.toString())
-          .toList();
+      final List<String> description = builder.properties.where((DiagnosticsNode n) => !n.isFiltered(DiagnosticLevel.info)).map((DiagnosticsNode n) => n.toString()).toList();
       expect(description, <String>[
         'debugLabel: "Scope Label"',
       ]);
     });
-    testWidgets('debugDescribeFocusTree produces correct output',
-        (WidgetTester tester) async {
+    testWidgets('debugDescribeFocusTree produces correct output', (WidgetTester tester) async {
       final BuildContext context = await setupWidget(tester);
       final FocusScopeNode scope1 = FocusScopeNode(debugLabel: 'Scope 1');
       final FocusAttachment scope1Attachment = scope1.attach(context);
-      final FocusScopeNode scope2 =
-          FocusScopeNode(); // No label, Just to test that it works.
+      final FocusScopeNode scope2 = FocusScopeNode(); // No label, Just to test that it works.
       final FocusAttachment scope2Attachment = scope2.attach(context);
       final FocusNode parent1 = FocusNode(debugLabel: 'Parent 1');
       final FocusAttachment parent1Attachment = parent1.attach(context);
@@ -532,8 +506,7 @@ void main() {
       final FocusAttachment parent2Attachment = parent2.attach(context);
       final FocusNode child1 = FocusNode(debugLabel: 'Child 1');
       final FocusAttachment child1Attachment = child1.attach(context);
-      final FocusNode child2 =
-          FocusNode(); // No label, Just to test that it works.
+      final FocusNode child2 = FocusNode(); // No label, Just to test that it works.
       final FocusAttachment child2Attachment = child2.attach(context);
       final FocusNode child3 = FocusNode(debugLabel: 'Child 3');
       final FocusAttachment child3Attachment = child3.attach(context);
@@ -551,48 +524,50 @@ void main() {
       await tester.pump();
       final String description = debugDescribeFocusTree();
       expect(
-          description,
-          equalsIgnoringHashCodes('FocusManager#00000\n'
-              ' │ currentFocus: FocusNode#00000\n'
-              ' │\n'
-              ' └─rootScope: FocusScopeNode#00000\n'
-              '   │ FOCUSED\n'
-              '   │ debugLabel: "Root Focus Scope"\n'
-              '   │ focusedChild: FocusScopeNode#00000\n'
-              '   │\n'
-              '   ├─Child 1: FocusScopeNode#00000\n'
-              '   │ │ context: Container-[GlobalKey#00000]\n'
-              '   │ │ debugLabel: "Scope 1"\n'
-              '   │ │\n'
-              '   │ └─Child 1: FocusNode#00000\n'
-              '   │   │ context: Container-[GlobalKey#00000]\n'
-              '   │   │ debugLabel: "Parent 1"\n'
-              '   │   │\n'
-              '   │   ├─Child 1: FocusNode#00000\n'
-              '   │   │   context: Container-[GlobalKey#00000]\n'
-              '   │   │   debugLabel: "Child 1"\n'
-              '   │   │\n'
-              '   │   └─Child 2: FocusNode#00000\n'
-              '   │       context: Container-[GlobalKey#00000]\n'
-              '   │\n'
-              '   └─Child 2: FocusScopeNode#00000\n'
-              '     │ context: Container-[GlobalKey#00000]\n'
-              '     │ FOCUSED\n'
-              '     │ focusedChild: FocusNode#00000\n'
-              '     │\n'
-              '     └─Child 1: FocusNode#00000\n'
-              '       │ context: Container-[GlobalKey#00000]\n'
-              '       │ FOCUSED\n'
-              '       │ debugLabel: "Parent 2"\n'
-              '       │\n'
-              '       ├─Child 1: FocusNode#00000\n'
-              '       │   context: Container-[GlobalKey#00000]\n'
-              '       │   debugLabel: "Child 3"\n'
-              '       │\n'
-              '       └─Child 2: FocusNode#00000\n'
-              '           context: Container-[GlobalKey#00000]\n'
-              '           FOCUSED\n'
-              '           debugLabel: "Child 4"\n'));
+        description,
+        equalsIgnoringHashCodes(
+          'FocusManager#00000\n'
+            ' │ currentFocus: FocusNode#00000\n'
+            ' │\n'
+            ' └─rootScope: FocusScopeNode#00000\n'
+            '   │ FOCUSED\n'
+            '   │ debugLabel: "Root Focus Scope"\n'
+            '   │ focusedChild: FocusScopeNode#00000\n'
+            '   │\n'
+            '   ├─Child 1: FocusScopeNode#00000\n'
+            '   │ │ context: Container-[GlobalKey#00000]\n'
+            '   │ │ debugLabel: "Scope 1"\n'
+            '   │ │\n'
+            '   │ └─Child 1: FocusNode#00000\n'
+            '   │   │ context: Container-[GlobalKey#00000]\n'
+            '   │   │ debugLabel: "Parent 1"\n'
+            '   │   │\n'
+            '   │   ├─Child 1: FocusNode#00000\n'
+            '   │   │   context: Container-[GlobalKey#00000]\n'
+            '   │   │   debugLabel: "Child 1"\n'
+            '   │   │\n'
+            '   │   └─Child 2: FocusNode#00000\n'
+            '   │       context: Container-[GlobalKey#00000]\n'
+            '   │\n'
+            '   └─Child 2: FocusScopeNode#00000\n'
+            '     │ context: Container-[GlobalKey#00000]\n'
+            '     │ FOCUSED\n'
+            '     │ focusedChild: FocusNode#00000\n'
+            '     │\n'
+            '     └─Child 1: FocusNode#00000\n'
+            '       │ context: Container-[GlobalKey#00000]\n'
+            '       │ FOCUSED\n'
+            '       │ debugLabel: "Parent 2"\n'
+            '       │\n'
+            '       ├─Child 1: FocusNode#00000\n'
+            '       │   context: Container-[GlobalKey#00000]\n'
+            '       │   debugLabel: "Child 3"\n'
+            '       │\n'
+            '       └─Child 2: FocusNode#00000\n'
+            '           context: Container-[GlobalKey#00000]\n'
+            '           FOCUSED\n'
+            '           debugLabel: "Child 4"\n'
+        ));
     });
   });
 }

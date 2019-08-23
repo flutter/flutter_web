@@ -31,12 +31,14 @@ class Velocity {
 
   /// Return the difference of two velocities.
   Velocity operator -(Velocity other) {
-    return Velocity(pixelsPerSecond: pixelsPerSecond - other.pixelsPerSecond);
+    return Velocity(
+        pixelsPerSecond: pixelsPerSecond - other.pixelsPerSecond);
   }
 
   /// Return the sum of two velocities.
   Velocity operator +(Velocity other) {
-    return Velocity(pixelsPerSecond: pixelsPerSecond + other.pixelsPerSecond);
+    return Velocity(
+        pixelsPerSecond: pixelsPerSecond + other.pixelsPerSecond);
   }
 
   /// Return a velocity whose magnitude has been clamped to [minValue]
@@ -54,19 +56,16 @@ class Velocity {
     assert(maxValue != null && maxValue >= 0.0 && maxValue >= minValue);
     final double valueSquared = pixelsPerSecond.distanceSquared;
     if (valueSquared > maxValue * maxValue)
-      return Velocity(
-          pixelsPerSecond:
-              (pixelsPerSecond / pixelsPerSecond.distance) * maxValue);
+      return Velocity(pixelsPerSecond: (pixelsPerSecond / pixelsPerSecond.distance) * maxValue);
     if (valueSquared < minValue * minValue)
-      return Velocity(
-          pixelsPerSecond:
-              (pixelsPerSecond / pixelsPerSecond.distance) * minValue);
+      return Velocity(pixelsPerSecond: (pixelsPerSecond / pixelsPerSecond.distance) * minValue);
     return this;
   }
 
   @override
   bool operator ==(dynamic other) {
-    if (other is! Velocity) return false;
+    if (other is! Velocity)
+      return false;
     final Velocity typedOther = other;
     return pixelsPerSecond == typedOther.pixelsPerSecond;
   }
@@ -75,8 +74,7 @@ class Velocity {
   int get hashCode => pixelsPerSecond.hashCode;
 
   @override
-  String toString() =>
-      'Velocity(${pixelsPerSecond.dx.toStringAsFixed(1)}, ${pixelsPerSecond.dy.toStringAsFixed(1)})';
+  String toString() => 'Velocity(${pixelsPerSecond.dx.toStringAsFixed(1)}, ${pixelsPerSecond.dy.toStringAsFixed(1)})';
 }
 
 /// A two dimensional velocity estimate.
@@ -101,10 +99,10 @@ class VelocityEstimate {
     @required this.confidence,
     @required this.duration,
     @required this.offset,
-  })  : assert(pixelsPerSecond != null),
-        assert(confidence != null),
-        assert(duration != null),
-        assert(offset != null);
+  }) : assert(pixelsPerSecond != null),
+       assert(confidence != null),
+       assert(duration != null),
+       assert(offset != null);
 
   /// The number of pixels per second of velocity in the x and y directions.
   final Offset pixelsPerSecond;
@@ -124,14 +122,13 @@ class VelocityEstimate {
   final Offset offset;
 
   @override
-  String toString() =>
-      'VelocityEstimate(${pixelsPerSecond.dx.toStringAsFixed(1)}, ${pixelsPerSecond.dy.toStringAsFixed(1)}; offset: $offset, duration: $duration, confidence: ${confidence.toStringAsFixed(1)})';
+  String toString() => 'VelocityEstimate(${pixelsPerSecond.dx.toStringAsFixed(1)}, ${pixelsPerSecond.dy.toStringAsFixed(1)}; offset: $offset, duration: $duration, confidence: ${confidence.toStringAsFixed(1)})';
 }
 
 class _PointAtTime {
   const _PointAtTime(this.point, this.time)
-      : assert(point != null),
-        assert(time != null);
+    : assert(point != null),
+      assert(time != null);
 
   final Duration time;
   final Offset point;
@@ -163,7 +160,8 @@ class VelocityTracker {
   /// Adds a position as the given time to the tracker.
   void addPosition(Duration time, Offset position) {
     _index += 1;
-    if (_index == _historySize) _index = 0;
+    if (_index == _historySize)
+      _index = 0;
     _samples[_index] = _PointAtTime(position, time);
   }
 
@@ -182,7 +180,8 @@ class VelocityTracker {
     int index = _index;
 
     final _PointAtTime newestSample = _samples[index];
-    if (newestSample == null) return null;
+    if (newestSample == null)
+      return null;
 
     _PointAtTime previousSample = newestSample;
     _PointAtTime oldestSample = newestSample;
@@ -191,15 +190,14 @@ class VelocityTracker {
     // the samples represent continuous motion.
     do {
       final _PointAtTime sample = _samples[index];
-      if (sample == null) break;
+      if (sample == null)
+        break;
 
-      final double age =
-          (newestSample.time - sample.time).inMilliseconds.toDouble();
-      final double delta =
-          (sample.time - previousSample.time).inMilliseconds.abs().toDouble();
+      final double age = (newestSample.time - sample.time).inMilliseconds.toDouble();
+      final double delta = (sample.time - previousSample.time).inMilliseconds.abs().toDouble();
       previousSample = sample;
-      if (age > _horizonMilliseconds ||
-          delta > _assumePointerMoveStoppedMilliseconds) break;
+      if (age > _horizonMilliseconds || delta > _assumePointerMoveStoppedMilliseconds)
+        break;
 
       oldestSample = sample;
       final Offset position = sample.point;
@@ -219,10 +217,8 @@ class VelocityTracker {
         final LeastSquaresSolver ySolver = LeastSquaresSolver(time, y, w);
         final PolynomialFit yFit = ySolver.solve(2);
         if (yFit != null) {
-          return VelocityEstimate(
-            // convert from pixels/ms to pixels/s
-            pixelsPerSecond: Offset(
-                xFit.coefficients[1] * 1000, yFit.coefficients[1] * 1000),
+          return VelocityEstimate( // convert from pixels/ms to pixels/s
+            pixelsPerSecond: Offset(xFit.coefficients[1] * 1000, yFit.coefficients[1] * 1000),
             confidence: xFit.confidence * yFit.confidence,
             duration: newestSample.time - oldestSample.time,
             offset: newestSample.point - oldestSample.point,

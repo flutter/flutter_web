@@ -9,14 +9,14 @@ import 'velocity_tracker_data.dart';
 
 bool _withinTolerance(double actual, double expected) {
   const double kTolerance = 0.001; // Within .1% of expected value
-  final double diff = (actual - expected) / expected;
+  final double diff = (actual - expected)/expected;
   return diff.abs() < kTolerance;
 }
 
 bool _checkVelocity(Velocity actual, Offset expected) {
-  return (actual != null) &&
-      _withinTolerance(actual.pixelsPerSecond.dx, expected.dx) &&
-      _withinTolerance(actual.pixelsPerSecond.dy, expected.dy);
+  return (actual != null)
+      && _withinTolerance(actual.pixelsPerSecond.dx, expected.dx)
+      && _withinTolerance(actual.pixelsPerSecond.dy, expected.dy);
 }
 
 void main() {
@@ -52,14 +52,11 @@ void main() {
   test('Velocity control test', () {
     const Velocity velocity1 = Velocity(pixelsPerSecond: Offset(7.0, 0.0));
     const Velocity velocity2 = Velocity(pixelsPerSecond: Offset(12.0, 0.0));
-    expect(
-        velocity1, equals(const Velocity(pixelsPerSecond: Offset(7.0, 0.0))));
+    expect(velocity1, equals(const Velocity(pixelsPerSecond: Offset(7.0, 0.0))));
     expect(velocity1, isNot(equals(velocity2)));
-    expect(velocity2 - velocity1,
-        equals(const Velocity(pixelsPerSecond: Offset(5.0, 0.0))));
+    expect(velocity2 - velocity1, equals(const Velocity(pixelsPerSecond: Offset(5.0, 0.0))));
     expect((-velocity1).pixelsPerSecond, const Offset(-7.0, 0.0));
-    expect(velocity1 + velocity2,
-        equals(const Velocity(pixelsPerSecond: Offset(19.0, 0.0))));
+    expect(velocity1 + velocity2, equals(const Velocity(pixelsPerSecond: Offset(19.0, 0.0))));
     expect(velocity1.hashCode, isNot(equals(velocity2.hashCode)));
     expect(velocity1, hasOneLineDescription);
   });

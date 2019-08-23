@@ -7,21 +7,27 @@ import 'package:flutter_web/material.dart';
 
 void main() {
   testWidgets('TickerMode', (WidgetTester tester) async {
-    const Widget widget =
-        TickerMode(enabled: false, child: CircularProgressIndicator());
+    const Widget widget = TickerMode(
+      enabled: false,
+      child: CircularProgressIndicator()
+    );
     expect(widget.toString, isNot(throwsException));
 
     await tester.pumpWidget(widget);
 
     expect(tester.binding.transientCallbackCount, 0);
 
-    await tester.pumpWidget(
-        const TickerMode(enabled: true, child: CircularProgressIndicator()));
+    await tester.pumpWidget(const TickerMode(
+      enabled: true,
+      child: CircularProgressIndicator()
+    ));
 
     expect(tester.binding.transientCallbackCount, 1);
 
-    await tester.pumpWidget(
-        const TickerMode(enabled: false, child: CircularProgressIndicator()));
+    await tester.pumpWidget(const TickerMode(
+      enabled: false,
+      child: CircularProgressIndicator()
+    ));
 
     expect(tester.binding.transientCallbackCount, 0);
   });
@@ -48,8 +54,7 @@ void main() {
     expect(tester.binding.transientCallbackCount, 1);
   });
 
-  testWidgets('SingleTickerProviderStateMixin can handle not being used',
-      (WidgetTester tester) async {
+  testWidgets('SingleTickerProviderStateMixin can handle not being used', (WidgetTester tester) async {
     final Widget widget = BoringTickerTest();
     expect(widget.toString, isNot(throwsException));
 
@@ -64,8 +69,7 @@ class BoringTickerTest extends StatefulWidget {
   _BoringTickerTestState createState() => _BoringTickerTestState();
 }
 
-class _BoringTickerTestState extends State<BoringTickerTest>
-    with SingleTickerProviderStateMixin {
+class _BoringTickerTestState extends State<BoringTickerTest> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) => Container();
 }

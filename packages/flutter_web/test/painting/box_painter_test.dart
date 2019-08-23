@@ -1,6 +1,7 @@
 // Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// Synced 2019-08-02T12:40:50.101760.
 
 import 'package:flutter_web_test/flutter_web_test.dart';
 import 'package:flutter_web/painting.dart';
@@ -23,14 +24,11 @@ void main() {
 
     expect(BorderSide.lerp(side1, side2, 0.0), equals(side1));
     expect(BorderSide.lerp(side1, side2, 1.0), equals(side2));
-    expect(
-        BorderSide.lerp(side1, side2, 0.5),
-        equals(BorderSide(
-          color:
-              Color.lerp(const Color(0xFF000000), const Color(0xFF00FFFF), 0.5),
-          width: 1.5,
-          style: BorderStyle.solid,
-        )));
+    expect(BorderSide.lerp(side1, side2, 0.5), equals(BorderSide(
+      color: Color.lerp(const Color(0xFF000000), const Color(0xFF00FFFF), 0.5),
+      width: 1.5,
+      style: BorderStyle.solid,
+    )));
 
     final BorderSide side3 = side2.copyWith(style: BorderStyle.none);
     BorderSide interpolated = BorderSide.lerp(side2, side3, 0.2);
@@ -50,10 +48,8 @@ void main() {
       style: BorderStyle.solid,
     );
 
-    expect(side1.toString(),
-        equals('BorderSide(Color(0xff000000), 1.0, BorderStyle.solid)'));
-    expect(side2.toString(),
-        equals('BorderSide(Color(0xff00ffff), 2.0, BorderStyle.solid)'));
+    expect(side1.toString(), equals('BorderSide(Color(0xff000000), 1.0, BorderStyle.solid)'));
+    expect(side2.toString(), equals('BorderSide(Color(0xff00ffff), 2.0, BorderStyle.solid)'));
   });
 
   test('Border control test', () {
@@ -115,9 +111,6 @@ void main() {
   });
 
   test('BoxShadow toString test', () {
-    expect(
-        const BoxShadow(blurRadius: 4.0).toString(),
-        equals(
-            'BoxShadow(Color(0xff000000), Offset(0.0, 0.0), ${(4.0).toString()}, ${(0.0).toString()})'));
+    expect(const BoxShadow(blurRadius: 4.0).toString(), equals('BoxShadow(Color(0xff000000), Offset(0.0, 0.0), 4.0, 0.0)'));
   });
 }

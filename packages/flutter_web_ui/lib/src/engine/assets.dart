@@ -20,7 +20,7 @@ class AssetManager {
     return html.window.document
         .querySelectorAll('meta')
         .whereType<html.MetaElement>()
-        .firstWhere((e) => e.name == 'assetBase', orElse: () => null)
+        .firstWhere((dynamic e) => e.name == 'assetBase', orElse: () => null)
         ?.content;
   }
 

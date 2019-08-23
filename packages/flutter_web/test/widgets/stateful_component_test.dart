@@ -10,25 +10,32 @@ import 'test_widgets.dart';
 
 void main() {
   testWidgets('Stateful widget smoke test', (WidgetTester tester) async {
+
     void checkTree(BoxDecoration expectedDecoration) {
       final SingleChildRenderObjectElement element = tester.element(
-          find.byElementPredicate(
-              (Element element) => element is SingleChildRenderObjectElement));
+        find.byElementPredicate((Element element) => element is SingleChildRenderObjectElement)
+      );
       expect(element, isNotNull);
       expect(element.renderObject is RenderDecoratedBox, isTrue);
       final RenderDecoratedBox renderObject = element.renderObject;
       expect(renderObject.decoration, equals(expectedDecoration));
     }
 
-    await tester.pumpWidget(const FlipWidget(
+    await tester.pumpWidget(
+      const FlipWidget(
         left: DecoratedBox(decoration: kBoxDecorationA),
-        right: DecoratedBox(decoration: kBoxDecorationB)));
+        right: DecoratedBox(decoration: kBoxDecorationB)
+      )
+    );
 
     checkTree(kBoxDecorationA);
 
-    await tester.pumpWidget(const FlipWidget(
+    await tester.pumpWidget(
+      const FlipWidget(
         left: DecoratedBox(decoration: kBoxDecorationB),
-        right: DecoratedBox(decoration: kBoxDecorationA)));
+        right: DecoratedBox(decoration: kBoxDecorationA)
+      )
+    );
 
     checkTree(kBoxDecorationB);
 
@@ -38,18 +45,24 @@ void main() {
 
     checkTree(kBoxDecorationA);
 
-    await tester.pumpWidget(const FlipWidget(
+    await tester.pumpWidget(
+      const FlipWidget(
         left: DecoratedBox(decoration: kBoxDecorationA),
-        right: DecoratedBox(decoration: kBoxDecorationB)));
+        right: DecoratedBox(decoration: kBoxDecorationB)
+      )
+    );
 
     checkTree(kBoxDecorationB);
   });
 
   testWidgets('Don\'t rebuild subwidgets', (WidgetTester tester) async {
-    await tester.pumpWidget(FlipWidget(
+    await tester.pumpWidget(
+      FlipWidget(
         key: const Key('rebuild test'),
         left: TestBuildCounter(),
-        right: const DecoratedBox(decoration: kBoxDecorationB)));
+        right: const DecoratedBox(decoration: kBoxDecorationB)
+      )
+    );
 
     expect(TestBuildCounter.buildCount, equals(1));
 

@@ -416,9 +416,8 @@ class _MaterialAppState extends State<MaterialApp> {
           navigatorKey: widget.navigatorKey,
           navigatorObservers: _navigatorObservers,
           // this can use type arguments again
-          pageRouteBuilder:
-              <T>(RouteSettings settings, WidgetBuilder builder) =>
-                  MaterialPageRoute<T>(settings: settings, builder: builder),
+          pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) =>
+              MaterialPageRoute<T>(settings: settings, builder: builder),
           home: widget.home,
           routes: widget.routes,
           initialRoute: widget.initialRoute,

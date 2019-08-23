@@ -47,8 +47,7 @@ class BinaryMessages {
           exception: exception,
           stack: stack,
           library: 'services library',
-          context:
-              ErrorDescription('during a platform message response callback'),
+          context: ErrorDescription('during a platform message response callback'),
         ));
       }
     });

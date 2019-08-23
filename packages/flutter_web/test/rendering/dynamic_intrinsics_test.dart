@@ -15,14 +15,10 @@ class RenderFixedSize extends RenderBox {
     markNeedsLayout();
   }
 
-  @override
-  double computeMinIntrinsicWidth(double height) => dimension;
-  @override
-  double computeMaxIntrinsicWidth(double height) => dimension;
-  @override
-  double computeMinIntrinsicHeight(double width) => dimension;
-  @override
-  double computeMaxIntrinsicHeight(double width) => dimension;
+  @override double computeMinIntrinsicWidth(double height) => dimension;
+  @override double computeMaxIntrinsicWidth(double height) => dimension;
+  @override double computeMinIntrinsicHeight(double width) => dimension;
+  @override double computeMaxIntrinsicHeight(double width) => dimension;
 
   @override
   void performLayout() {
@@ -31,7 +27,7 @@ class RenderFixedSize extends RenderBox {
 }
 
 class RenderParentSize extends RenderProxyBox {
-  RenderParentSize({RenderBox child}) : super(child);
+  RenderParentSize({ RenderBox child }) : super(child);
 
   @override
   bool get sizedByParent => true;
@@ -48,13 +44,15 @@ class RenderParentSize extends RenderProxyBox {
 }
 
 class RenderIntrinsicSize extends RenderProxyBox {
-  RenderIntrinsicSize({RenderBox child}) : super(child);
+  RenderIntrinsicSize({ RenderBox child }) : super(child);
 
   @override
   void performLayout() {
     child.layout(constraints);
-    size = Size(child.getMinIntrinsicWidth(double.infinity),
-        child.getMinIntrinsicHeight(double.infinity));
+    size = Size(
+      child.getMinIntrinsicWidth(double.infinity),
+      child.getMinIntrinsicHeight(double.infinity)
+    );
   }
 }
 
@@ -63,13 +61,18 @@ void main() {
     RenderBox root;
     RenderFixedSize inner;
     layout(
-        root = RenderIntrinsicSize(
-            child: RenderParentSize(child: inner = RenderFixedSize())),
-        constraints: const BoxConstraints(
-            minWidth: 0.0,
-            minHeight: 0.0,
-            maxWidth: 1000.0,
-            maxHeight: 1000.0));
+      root = RenderIntrinsicSize(
+        child: RenderParentSize(
+          child: inner = RenderFixedSize()
+        )
+      ),
+      constraints: const BoxConstraints(
+        minWidth: 0.0,
+        minHeight: 0.0,
+        maxWidth: 1000.0,
+        maxHeight: 1000.0
+      )
+    );
     expect(root.size, equals(inner.size));
 
     inner.grow();

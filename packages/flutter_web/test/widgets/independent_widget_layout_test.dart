@@ -9,11 +9,10 @@ import 'package:flutter_web/rendering.dart';
 const Size _kTestViewSize = Size(800.0, 600.0);
 
 class OffscreenRenderView extends RenderView {
-  OffscreenRenderView()
-      : super(
-          configuration: const ViewConfiguration(size: _kTestViewSize),
-          window: WidgetsBinding.instance.window,
-        );
+  OffscreenRenderView() : super(
+    configuration: const ViewConfiguration(size: _kTestViewSize),
+    window: WidgetsBinding.instance.window,
+  );
 
   @override
   void compositeFrame() {
@@ -50,6 +49,7 @@ class OffscreenWidgetTree {
     pipelineOwner.flushSemantics();
     buildOwner.finalizeTree();
   }
+
 }
 
 class Counter {
@@ -59,12 +59,13 @@ class Counter {
 class Trigger {
   VoidCallback callback;
   void fire() {
-    if (callback != null) callback();
+    if (callback != null)
+      callback();
   }
 }
 
 class TriggerableWidget extends StatefulWidget {
-  const TriggerableWidget({this.trigger, this.counter});
+  const TriggerableWidget({ this.trigger, this.counter });
   final Trigger trigger;
   final Counter counter;
   @override
@@ -131,8 +132,7 @@ class TestFocusableState extends State<TestFocusable> {
 }
 
 void main() {
-  testWidgets('no crosstalk between widget build owners',
-      (WidgetTester tester) async {
+  testWidgets('no crosstalk between widget build owners', (WidgetTester tester) async {
     final Trigger trigger1 = Trigger();
     final Counter counter1 = Counter();
     final Trigger trigger2 = Trigger();
@@ -142,8 +142,7 @@ void main() {
     expect(counter1.count, equals(0));
     expect(counter2.count, equals(0));
     // Lay out the "onscreen" in the default test binding
-    await tester
-        .pumpWidget(TriggerableWidget(trigger: trigger1, counter: counter1));
+    await tester.pumpWidget(TriggerableWidget(trigger: trigger1, counter: counter1));
     // Only the "onscreen" widget should have built
     expect(counter1.count, equals(1));
     expect(counter2.count, equals(0));
@@ -205,4 +204,5 @@ void main() {
     expect(onscreenFocus.hasFocus, isTrue);
     expect(offscreenFocus.hasFocus, isTrue);
   });
+
 }

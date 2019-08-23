@@ -248,9 +248,9 @@ String canonicalizeHtml(String html,
   void unexpectedSceneStructure() {
     test_package.fail(
       'The root scene element <s> (or <flt-scene>) must have a single '
-      'child transform element <t> (or <flt-transform>), but found '
-      '${cleanDom.children.length} children '
-      '${originalDom.children.map((e) => '<${e.localName}>').join(', ')}',
+          'child transform element <t> (or <flt-transform>), but found '
+          '${cleanDom.children.length} children '
+          '${originalDom.children.map((e) => '<${e.localName}>').join(', ')}',
     );
   }
 

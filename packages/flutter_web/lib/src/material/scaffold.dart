@@ -1525,8 +1525,7 @@ class ScaffoldState extends State<Scaffold> with TickerProviderStateMixin {
   // Backwards compatibility for deprecated resizeToAvoidBottomPadding property
   bool get _resizeToAvoidBottomInset {
     return widget.resizeToAvoidBottomInset ??
-        widget
-            .resizeToAvoidBottomPadding ?? // ignore: deprecated_member_use_from_same_package
+        widget.resizeToAvoidBottomPadding ?? // ignore: deprecated_member_use_from_same_package
         true;
   }
 

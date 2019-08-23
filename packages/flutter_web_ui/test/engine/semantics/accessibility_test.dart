@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -11,7 +11,7 @@ import 'package:test/test.dart';
 const MessageCodec<dynamic> codec = StandardMessageCodec();
 const String testMessage = 'This is an tooltip.';
 const Map<dynamic, dynamic> testInput = <dynamic, dynamic>{
-  'data': {'message': testMessage}
+  'data': <dynamic, dynamic>{'message': testMessage}
 };
 
 void main() {
@@ -27,7 +27,7 @@ void main() {
         'is after a delay', () {
       // Set the a11y announcement's duration on DOM to half seconds.
       accessibilityAnnouncements.durationA11yMessageIsOnDom =
-          Duration(milliseconds: 500);
+          const Duration(milliseconds: 500);
 
       // Initially there is no accessibility-element
       expect(document.getElementById('accessibility-element'), isNull);

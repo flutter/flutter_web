@@ -20,8 +20,7 @@ class IconThemeData extends Diagnosticable {
   ///
   /// The opacity applies to both explicit and default icon colors. The value
   /// is clamped between 0.0 and 1.0.
-  const IconThemeData({this.color, double opacity, this.size})
-      : _opacity = opacity;
+  const IconThemeData({this.color, double opacity, this.size}) : _opacity = opacity;
 
   /// Creates an icon them with some reasonable default values.
   ///
@@ -45,7 +44,8 @@ class IconThemeData extends Diagnosticable {
   /// replaced by the non-null parameters of the given icon theme. If the given
   /// icon theme is null, simply returns this icon theme.
   IconThemeData merge(IconThemeData other) {
-    if (other == null) return this;
+    if (other == null)
+      return this;
     return copyWith(
       color: other.color,
       opacity: other.opacity,
@@ -80,11 +80,12 @@ class IconThemeData extends Diagnosticable {
 
   @override
   bool operator ==(dynamic other) {
-    if (other.runtimeType != runtimeType) return false;
+    if (other.runtimeType != runtimeType)
+      return false;
     final IconThemeData typedOther = other;
-    return color == typedOther.color &&
-        opacity == typedOther.opacity &&
-        size == typedOther.size;
+    return color == typedOther.color
+        && opacity == typedOther.opacity
+        && size == typedOther.size;
   }
 
   @override
@@ -93,8 +94,7 @@ class IconThemeData extends Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties
-        .add(DiagnosticsProperty<Color>('color', color, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('color', color, defaultValue: null));
     properties.add(DoubleProperty('opacity', opacity, defaultValue: null));
     properties.add(DoubleProperty('size', size, defaultValue: null));
   }

@@ -27,10 +27,10 @@ class RawKeyEventDataMacOs extends RawKeyEventData {
     this.charactersIgnoringModifiers = '',
     this.keyCode = 0,
     this.modifiers = 0,
-  })  : assert(characters != null),
-        assert(charactersIgnoringModifiers != null),
-        assert(keyCode != null),
-        assert(modifiers != null);
+  }) : assert(characters != null),
+       assert(charactersIgnoringModifiers != null),
+       assert(keyCode != null),
+       assert(modifiers != null);
 
   /// The Unicode characters associated with a key-up or key-down event.
   ///
@@ -62,12 +62,10 @@ class RawKeyEventDataMacOs extends RawKeyEventData {
   final int modifiers;
 
   @override
-  String get keyLabel =>
-      charactersIgnoringModifiers.isEmpty ? null : charactersIgnoringModifiers;
+  String get keyLabel => charactersIgnoringModifiers.isEmpty ? null : charactersIgnoringModifiers;
 
   @override
-  PhysicalKeyboardKey get physicalKey =>
-      kMacOsToPhysicalKey[keyCode] ?? PhysicalKeyboardKey.none;
+  PhysicalKeyboardKey get physicalKey => kMacOsToPhysicalKey[keyCode] ?? PhysicalKeyboardKey.none;
 
   @override
   LogicalKeyboardKey get logicalKey {
@@ -80,7 +78,8 @@ class RawKeyEventDataMacOs extends RawKeyEventData {
     }
 
     // Look to see if the keyCode is one we know about and have a mapping for.
-    if (keyLabel != null && !LogicalKeyboardKey.isControlCharacter(keyLabel)) {
+    if (keyLabel != null &&
+        !LogicalKeyboardKey.isControlCharacter(keyLabel)) {
       assert(charactersIgnoringModifiers.length <= 2);
       int codeUnit = charactersIgnoringModifiers.codeUnitAt(0);
       if (charactersIgnoringModifiers.length == 2) {
@@ -89,14 +88,12 @@ class RawKeyEventDataMacOs extends RawKeyEventData {
         codeUnit = (codeUnit << 16) | secondCode;
       }
 
-      final int keyId = LogicalKeyboardKey.unicodePlane |
-          (codeUnit & LogicalKeyboardKey.valueMask);
-      return LogicalKeyboardKey.findKeyByKeyId(keyId) ??
-          LogicalKeyboardKey(
-            keyId,
-            keyLabel: keyLabel,
-            debugName: kReleaseMode ? null : 'Key ${keyLabel.toUpperCase()}',
-          );
+      final int keyId = LogicalKeyboardKey.unicodePlane | (codeUnit & LogicalKeyboardKey.valueMask);
+      return LogicalKeyboardKey.findKeyByKeyId(keyId) ?? LogicalKeyboardKey(
+        keyId,
+        keyLabel: keyLabel,
+        debugName: kReleaseMode ? null : 'Key ${keyLabel.toUpperCase()}',
+      );
     }
 
     // This is a non-printable key that we don't know about, so we mint a new
@@ -109,12 +106,11 @@ class RawKeyEventDataMacOs extends RawKeyEventData {
     // debugName. This avoids the need for duplicating the physical key map.
     if (physicalKey != PhysicalKeyboardKey.none) {
       final int keyId = physicalKey.usbHidUsage | LogicalKeyboardKey.hidPlane;
-      return LogicalKeyboardKey.findKeyByKeyId(keyId) ??
-          LogicalKeyboardKey(
-            keyId,
-            keyLabel: physicalKey.debugName,
-            debugName: physicalKey.debugName,
-          );
+      return LogicalKeyboardKey.findKeyByKeyId(keyId) ?? LogicalKeyboardKey(
+        keyId,
+        keyLabel: physicalKey.debugName,
+        debugName: physicalKey.debugName,
+      );
     }
 
     return LogicalKeyboardKey(
@@ -123,8 +119,7 @@ class RawKeyEventDataMacOs extends RawKeyEventData {
     );
   }
 
-  bool _isLeftRightModifierPressed(
-      KeyboardSide side, int anyMask, int leftMask, int rightMask) {
+  bool _isLeftRightModifierPressed(KeyboardSide side, int anyMask, int leftMask, int rightMask) {
     if (modifiers & anyMask == 0) {
       return false;
     }
@@ -142,34 +137,17 @@ class RawKeyEventDataMacOs extends RawKeyEventData {
   }
 
   @override
-  bool isModifierPressed(ModifierKey key,
-      {KeyboardSide side = KeyboardSide.any}) {
+  bool isModifierPressed(ModifierKey key, {KeyboardSide side = KeyboardSide.any}) {
     final int independentModifier = modifiers & deviceIndependentMask;
     switch (key) {
       case ModifierKey.controlModifier:
-        return _isLeftRightModifierPressed(
-            side,
-            independentModifier & modifierControl,
-            modifierLeftControl,
-            modifierRightControl);
+        return _isLeftRightModifierPressed(side, independentModifier & modifierControl, modifierLeftControl, modifierRightControl);
       case ModifierKey.shiftModifier:
-        return _isLeftRightModifierPressed(
-            side,
-            independentModifier & modifierShift,
-            modifierLeftShift,
-            modifierRightShift);
+        return _isLeftRightModifierPressed(side, independentModifier & modifierShift, modifierLeftShift, modifierRightShift);
       case ModifierKey.altModifier:
-        return _isLeftRightModifierPressed(
-            side,
-            independentModifier & modifierOption,
-            modifierLeftOption,
-            modifierRightOption);
+        return _isLeftRightModifierPressed(side, independentModifier & modifierOption, modifierLeftOption, modifierRightOption);
       case ModifierKey.metaModifier:
-        return _isLeftRightModifierPressed(
-            side,
-            independentModifier & modifierCommand,
-            modifierLeftCommand,
-            modifierRightCommand);
+        return _isLeftRightModifierPressed(side, independentModifier & modifierCommand, modifierLeftCommand, modifierRightCommand);
       case ModifierKey.capsLockModifier:
         return independentModifier & modifierCapsLock != 0;
       case ModifierKey.numLockModifier:

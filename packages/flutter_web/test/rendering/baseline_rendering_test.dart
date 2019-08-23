@@ -13,11 +13,13 @@ void main() {
     RenderBaseline parent;
     RenderSizedBox child;
     final RenderBox root = RenderPositionedBox(
-        alignment: Alignment.topLeft,
-        child: parent = RenderBaseline(
-            baseline: 0.0,
-            baselineType: TextBaseline.alphabetic,
-            child: child = RenderSizedBox(const Size(100.0, 100.0))));
+      alignment: Alignment.topLeft,
+      child: parent = RenderBaseline(
+        baseline: 0.0,
+        baselineType: TextBaseline.alphabetic,
+        child: child = RenderSizedBox(const Size(100.0, 100.0))
+      )
+    );
     final BoxParentData childParentData = child.parentData;
 
     layout(root, phase: EnginePhase.layout);

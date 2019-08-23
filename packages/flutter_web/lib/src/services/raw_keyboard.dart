@@ -125,8 +125,7 @@ abstract class RawKeyEventData {
   /// side of the keyboard. Defaults to checking for the key being down on
   /// either side of the keyboard. If there is only one instance of the key on
   /// the keyboard, then [side] is ignored.
-  bool isModifierPressed(ModifierKey key,
-      {KeyboardSide side = KeyboardSide.any});
+  bool isModifierPressed(ModifierKey key, { KeyboardSide side = KeyboardSide.any });
 
   /// Returns a [KeyboardSide] enum value that describes which side or sides of
   /// the given keyboard modifier key were pressed at the time of this event.
@@ -141,29 +140,25 @@ abstract class RawKeyEventData {
   /// regardless of which side of the keyboard it is on.
   ///
   /// Use [isModifierPressed] if you need to know which control key was pressed.
-  bool get isControlPressed =>
-      isModifierPressed(ModifierKey.controlModifier, side: KeyboardSide.any);
+  bool get isControlPressed => isModifierPressed(ModifierKey.controlModifier, side: KeyboardSide.any);
 
   /// Returns true if a SHIFT modifier key was pressed at the time of this
   /// event, regardless of which side of the keyboard it is on.
   ///
   /// Use [isModifierPressed] if you need to know which shift key was pressed.
-  bool get isShiftPressed =>
-      isModifierPressed(ModifierKey.shiftModifier, side: KeyboardSide.any);
+  bool get isShiftPressed => isModifierPressed(ModifierKey.shiftModifier, side: KeyboardSide.any);
 
   /// Returns true if a ALT modifier key was pressed at the time of this event,
   /// regardless of which side of the keyboard it is on.
   ///
   /// Use [isModifierPressed] if you need to know which alt key was pressed.
-  bool get isAltPressed =>
-      isModifierPressed(ModifierKey.altModifier, side: KeyboardSide.any);
+  bool get isAltPressed => isModifierPressed(ModifierKey.altModifier, side: KeyboardSide.any);
 
   /// Returns true if a META modifier key was pressed at the time of this event,
   /// regardless of which side of the keyboard it is on.
   ///
   /// Use [isModifierPressed] if you need to know which meta key was pressed.
-  bool get isMetaPressed =>
-      isModifierPressed(ModifierKey.metaModifier, side: KeyboardSide.any);
+  bool get isMetaPressed => isModifierPressed(ModifierKey.metaModifier, side: KeyboardSide.any);
 
   /// Returns a map of modifier keys that were pressed at the time of this
   /// event, and the keyboard side or sides that the key was on.
@@ -286,7 +281,7 @@ abstract class RawKeyEvent {
           data = RawKeyEventDataMacOs(
               characters: message['characters'] ?? '',
               charactersIgnoringModifiers:
-                  message['charactersIgnoringModifiers'] ?? '',
+              message['charactersIgnoringModifiers'] ?? '',
               keyCode: message['keyCode'] ?? 0,
               modifiers: message['modifiers'] ?? 0);
           break;
@@ -299,9 +294,9 @@ abstract class RawKeyEvent {
               modifiers: message['modifiers'] ?? 0);
           break;
         default:
-          // We don't yet implement raw key events on iOS or other platforms, but
-          // we don't hit this exception because the engine never sends us these
-          // messages.
+        // We don't yet implement raw key events on iOS or other platforms, but
+        // we don't hit this exception because the engine never sends us these
+        // messages.
           throw FlutterError('Unknown keymap for key events: $keymap');
       }
     }
@@ -318,16 +313,14 @@ abstract class RawKeyEvent {
   }
 
   /// Returns true if the given [KeyboardKey] is pressed.
-  bool isKeyPressed(LogicalKeyboardKey key) =>
-      RawKeyboard.instance.keysPressed.contains(key);
+  bool isKeyPressed(LogicalKeyboardKey key) => RawKeyboard.instance.keysPressed.contains(key);
 
   /// Returns true if a CTRL modifier key is pressed, regardless of which side
   /// of the keyboard it is on.
   ///
   /// Use [isKeyPressed] if you need to know which control key was pressed.
   bool get isControlPressed {
-    return isKeyPressed(LogicalKeyboardKey.controlLeft) ||
-        isKeyPressed(LogicalKeyboardKey.controlRight);
+    return isKeyPressed(LogicalKeyboardKey.controlLeft) || isKeyPressed(LogicalKeyboardKey.controlRight);
   }
 
   /// Returns true if a SHIFT modifier key is pressed, regardless of which side
@@ -335,8 +328,7 @@ abstract class RawKeyEvent {
   ///
   /// Use [isKeyPressed] if you need to know which shift key was pressed.
   bool get isShiftPressed {
-    return isKeyPressed(LogicalKeyboardKey.shiftLeft) ||
-        isKeyPressed(LogicalKeyboardKey.shiftRight);
+    return isKeyPressed(LogicalKeyboardKey.shiftLeft) || isKeyPressed(LogicalKeyboardKey.shiftRight);
   }
 
   /// Returns true if a ALT modifier key is pressed, regardless of which side
@@ -350,8 +342,7 @@ abstract class RawKeyEvent {
   ///
   /// Use [isKeyPressed] if you need to know which alt key was pressed.
   bool get isAltPressed {
-    return isKeyPressed(LogicalKeyboardKey.altLeft) ||
-        isKeyPressed(LogicalKeyboardKey.altRight);
+    return isKeyPressed(LogicalKeyboardKey.altLeft) || isKeyPressed(LogicalKeyboardKey.altRight);
   }
 
   /// Returns true if a META modifier key is pressed, regardless of which side
@@ -359,8 +350,7 @@ abstract class RawKeyEvent {
   ///
   /// Use [isKeyPressed] if you need to know which meta key was pressed.
   bool get isMetaPressed {
-    return isKeyPressed(LogicalKeyboardKey.metaLeft) ||
-        isKeyPressed(LogicalKeyboardKey.metaRight);
+    return isKeyPressed(LogicalKeyboardKey.metaLeft) || isKeyPressed(LogicalKeyboardKey.metaRight);
   }
 
   /// Returns an object representing the physical location of this key.
@@ -482,8 +472,7 @@ class RawKeyboard {
   /// The shared instance of [RawKeyboard].
   static final RawKeyboard instance = RawKeyboard._();
 
-  final List<ValueChanged<RawKeyEvent>> _listeners =
-      <ValueChanged<RawKeyEvent>>[];
+  final List<ValueChanged<RawKeyEvent>> _listeners = <ValueChanged<RawKeyEvent>>[];
 
   /// Calls the listener every time the user presses or releases a key.
   ///
@@ -513,8 +502,7 @@ class RawKeyboard {
     if (_listeners.isEmpty) {
       return;
     }
-    for (ValueChanged<RawKeyEvent> listener
-        in List<ValueChanged<RawKeyEvent>>.from(_listeners)) {
+    for (ValueChanged<RawKeyEvent> listener in List<ValueChanged<RawKeyEvent>>.from(_listeners)) {
       if (_listeners.contains(listener)) {
         listener(event);
       }

@@ -25,14 +25,7 @@ export 'package:flutter_web/gestures.dart' show HitTestResult;
 // dynamic context;
 
 /// The glue between the render tree and the Flutter engine.
-mixin RendererBinding
-    on
-        BindingBase,
-        ServicesBinding,
-        SchedulerBinding,
-        GestureBinding,
-        SemanticsBinding,
-        HitTestable {
+mixin RendererBinding on BindingBase, ServicesBinding, SchedulerBinding, GestureBinding, SemanticsBinding, HitTestable {
   @override
   void initInstances() {
     super.initInstances();
@@ -69,7 +62,8 @@ mixin RendererBinding
         name: 'debugPaint',
         getter: () async => debugPaintSizeEnabled,
         setter: (bool value) {
-          if (debugPaintSizeEnabled == value) return Future<void>.value();
+          if (debugPaintSizeEnabled == value)
+            return Future<void>.value();
           debugPaintSizeEnabled = value;
           return _forceRepaint();
         },
@@ -78,7 +72,8 @@ mixin RendererBinding
         name: 'debugPaintBaselinesEnabled',
         getter: () async => debugPaintBaselinesEnabled,
         setter: (bool value) {
-          if (debugPaintBaselinesEnabled == value) return Future<void>.value();
+          if (debugPaintBaselinesEnabled == value)
+            return Future<void>.value();
           debugPaintBaselinesEnabled = value;
           return _forceRepaint();
         },
@@ -91,7 +86,8 @@ mixin RendererBinding
           setter: (bool value) {
             final bool repaint = debugRepaintRainbowEnabled && !value;
             debugRepaintRainbowEnabled = value;
-            if (repaint) return _forceRepaint();
+            if (repaint)
+              return _forceRepaint();
             return Future<void>.value();
           },
         );
@@ -142,8 +138,7 @@ mixin RendererBinding
   /// Called automatically when the binding is created.
   void initRenderView() {
     assert(renderView == null);
-    renderView =
-        RenderView(configuration: createViewConfiguration(), window: window);
+    renderView = RenderView(configuration: createViewConfiguration(), window: window);
     renderView.scheduleInitialFrame();
   }
 
@@ -159,7 +154,6 @@ mixin RendererBinding
 
   /// The render tree that's attached to the output surface.
   RenderView get renderView => _pipelineOwner.rootNode;
-
   /// Sets the given [RenderView] object (which must not be null), and its tree, to
   /// be the new render tree to display. The previous tree, if any, is detached.
   set renderView(RenderView value) {
@@ -181,7 +175,7 @@ mixin RendererBinding
   ///
   /// See [Window.onTextScaleFactorChanged].
   @protected
-  void handleTextScaleFactorChanged() {}
+  void handleTextScaleFactorChanged() { }
 
   /// {@template on_platform_brightness_change}
   /// Called when the platform brightness changes.
@@ -217,7 +211,7 @@ mixin RendererBinding
   /// See [Window.onPlatformBrightnessChanged].
   /// {@endtemplate}
   @protected
-  void handlePlatformBrightnessChanged() {}
+  void handlePlatformBrightnessChanged() { }
 
   /// Returns a [ViewConfiguration] configured for the [RenderView] based on the
   /// current environment.
@@ -246,8 +240,7 @@ mixin RendererBinding
       // Layer hit testing is done using device pixels, so we have to convert
       // the logical coordinates of the event location back to device pixels
       // here.
-      return renderView.layer
-          .findAll<MouseTrackerAnnotation>(offset * window.devicePixelRatio);
+      return renderView.layer.findAll<MouseTrackerAnnotation>(offset * window.devicePixelRatio);
     });
   }
 
@@ -354,8 +347,7 @@ mixin RendererBinding
   @override
   Future<void> performReassemble() async {
     await super.performReassemble();
-    Timeline.startSync('Dirty Render Tree',
-        arguments: timelineWhitelistArguments);
+    Timeline.startSync('Dirty Render Tree', arguments: timelineWhitelistArguments);
     try {
       renderView.reassemble();
     } finally {
@@ -385,14 +377,12 @@ mixin RendererBinding
 
 /// Prints a textual representation of the entire render tree.
 void debugDumpRenderTree() {
-  debugPrint(RendererBinding.instance?.renderView?.toStringDeep() ??
-      'Render tree unavailable.');
+  debugPrint(RendererBinding.instance?.renderView?.toStringDeep() ?? 'Render tree unavailable.');
 }
 
 /// Prints a textual representation of the entire layer tree.
 void debugDumpLayerTree() {
-  debugPrint(RendererBinding.instance?.renderView?.debugLayer?.toStringDeep() ??
-      'Layer tree unavailable.');
+  debugPrint(RendererBinding.instance?.renderView?.debugLayer?.toStringDeep() ?? 'Layer tree unavailable.');
 }
 
 /// Prints a textual representation of the entire semantics tree.
@@ -402,9 +392,7 @@ void debugDumpLayerTree() {
 /// The order in which the children of a [SemanticsNode] will be printed is
 /// controlled by the [childOrder] parameter.
 void debugDumpSemanticsTree(DebugSemanticsDumpOrder childOrder) {
-  debugPrint(RendererBinding.instance?.renderView?.debugSemantics
-          ?.toStringDeep(childOrder: childOrder) ??
-      'Semantics not collected.');
+  debugPrint(RendererBinding.instance?.renderView?.debugSemantics?.toStringDeep(childOrder: childOrder) ?? 'Semantics not collected.');
 }
 
 /// A concrete binding for applications that use the Rendering framework
@@ -416,18 +404,12 @@ void debugDumpSemanticsTree(DebugSemanticsDumpOrder childOrder) {
 /// that layer's binding.
 ///
 /// See also [BindingBase].
-class RenderingFlutterBinding extends BindingBase
-    with
-        GestureBinding,
-        ServicesBinding,
-        SchedulerBinding,
-        SemanticsBinding,
-        RendererBinding {
+class RenderingFlutterBinding extends BindingBase with GestureBinding, ServicesBinding, SchedulerBinding, SemanticsBinding, RendererBinding {
   /// Creates a binding for the rendering layer.
   ///
   /// The `root` render box is attached directly to the [renderView] and is
   /// given constraints that require it to fill the window.
-  RenderingFlutterBinding({RenderBox root}) {
+  RenderingFlutterBinding({ RenderBox root }) {
     assert(renderView != null);
     renderView.child = root;
   }

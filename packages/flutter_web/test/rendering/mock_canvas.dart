@@ -1,6 +1,7 @@
 // Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// Synced. * Contains Web DELTA *
 
 import 'package:flutter_web_ui/ui.dart' as ui show Paragraph, Image;
 
@@ -1092,15 +1093,11 @@ abstract class _DrawCommandPaintPredicate extends _PaintPredicate {
   @mustCallSuper
   void verifyArguments(List<dynamic> arguments) {
     final Paint paintArgument = arguments[paintArgumentIndex];
-    // TODO(flutter_web): sync change up to flutter so that
-    // matcher compares absolute color instead of failing when comparing
-    // ColorSwatch/MaterialColor with Color instance.
     if (color != null && paintArgument.color.value != color.value)
       throw 'It called $methodName with a paint whose color, ${paintArgument.color}, was not exactly the expected color ($color).';
     if (strokeWidth != null && paintArgument.strokeWidth != strokeWidth)
       throw 'It called $methodName with a paint whose strokeWidth, ${paintArgument.strokeWidth}, was not exactly the expected strokeWidth ($strokeWidth).';
-    if (hasMaskFilter != null &&
-        (paintArgument.maskFilter != null) != hasMaskFilter) {
+    if (hasMaskFilter != null && (paintArgument.maskFilter != null) != hasMaskFilter) {
       if (hasMaskFilter)
         throw 'It called $methodName with a paint that did not have a mask filter, despite expecting one.';
       else

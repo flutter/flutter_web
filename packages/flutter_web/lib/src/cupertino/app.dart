@@ -1,7 +1,7 @@
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// Synced 2019-06-05T16:17:57.425454.
+// Synced 2019-08-12T13:26:26.183328.
 
 import 'package:flutter_web/rendering.dart';
 import 'package:flutter_web/widgets.dart';
@@ -91,15 +91,15 @@ class CupertinoApp extends StatefulWidget {
     this.checkerboardOffscreenLayers = false,
     this.showSemanticsDebugger = false,
     this.debugShowCheckedModeBanner = true,
-  })  : assert(routes != null),
-        assert(navigatorObservers != null),
-        assert(title != null),
-        assert(showPerformanceOverlay != null),
-        assert(checkerboardRasterCacheImages != null),
-        assert(checkerboardOffscreenLayers != null),
-        assert(showSemanticsDebugger != null),
-        assert(debugShowCheckedModeBanner != null),
-        super(key: key);
+  }) : assert(routes != null),
+       assert(navigatorObservers != null),
+       assert(title != null),
+       assert(showPerformanceOverlay != null),
+       assert(checkerboardRasterCacheImages != null),
+       assert(checkerboardOffscreenLayers != null),
+       assert(showSemanticsDebugger != null),
+       assert(debugShowCheckedModeBanner != null),
+       super(key: key);
 
   /// {@macro flutter.widgets.widgetsApp.navigatorKey}
   final GlobalKey<NavigatorState> navigatorKey;
@@ -204,8 +204,7 @@ class CupertinoApp extends StatefulWidget {
 
 class _AlwaysCupertinoScrollBehavior extends ScrollBehavior {
   @override
-  Widget buildViewportChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection) {
+  Widget buildViewportChrome(BuildContext context, Widget child, AxisDirection axisDirection) {
     // Never build any overscroll glow indicators.
     return child;
   }
@@ -246,9 +245,8 @@ class _CupertinoAppState extends State<CupertinoApp> {
         widget.routes.isNotEmpty ||
         widget.onGenerateRoute != null ||
         widget.onUnknownRoute != null) {
-      _navigatorObservers =
-          List<NavigatorObserver>.from(widget.navigatorObservers)
-            ..add(_heroController);
+      _navigatorObservers = List<NavigatorObserver>.from(widget.navigatorObservers)
+        ..add(_heroController);
     } else {
       _navigatorObservers = const <NavigatorObserver>[];
     }
@@ -267,8 +265,7 @@ class _CupertinoAppState extends State<CupertinoApp> {
 
   @override
   Widget build(BuildContext context) {
-    final CupertinoThemeData effectiveThemeData =
-        widget.theme ?? const CupertinoThemeData();
+    final CupertinoThemeData effectiveThemeData = widget.theme ?? const CupertinoThemeData();
 
     return ScrollConfiguration(
       behavior: _AlwaysCupertinoScrollBehavior(),
@@ -278,9 +275,8 @@ class _CupertinoAppState extends State<CupertinoApp> {
           key: GlobalObjectKey(this),
           navigatorKey: widget.navigatorKey,
           navigatorObservers: _navigatorObservers,
-          pageRouteBuilder:
-              <T>(RouteSettings settings, WidgetBuilder builder) =>
-                  CupertinoPageRoute<T>(settings: settings, builder: builder),
+          pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) =>
+            CupertinoPageRoute<T>(settings: settings, builder: builder),
           home: widget.home,
           routes: widget.routes,
           initialRoute: widget.initialRoute,
@@ -301,8 +297,7 @@ class _CupertinoAppState extends State<CupertinoApp> {
           checkerboardOffscreenLayers: widget.checkerboardOffscreenLayers,
           showSemanticsDebugger: widget.showSemanticsDebugger,
           debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
-          inspectorSelectButtonBuilder:
-              (BuildContext context, VoidCallback onPressed) {
+          inspectorSelectButtonBuilder: (BuildContext context, VoidCallback onPressed) {
             return CupertinoButton.filled(
               child: const Icon(
                 CupertinoIcons.search,

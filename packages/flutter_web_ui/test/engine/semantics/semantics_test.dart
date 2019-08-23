@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -7,13 +7,12 @@ import 'dart:html' as html;
 import 'dart:typed_data';
 
 import 'package:quiver/testing/async.dart';
+import 'package:test/test.dart';
 
-import 'package:flutter_web/widgets.dart';
-import 'package:flutter_web_test/flutter_web_test.dart';
-import 'package:flutter_web_ui/src/engine.dart' hide Matrix4;
+import 'package:flutter_web_ui/src/engine.dart';
 import 'package:flutter_web_ui/ui.dart' as ui;
 
-import '../widgets/semantics_tester.dart';
+import '../../matchers.dart';
 
 DateTime _testTime = DateTime(2018, 12, 17);
 
@@ -82,7 +81,7 @@ void _testEngineSemanticsOwner() {
     // Synthesize a click on the placeholder.
     final html.Element placeholder =
         html.document.querySelectorAll('flt-semantics-placeholder').single;
-    final html.Rectangle rect = placeholder.getBoundingClientRect();
+    final html.Rectangle<num> rect = placeholder.getBoundingClientRect();
     placeholder.dispatchEvent(html.MouseEvent(
       'click',
       clientX: (rect.left + (rect.right - rect.left) / 2).floor(),
@@ -94,16 +93,35 @@ void _testEngineSemanticsOwner() {
     expect(semantics().semanticsEnabled, true);
   });
 
-  testWidgets('produces an aria-label', (WidgetTester tester) async {
+  void renderLabel(String label) {
+    final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
+    builder.updateNode(
+      id: 0,
+      actions: 0,
+      flags: 0,
+      transform: Matrix4.identity().storage,
+      rect: const ui.Rect.fromLTRB(0, 0, 20, 20),
+      childrenInHitTestOrder: Int32List.fromList(<int>[1]),
+      childrenInTraversalOrder: Int32List.fromList(<int>[1]),
+    );
+    builder.updateNode(
+      id: 1,
+      actions: 0,
+      flags: 0,
+      label: label,
+      transform: Matrix4.identity().storage,
+      rect: const ui.Rect.fromLTRB(0, 0, 20, 20),
+    );
+    semantics().updateSemantics(builder.build());
+  }
+
+  test('produces an aria-label', () async {
     semantics().semanticsEnabled = true;
-    final SemanticsTester semanticsTester = SemanticsTester(tester);
 
     // Create
-    await tester.pumpWidget(
-      Text('Hello', textDirection: TextDirection.ltr),
-    );
+    renderLabel('Hello');
 
-    final tree = semantics().debugSemanticsTree;
+    final Map<int, SemanticsObject> tree = semantics().debugSemanticsTree;
     expect(tree.length, 2);
     expect(tree[0].id, 0);
     expect(tree[0].element.tagName.toLowerCase(), 'flt-semantics');
@@ -118,9 +136,7 @@ void _testEngineSemanticsOwner() {
 </sem>''');
 
     // Update
-    await tester.pumpWidget(
-      Text('World', textDirection: TextDirection.ltr),
-    );
+    renderLabel('World');
 
     expectSemanticsTree('''
 <sem style="filter: opacity(0%); color: rgba(0, 0, 0, 0)">
@@ -132,9 +148,7 @@ void _testEngineSemanticsOwner() {
 </sem>''');
 
     // Remove
-    await tester.pumpWidget(
-      Text('', textDirection: TextDirection.ltr),
-    );
+    renderLabel('');
 
     expectSemanticsTree('''
 <sem style="filter: opacity(0%); color: rgba(0, 0, 0, 0)">
@@ -143,31 +157,26 @@ void _testEngineSemanticsOwner() {
   </sem-c>
 </sem>''');
 
-    semanticsTester.dispose();
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('clears semantics tree when disabled',
-      (WidgetTester tester) async {
+  test('clears semantics tree when disabled', () {
     expect(semantics().debugSemanticsTree, isEmpty);
     semantics().semanticsEnabled = true;
-    final SemanticsTester semanticsTester = SemanticsTester(tester);
-    await tester.pumpWidget(Text('Hello', textDirection: TextDirection.ltr));
+    renderLabel('Hello');
     expect(semantics().debugSemanticsTree, isNotEmpty);
     semantics().semanticsEnabled = false;
     expect(semantics().debugSemanticsTree, isEmpty);
-    semanticsTester.dispose();
   });
 
-  testWidgets('accepts standalone browser gestures',
-      (WidgetTester tester) async {
+  test('accepts standalone browser gestures', () {
     semantics().semanticsEnabled = true;
     expect(semantics().shouldAcceptBrowserGesture('click'), true);
     semantics().semanticsEnabled = false;
   });
 
   test('rejects browser gestures accompanied by pointer click', () {
-    FakeAsync().run((fakeAsync) {
+    FakeAsync().run((FakeAsync fakeAsync) {
       semantics()
         ..debugOverrideTimestampFunction(fakeAsync.getClock(_testTime).now)
         ..semanticsEnabled = true;
@@ -176,7 +185,7 @@ void _testEngineSemanticsOwner() {
       expect(semantics().shouldAcceptBrowserGesture('click'), false);
 
       // After 1 second of inactivity a browser gestures counts as standalone.
-      fakeAsync.elapse(Duration(seconds: 1));
+      fakeAsync.elapse(const Duration(seconds: 1));
       expect(semantics().shouldAcceptBrowserGesture('click'), true);
       semantics().semanticsEnabled = false;
     });
@@ -184,7 +193,7 @@ void _testEngineSemanticsOwner() {
 }
 
 void _testHeader() {
-  testWidgets('renders heading role for headers', (WidgetTester tester) async {
+  test('renders heading role for headers', () {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -193,10 +202,10 @@ void _testHeader() {
     builder.updateNode(
       id: 0,
       actions: 0,
-      flags: 0 | SemanticsFlag.isHeader.index,
+      flags: 0 | ui.SemanticsFlag.isHeader.index,
       label: 'Header of the page',
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -211,7 +220,7 @@ void _testHeader() {
 }
 
 void _testLongestIncreasingSubsequence() {
-  expectLis(List<int> list, List<int> seq) {
+  void expectLis(List<int> list, List<int> seq) {
     expect(longestIncreasingSubsequence(list), seq);
   }
 
@@ -220,26 +229,27 @@ void _testLongestIncreasingSubsequence() {
   });
 
   test('longest in the middle', () {
-    expectLis([10, 1, 2, 3, 0], [1, 2, 3]);
+    expectLis(<int>[10, 1, 2, 3, 0], <int>[1, 2, 3]);
   });
 
   test('longest at head', () {
-    expectLis([1, 2, 3, 0], [0, 1, 2]);
+    expectLis(<int>[1, 2, 3, 0], <int>[0, 1, 2]);
   });
 
   test('longest at tail', () {
-    expectLis([10, 1, 2, 3], [1, 2, 3]);
+    expectLis(<int>[10, 1, 2, 3], <int>[1, 2, 3]);
   });
 
   test('longest in a jagged pattern', () {
-    expectLis([0, 1, -1, 2, -2, 3, -3, 4, -4, 5, -5], [0, 1, 3, 5, 7, 9]);
+    expectLis(
+        <int>[0, 1, -1, 2, -2, 3, -3, 4, -4, 5, -5], <int>[0, 1, 3, 5, 7, 9]);
   });
 
   test('fully sorted up', () {
     for (int count = 0; count < 100; count += 1) {
       expectLis(
-        List<int>.generate(count, (i) => 10 * i),
-        List<int>.generate(count, (i) => i),
+        List<int>.generate(count, (int i) => 10 * i),
+        List<int>.generate(count, (int i) => i),
       );
     }
   });
@@ -247,7 +257,7 @@ void _testLongestIncreasingSubsequence() {
   test('fully sorted down', () {
     for (int count = 1; count < 100; count += 1) {
       expectLis(
-        List<int>.generate(count, (i) => 10 * (count - i)),
+        List<int>.generate(count, (int i) => 10 * (count - i)),
         <int>[count - 1],
       );
     }
@@ -255,22 +265,22 @@ void _testLongestIncreasingSubsequence() {
 }
 
 void _testContainer() {
-  testWidgets('container node has no transform when there is no rect offset',
-      (WidgetTester tester) async {
+  test('container node has no transform when there is no rect offset',
+      () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
 
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
-    final ui.Rect zeroOffsetRect = ui.Rect.fromLTRB(0, 0, 20, 20);
+    const ui.Rect zeroOffsetRect = ui.Rect.fromLTRB(0, 0, 20, 20);
     builder.updateNode(
       id: 0,
       actions: 0,
       flags: 0,
       transform: Matrix4.identity().storage,
       rect: zeroOffsetRect,
-      childrenInHitTestOrder: Int32List.fromList([1]),
-      childrenInTraversalOrder: Int32List.fromList([1]),
+      childrenInHitTestOrder: Int32List.fromList(<int>[1]),
+      childrenInTraversalOrder: Int32List.fromList(<int>[1]),
     );
 
     semantics().updateSemantics(builder.build());
@@ -281,8 +291,9 @@ void _testContainer() {
   </sem-c>
 </sem>''');
 
-    html.Element parentElement = html.document.querySelector('flt-semantics');
-    html.Element container =
+    final html.Element parentElement =
+        html.document.querySelector('flt-semantics');
+    final html.Element container =
         html.document.querySelector('flt-semantics-container');
 
     expect(parentElement.style.transform, '');
@@ -293,8 +304,7 @@ void _testContainer() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('container node compensates for rect offset',
-      (WidgetTester tester) async {
+  test('container node compensates for rect offset', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -305,9 +315,9 @@ void _testContainer() {
       actions: 0,
       flags: 0,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(10, 10, 20, 20),
-      childrenInHitTestOrder: Int32List.fromList([1]),
-      childrenInTraversalOrder: Int32List.fromList([1]),
+      rect: const ui.Rect.fromLTRB(10, 10, 20, 20),
+      childrenInHitTestOrder: Int32List.fromList(<int>[1]),
+      childrenInTraversalOrder: Int32List.fromList(<int>[1]),
     );
 
     semantics().updateSemantics(builder.build());
@@ -318,8 +328,9 @@ void _testContainer() {
   </sem-c>
 </sem>''');
 
-    html.Element parentElement = html.document.querySelector('flt-semantics');
-    html.Element container =
+    final html.Element parentElement =
+        html.document.querySelector('flt-semantics');
+    final html.Element container =
         html.document.querySelector('flt-semantics-container');
 
     expect(parentElement.style.transform, 'translate(10px, 10px)');
@@ -332,7 +343,7 @@ void _testContainer() {
 }
 
 void _testVerticalScrolling() {
-  testWidgets('renders an empty scrollable node', (WidgetTester tester) async {
+  test('renders an empty scrollable node', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -340,10 +351,10 @@ void _testVerticalScrolling() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.scrollUp.index,
+      actions: 0 | ui.SemanticsAction.scrollUp.index,
       flags: 0,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 50, 100),
+      rect: const ui.Rect.fromLTRB(0, 0, 50, 100),
     );
 
     semantics().updateSemantics(builder.build());
@@ -354,8 +365,7 @@ void _testVerticalScrolling() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('scrollable node with children has a container node',
-      (WidgetTester tester) async {
+  test('scrollable node with children has a container node', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -363,12 +373,12 @@ void _testVerticalScrolling() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.scrollUp.index,
+      actions: 0 | ui.SemanticsAction.scrollUp.index,
       flags: 0,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 50, 100),
-      childrenInHitTestOrder: Int32List.fromList([1]),
-      childrenInTraversalOrder: Int32List.fromList([1]),
+      rect: const ui.Rect.fromLTRB(0, 0, 50, 100),
+      childrenInHitTestOrder: Int32List.fromList(<int>[1]),
+      childrenInTraversalOrder: Int32List.fromList(<int>[1]),
     );
 
     semantics().updateSemantics(builder.build());
@@ -379,7 +389,7 @@ void _testVerticalScrolling() {
   </sem-c>
 </sem>''');
 
-    html.Element scrollable = findScrollable();
+    final html.Element scrollable = findScrollable();
     expect(scrollable, isNotNull);
 
     // When there's less content than the available size the neutral scrollTop
@@ -391,19 +401,19 @@ void _testVerticalScrolling() {
 
   test('scrollable node dispatches scroll events', () async {
     final StreamController<int> idLogController = StreamController<int>();
-    final StreamController<SemanticsAction> actionLogController =
-        StreamController<SemanticsAction>();
+    final StreamController<ui.SemanticsAction> actionLogController =
+        StreamController<ui.SemanticsAction>();
     final Stream<int> idLog = idLogController.stream.asBroadcastStream();
-    final Stream<SemanticsAction> actionLog =
+    final Stream<ui.SemanticsAction> actionLog =
         actionLogController.stream.asBroadcastStream();
 
     // The browser kicks us out of the test zone when the scroll event happens.
     // We memorize the test zone so we can call expect when the callback is
     // fired.
-    var testZone = Zone.current;
+    final Zone testZone = Zone.current;
 
     ui.window.onSemanticsAction =
-        (int id, SemanticsAction action, ByteData args) {
+        (int id, ui.SemanticsAction action, ByteData args) {
       idLogController.add(id);
       actionLogController.add(action);
       testZone.run(() {
@@ -417,13 +427,14 @@ void _testVerticalScrolling() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions:
-          0 | SemanticsAction.scrollUp.index | SemanticsAction.scrollDown.index,
+      actions: 0 |
+          ui.SemanticsAction.scrollUp.index |
+          ui.SemanticsAction.scrollDown.index,
       flags: 0,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 50, 100),
-      childrenInHitTestOrder: Int32List.fromList([1, 2, 3]),
-      childrenInTraversalOrder: Int32List.fromList([1, 2, 3]),
+      rect: const ui.Rect.fromLTRB(0, 0, 50, 100),
+      childrenInHitTestOrder: Int32List.fromList(<int>[1, 2, 3]),
+      childrenInTraversalOrder: Int32List.fromList(<int>[1, 2, 3]),
     );
 
     for (int id = 1; id <= 3; id++) {
@@ -432,7 +443,7 @@ void _testVerticalScrolling() {
         actions: 0,
         flags: 0,
         transform: Matrix4.translationValues(0, 50.0 * id, 0).storage,
-        rect: ui.Rect.fromLTRB(0, 0, 50, 50),
+        rect: const ui.Rect.fromLTRB(0, 0, 50, 50),
       );
     }
 
@@ -446,7 +457,7 @@ void _testVerticalScrolling() {
   </sem-c>
 </sem>''');
 
-    html.Element scrollable = findScrollable();
+    final html.Element scrollable = findScrollable();
     expect(scrollable, isNotNull);
 
     // When there's more content than the available size the neutral scrollTop
@@ -456,14 +467,14 @@ void _testVerticalScrolling() {
     scrollable.scrollTop = 20;
     expect(scrollable.scrollTop, 20);
     expect(await idLog.first, 0);
-    expect(await actionLog.first, SemanticsAction.scrollUp);
+    expect(await actionLog.first, ui.SemanticsAction.scrollUp);
     // Engine semantics returns scroll top back to neutral.
     expect(scrollable.scrollTop, 10);
 
     scrollable.scrollTop = 5;
     expect(scrollable.scrollTop, 5);
     expect(await idLog.first, 0);
-    expect(await actionLog.first, SemanticsAction.scrollDown);
+    expect(await actionLog.first, ui.SemanticsAction.scrollDown);
     // Engine semantics returns scroll top back to neutral.
     expect(scrollable.scrollTop, 10);
 
@@ -472,7 +483,7 @@ void _testVerticalScrolling() {
 }
 
 void _testHorizontalScrolling() {
-  testWidgets('renders an empty scrollable node', (WidgetTester tester) async {
+  test('renders an empty scrollable node', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -480,10 +491,10 @@ void _testHorizontalScrolling() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.scrollLeft.index,
+      actions: 0 | ui.SemanticsAction.scrollLeft.index,
       flags: 0,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -494,8 +505,7 @@ void _testHorizontalScrolling() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('scrollable node with children has a container node',
-      (WidgetTester tester) async {
+  test('scrollable node with children has a container node', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -503,12 +513,12 @@ void _testHorizontalScrolling() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.scrollLeft.index,
+      actions: 0 | ui.SemanticsAction.scrollLeft.index,
       flags: 0,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
-      childrenInHitTestOrder: Int32List.fromList([1]),
-      childrenInTraversalOrder: Int32List.fromList([1]),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
+      childrenInHitTestOrder: Int32List.fromList(<int>[1]),
+      childrenInTraversalOrder: Int32List.fromList(<int>[1]),
     );
 
     semantics().updateSemantics(builder.build());
@@ -519,7 +529,7 @@ void _testHorizontalScrolling() {
   </sem-c>
 </sem>''');
 
-    html.Element scrollable = findScrollable();
+    final html.Element scrollable = findScrollable();
     expect(scrollable, isNotNull);
 
     // When there's less content than the available size the neutral
@@ -539,13 +549,13 @@ void _testHorizontalScrolling() {
     builder.updateNode(
       id: 0,
       actions: 0 |
-          SemanticsAction.scrollLeft.index |
-          SemanticsAction.scrollRight.index,
+          ui.SemanticsAction.scrollLeft.index |
+          ui.SemanticsAction.scrollRight.index,
       flags: 0,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
-      childrenInHitTestOrder: Int32List.fromList([1, 2, 3]),
-      childrenInTraversalOrder: Int32List.fromList([1, 2, 3]),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
+      childrenInHitTestOrder: Int32List.fromList(<int>[1, 2, 3]),
+      childrenInTraversalOrder: Int32List.fromList(<int>[1, 2, 3]),
     );
 
     for (int id = 1; id <= 3; id++) {
@@ -554,7 +564,7 @@ void _testHorizontalScrolling() {
         actions: 0,
         flags: 0,
         transform: Matrix4.translationValues(50.0 * id, 0, 0).storage,
-        rect: ui.Rect.fromLTRB(0, 0, 50, 50),
+        rect: const ui.Rect.fromLTRB(0, 0, 50, 50),
       );
     }
 
@@ -568,7 +578,7 @@ void _testHorizontalScrolling() {
   </sem-c>
 </sem>''');
 
-    html.Element scrollable = findScrollable();
+    final html.Element scrollable = findScrollable();
     expect(scrollable, isNotNull);
 
     // When there's more content than the available size the neutral scrollTop
@@ -578,14 +588,14 @@ void _testHorizontalScrolling() {
     scrollable.scrollLeft = 20;
     expect(scrollable.scrollLeft, 20);
     expect(await logger.idLog.first, 0);
-    expect(await logger.actionLog.first, SemanticsAction.scrollLeft);
+    expect(await logger.actionLog.first, ui.SemanticsAction.scrollLeft);
     // Engine semantics returns scroll position back to neutral.
     expect(scrollable.scrollLeft, 10);
 
     scrollable.scrollLeft = 5;
     expect(scrollable.scrollLeft, 5);
     expect(await logger.idLog.first, 0);
-    expect(await logger.actionLog.first, SemanticsAction.scrollRight);
+    expect(await logger.actionLog.first, ui.SemanticsAction.scrollRight);
     // Engine semantics returns scroll top back to neutral.
     expect(scrollable.scrollLeft, 10);
 
@@ -594,8 +604,7 @@ void _testHorizontalScrolling() {
 }
 
 void _testIncrementables() {
-  testWidgets('renders a trivial incrementable node',
-      (WidgetTester tester) async {
+  test('renders a trivial incrementable node', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -603,11 +612,11 @@ void _testIncrementables() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.increase.index,
+      actions: 0 | ui.SemanticsAction.increase.index,
       flags: 0,
       value: 'd',
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -619,7 +628,7 @@ void _testIncrementables() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('increments', (WidgetTester tester) async {
+  test('increments', () async {
     final SemanticsActionLogger logger = SemanticsActionLogger();
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
@@ -628,12 +637,12 @@ void _testIncrementables() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.increase.index,
+      actions: 0 | ui.SemanticsAction.increase.index,
       flags: 0,
       value: 'd',
       increasedValue: 'e',
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -642,17 +651,18 @@ void _testIncrementables() {
   <input aria-valuenow="1" aria-valuetext="d" aria-valuemax="2" aria-valuemin="1">
 </sem>''');
 
-    html.InputElement input = html.document.querySelectorAll('input').single;
+    final html.InputElement input =
+        html.document.querySelectorAll('input').single;
     input.value = '2';
     input.dispatchEvent(html.Event('change'));
 
     expect(await logger.idLog.first, 0);
-    expect(await logger.actionLog.first, SemanticsAction.increase);
+    expect(await logger.actionLog.first, ui.SemanticsAction.increase);
 
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('decrements', (WidgetTester tester) async {
+  test('decrements', () async {
     final SemanticsActionLogger logger = SemanticsActionLogger();
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
@@ -661,12 +671,12 @@ void _testIncrementables() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.decrease.index,
+      actions: 0 | ui.SemanticsAction.decrease.index,
       flags: 0,
       value: 'd',
       decreasedValue: 'c',
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -675,18 +685,18 @@ void _testIncrementables() {
   <input aria-valuenow="1" aria-valuetext="d" aria-valuemax="1" aria-valuemin="0">
 </sem>''');
 
-    html.InputElement input = html.document.querySelectorAll('input').single;
+    final html.InputElement input =
+        html.document.querySelectorAll('input').single;
     input.value = '0';
     input.dispatchEvent(html.Event('change'));
 
     expect(await logger.idLog.first, 0);
-    expect(await logger.actionLog.first, SemanticsAction.decrease);
+    expect(await logger.actionLog.first, ui.SemanticsAction.decrease);
 
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('renders a node that can both increment and decrement',
-      (WidgetTester tester) async {
+  test('renders a node that can both increment and decrement', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -694,14 +704,15 @@ void _testIncrementables() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions:
-          0 | SemanticsAction.decrease.index | SemanticsAction.increase.index,
+      actions: 0 |
+          ui.SemanticsAction.decrease.index |
+          ui.SemanticsAction.increase.index,
       flags: 0,
       value: 'd',
       increasedValue: 'e',
       decreasedValue: 'c',
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -715,7 +726,7 @@ void _testIncrementables() {
 }
 
 void _testTextField() {
-  testWidgets('renders a text field', (WidgetTester tester) async {
+  test('renders a text field', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -723,11 +734,11 @@ void _testTextField() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.tap.index,
-      flags: 0 | SemanticsFlag.isTextField.index,
+      actions: 0 | ui.SemanticsAction.tap.index,
+      flags: 0 | ui.SemanticsFlag.isTextField.index,
       value: 'hello',
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -741,8 +752,7 @@ void _testTextField() {
 
   // TODO(yjbanov): this test will need to be adjusted for Safari when we add
   //                Safari testing.
-  testWidgets('sends a tap action when text field is activated',
-      (WidgetTester tester) async {
+  test('sends a tap action when text field is activated', () async {
     final SemanticsActionLogger logger = SemanticsActionLogger();
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
@@ -751,11 +761,11 @@ void _testTextField() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.tap.index,
-      flags: 0 | SemanticsFlag.isTextField.index,
+      actions: 0 | ui.SemanticsAction.tap.index,
+      flags: 0 | ui.SemanticsFlag.isTextField.index,
       value: 'hello',
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -770,15 +780,14 @@ void _testTextField() {
 
     expect(html.document.activeElement, textField);
     expect(await logger.idLog.first, 0);
-    expect(await logger.actionLog.first, SemanticsAction.tap);
+    expect(await logger.actionLog.first, ui.SemanticsAction.tap);
 
     semantics().semanticsEnabled = false;
   });
 }
 
 void _testCheckables() {
-  testWidgets('renders a switched on switch element',
-      (WidgetTester tester) async {
+  test('renders a switched on switch element', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -786,13 +795,13 @@ void _testCheckables() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.tap.index,
+      actions: 0 | ui.SemanticsAction.tap.index,
       flags: 0 |
-          SemanticsFlag.isEnabled.index |
-          SemanticsFlag.hasToggledState.index |
-          SemanticsFlag.isToggled.index,
+          ui.SemanticsFlag.isEnabled.index |
+          ui.SemanticsFlag.hasToggledState.index |
+          ui.SemanticsFlag.isToggled.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -803,8 +812,7 @@ void _testCheckables() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('renders a switched on disabled switch element',
-      (WidgetTester tester) async {
+  test('renders a switched on disabled switch element', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -812,12 +820,12 @@ void _testCheckables() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.tap.index,
+      actions: 0 | ui.SemanticsAction.tap.index,
       flags: 0 |
-          SemanticsFlag.hasToggledState.index |
-          SemanticsFlag.isToggled.index,
+          ui.SemanticsFlag.hasToggledState.index |
+          ui.SemanticsFlag.isToggled.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -828,8 +836,7 @@ void _testCheckables() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('renders a switched off switch element',
-      (WidgetTester tester) async {
+  test('renders a switched off switch element', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -837,12 +844,12 @@ void _testCheckables() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.tap.index,
+      actions: 0 | ui.SemanticsAction.tap.index,
       flags: 0 |
-          SemanticsFlag.hasToggledState.index |
-          SemanticsFlag.isEnabled.index,
+          ui.SemanticsFlag.hasToggledState.index |
+          ui.SemanticsFlag.isEnabled.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -852,7 +859,7 @@ void _testCheckables() {
 
     semantics().semanticsEnabled = false;
   });
-  testWidgets('renders a checked checkbox', (WidgetTester tester) async {
+  test('renders a checked checkbox', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -860,13 +867,13 @@ void _testCheckables() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.tap.index,
+      actions: 0 | ui.SemanticsAction.tap.index,
       flags: 0 |
-          SemanticsFlag.isEnabled.index |
-          SemanticsFlag.hasCheckedState.index |
-          SemanticsFlag.isChecked.index,
+          ui.SemanticsFlag.isEnabled.index |
+          ui.SemanticsFlag.hasCheckedState.index |
+          ui.SemanticsFlag.isChecked.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -877,8 +884,7 @@ void _testCheckables() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('renders a checked disabled checkbox',
-      (WidgetTester tester) async {
+  test('renders a checked disabled checkbox', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -886,12 +892,12 @@ void _testCheckables() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.tap.index,
+      actions: 0 | ui.SemanticsAction.tap.index,
       flags: 0 |
-          SemanticsFlag.hasCheckedState.index |
-          SemanticsFlag.isChecked.index,
+          ui.SemanticsFlag.hasCheckedState.index |
+          ui.SemanticsFlag.isChecked.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -902,7 +908,7 @@ void _testCheckables() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('renders an unchecked checkbox', (WidgetTester tester) async {
+  test('renders an unchecked checkbox', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -910,12 +916,12 @@ void _testCheckables() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.tap.index,
+      actions: 0 | ui.SemanticsAction.tap.index,
       flags: 0 |
-          SemanticsFlag.hasCheckedState.index |
-          SemanticsFlag.isEnabled.index,
+          ui.SemanticsFlag.hasCheckedState.index |
+          ui.SemanticsFlag.isEnabled.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -926,7 +932,7 @@ void _testCheckables() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('renders a checked radio button', (WidgetTester tester) async {
+  test('renders a checked radio button', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -934,14 +940,14 @@ void _testCheckables() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.tap.index,
+      actions: 0 | ui.SemanticsAction.tap.index,
       flags: 0 |
-          SemanticsFlag.isEnabled.index |
-          SemanticsFlag.hasCheckedState.index |
-          SemanticsFlag.isInMutuallyExclusiveGroup.index |
-          SemanticsFlag.isChecked.index,
+          ui.SemanticsFlag.isEnabled.index |
+          ui.SemanticsFlag.hasCheckedState.index |
+          ui.SemanticsFlag.isInMutuallyExclusiveGroup.index |
+          ui.SemanticsFlag.isChecked.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -952,8 +958,7 @@ void _testCheckables() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('renders a checked disabled radio button',
-      (WidgetTester tester) async {
+  test('renders a checked disabled radio button', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -961,13 +966,13 @@ void _testCheckables() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.tap.index,
+      actions: 0 | ui.SemanticsAction.tap.index,
       flags: 0 |
-          SemanticsFlag.hasCheckedState.index |
-          SemanticsFlag.isInMutuallyExclusiveGroup.index |
-          SemanticsFlag.isChecked.index,
+          ui.SemanticsFlag.hasCheckedState.index |
+          ui.SemanticsFlag.isInMutuallyExclusiveGroup.index |
+          ui.SemanticsFlag.isChecked.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -978,7 +983,7 @@ void _testCheckables() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('renders an unchecked checkbox', (WidgetTester tester) async {
+  test('renders an unchecked checkbox', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -986,13 +991,13 @@ void _testCheckables() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.tap.index,
+      actions: 0 | ui.SemanticsAction.tap.index,
       flags: 0 |
-          SemanticsFlag.isEnabled.index |
-          SemanticsFlag.hasCheckedState.index |
-          SemanticsFlag.isInMutuallyExclusiveGroup.index,
+          ui.SemanticsFlag.isEnabled.index |
+          ui.SemanticsFlag.hasCheckedState.index |
+          ui.SemanticsFlag.isInMutuallyExclusiveGroup.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -1005,8 +1010,7 @@ void _testCheckables() {
 }
 
 void _testTappable() {
-  testWidgets('renders an enabled tappable widget',
-      (WidgetTester tester) async {
+  test('renders an enabled tappable widget', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -1014,13 +1018,13 @@ void _testTappable() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.tap.index,
+      actions: 0 | ui.SemanticsAction.tap.index,
       flags: 0 |
-          SemanticsFlag.hasEnabledState.index |
-          SemanticsFlag.isEnabled.index |
-          SemanticsFlag.isButton.index,
+          ui.SemanticsFlag.hasEnabledState.index |
+          ui.SemanticsFlag.isEnabled.index |
+          ui.SemanticsFlag.isButton.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -1031,8 +1035,7 @@ void _testTappable() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('renders a disabled tappable widget',
-      (WidgetTester tester) async {
+  test('renders a disabled tappable widget', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -1040,12 +1043,12 @@ void _testTappable() {
     final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();
     builder.updateNode(
       id: 0,
-      actions: 0 | SemanticsAction.tap.index,
+      actions: 0 | ui.SemanticsAction.tap.index,
       flags: 0 |
-          SemanticsFlag.hasEnabledState.index |
-          SemanticsFlag.isButton.index,
+          ui.SemanticsFlag.hasEnabledState.index |
+          ui.SemanticsFlag.isButton.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -1058,8 +1061,7 @@ void _testTappable() {
 }
 
 void _testImage() {
-  testWidgets('renders an image with no child nodes and with a label',
-      (WidgetTester tester) async {
+  test('renders an image with no child nodes and with a label', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -1068,10 +1070,10 @@ void _testImage() {
     builder.updateNode(
       id: 0,
       actions: 0,
-      flags: 0 | SemanticsFlag.isImage.index,
+      flags: 0 | ui.SemanticsFlag.isImage.index,
       label: 'Test Image Label',
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -1082,8 +1084,7 @@ void _testImage() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('renders an image with a child node and with a label',
-      (WidgetTester tester) async {
+  test('renders an image with a child node and with a label', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -1092,12 +1093,12 @@ void _testImage() {
     builder.updateNode(
       id: 0,
       actions: 0,
-      flags: 0 | SemanticsFlag.isImage.index,
+      flags: 0 | ui.SemanticsFlag.isImage.index,
       label: 'Test Image Label',
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
-      childrenInHitTestOrder: Int32List.fromList([1]),
-      childrenInTraversalOrder: Int32List.fromList([1]),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
+      childrenInHitTestOrder: Int32List.fromList(<int>[1]),
+      childrenInTraversalOrder: Int32List.fromList(<int>[1]),
     );
 
     semantics().updateSemantics(builder.build());
@@ -1113,8 +1114,7 @@ void _testImage() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('renders an image with no child nodes without a label',
-      (WidgetTester tester) async {
+  test('renders an image with no child nodes without a label', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -1123,9 +1123,9 @@ void _testImage() {
     builder.updateNode(
       id: 0,
       actions: 0,
-      flags: 0 | SemanticsFlag.isImage.index,
+      flags: 0 | ui.SemanticsFlag.isImage.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
 
     semantics().updateSemantics(builder.build());
@@ -1135,8 +1135,7 @@ void _testImage() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('renders an image with a child node and without a label',
-      (WidgetTester tester) async {
+  test('renders an image with a child node and without a label', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -1145,11 +1144,11 @@ void _testImage() {
     builder.updateNode(
       id: 0,
       actions: 0,
-      flags: 0 | SemanticsFlag.isImage.index,
+      flags: 0 | ui.SemanticsFlag.isImage.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
-      childrenInHitTestOrder: Int32List.fromList([1]),
-      childrenInTraversalOrder: Int32List.fromList([1]),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
+      childrenInHitTestOrder: Int32List.fromList(<int>[1]),
+      childrenInTraversalOrder: Int32List.fromList(<int>[1]),
     );
 
     semantics().updateSemantics(builder.build());
@@ -1167,8 +1166,7 @@ void _testImage() {
 }
 
 void _testLiveRegion() {
-  testWidgets('renders a live region if there is a label',
-      (WidgetTester tester) async {
+  test('renders a live region if there is a label', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -1178,9 +1176,9 @@ void _testLiveRegion() {
       id: 0,
       actions: 0,
       label: 'This is a snackbar',
-      flags: 0 | SemanticsFlag.isLiveRegion.index,
+      flags: 0 | ui.SemanticsFlag.isLiveRegion.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
     semantics().updateSemantics(builder.build());
 
@@ -1191,8 +1189,7 @@ void _testLiveRegion() {
     semantics().semanticsEnabled = false;
   });
 
-  testWidgets('does not render a live region if there is no label',
-      (WidgetTester tester) async {
+  test('does not render a live region if there is no label', () async {
     semantics()
       ..debugOverrideTimestampFunction(() => _testTime)
       ..semanticsEnabled = true;
@@ -1201,9 +1198,9 @@ void _testLiveRegion() {
     builder.updateNode(
       id: 0,
       actions: 0,
-      flags: 0 | SemanticsFlag.isLiveRegion.index,
+      flags: 0 | ui.SemanticsFlag.isLiveRegion.index,
       transform: Matrix4.identity().storage,
-      rect: ui.Rect.fromLTRB(0, 0, 100, 50),
+      rect: const ui.Rect.fromLTRB(0, 0, 100, 50),
     );
     semantics().updateSemantics(builder.build());
 
@@ -1234,23 +1231,23 @@ html.Element findScrollable() {
 
 class SemanticsActionLogger {
   StreamController<int> idLogController;
-  StreamController<SemanticsAction> actionLogController;
+  StreamController<ui.SemanticsAction> actionLogController;
   Stream<int> idLog;
-  Stream<SemanticsAction> actionLog;
+  Stream<ui.SemanticsAction> actionLog;
 
   SemanticsActionLogger() {
     idLogController = StreamController<int>();
-    actionLogController = StreamController<SemanticsAction>();
+    actionLogController = StreamController<ui.SemanticsAction>();
     idLog = idLogController.stream.asBroadcastStream();
     actionLog = actionLogController.stream.asBroadcastStream();
 
     // The browser kicks us out of the test zone when the browser event happens.
     // We memorize the test zone so we can call expect when the callback is
     // fired.
-    var testZone = Zone.current;
+    final Zone testZone = Zone.current;
 
     ui.window.onSemanticsAction =
-        (int id, SemanticsAction action, ByteData args) {
+        (int id, ui.SemanticsAction action, ByteData args) {
       idLogController.add(id);
       actionLogController.add(action);
       testZone.run(() {

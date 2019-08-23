@@ -41,8 +41,7 @@ class BitField<T extends dynamic> {
   final int _length;
   int _bits;
 
-  static const int _smiBits =
-      62; // see https://www.dartlang.org/articles/numeric-computation/#smis-and-mints
+  static const int _smiBits = 62; // see https://www.dartlang.org/articles/numeric-computation/#smis-and-mints
   static const int _allZeros = 0;
   static const int _allOnes = kMaxUnsignedSMI; // 2^(_kSMIBits+1)-1
 
@@ -68,7 +67,7 @@ class BitField<T extends dynamic> {
   ///
   /// If the value is true, the bits are all set to one. Otherwise, the bits are
   /// all set to zero. Defaults to setting all the bits to zero.
-  void reset([bool value = false]) {
+  void reset([ bool value = false ]) {
     _bits = value ? _allOnes : _allZeros;
   }
 }

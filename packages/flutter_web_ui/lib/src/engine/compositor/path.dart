@@ -22,7 +22,8 @@ class SkPath implements ui.Path {
   @override
   ui.PathFillType get fillType => _fillType;
 
-  void set fillType(ui.PathFillType newFillType) {
+  @override
+  set fillType(ui.PathFillType newFillType) {
     _fillType = newFillType;
 
     js.JsObject skFillType;
@@ -279,7 +280,7 @@ class SkPath implements ui.Path {
   ui.RRect get webOnlyPathAsRoundedRect => null;
 
   @override
-  List webOnlySerializeToCssPaint() {
+  List<dynamic> webOnlySerializeToCssPaint() {
     return null;
   }
 }

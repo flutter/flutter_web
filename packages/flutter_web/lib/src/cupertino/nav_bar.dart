@@ -1,8 +1,10 @@
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// Synced 2019-08-12T13:26:26.220561.
 
 import 'dart:math' as math;
+import 'package:flutter_web_ui/ui.dart' show ImageFilter;
 
 import 'package:flutter_web/foundation.dart';
 import 'package:flutter_web/rendering.dart';
@@ -10,10 +12,10 @@ import 'package:flutter_web/services.dart';
 import 'package:flutter_web/widgets.dart';
 
 import 'button.dart';
-import 'colors.dart';
 import 'icons.dart';
 import 'page_scaffold.dart';
 import 'route.dart';
+import 'theme.dart';
 
 /// Standard iOS navigation bar height without the status bar.
 ///
@@ -35,7 +37,6 @@ const double _kNavBarBackButtonTapWidth = 50.0;
 /// Title text transfer fade.
 const Duration _kNavBarTitleFadeDuration = Duration(milliseconds: 150);
 
-const Color _kDefaultNavBarBackgroundColor = Color(0xCCF8F8F8);
 const Color _kDefaultNavBarBorderColor = Color(0x4C000000);
 
 const Border _kDefaultNavBarBorder = Border(
@@ -44,22 +45,6 @@ const Border _kDefaultNavBarBorder = Border(
     width: 0.0, // One physical pixel.
     style: BorderStyle.solid,
   ),
-);
-
-const TextStyle _kMiddleTitleTextStyle = TextStyle(
-  fontFamily: '.SF UI Text',
-  fontSize: 17.0,
-  fontWeight: FontWeight.w600,
-  letterSpacing: -0.08,
-  color: CupertinoColors.black,
-);
-
-const TextStyle _kLargeTitleTextStyle = TextStyle(
-  fontFamily: '.SF Pro Display',
-  fontSize: 34.0,
-  fontWeight: FontWeight.w700,
-  letterSpacing: 0.24,
-  color: CupertinoColors.black,
 );
 
 // There's a single tag for all instances of navigation bars because they can
@@ -73,8 +58,7 @@ class _HeroTag {
 
   // Let the Hero tag be described in tree dumps.
   @override
-  String toString() =>
-      'Default Hero tag for Cupertino navigation bars with navigator $navigator';
+  String toString() => 'Default Hero tag for Cupertino navigation bars with navigator $navigator';
 
   @override
   bool operator ==(Object other) {
@@ -94,15 +78,6 @@ class _HeroTag {
   }
 }
 
-TextStyle _navBarItemStyle(Color color) {
-  return TextStyle(
-    fontFamily: '.SF UI Text',
-    fontSize: 17.0,
-    letterSpacing: -0.24,
-    color: color,
-  );
-}
-
 /// Returns `child` wrapped with background and a bottom border if background color
 /// is opaque. Otherwise, also blur with [BackdropFilter].
 ///
@@ -117,8 +92,9 @@ Widget _wrapWithBackground({
   Widget result = child;
   if (updateSystemUiOverlay) {
     final bool darkBackground = backgroundColor.computeLuminance() < 0.179;
-    final SystemUiOverlayStyle overlayStyle =
-        darkBackground ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark;
+    final SystemUiOverlayStyle overlayStyle = darkBackground
+        ? SystemUiOverlayStyle.light
+        : SystemUiOverlayStyle.dark;
     result = AnnotatedRegion<SystemUiOverlayStyle>(
       value: overlayStyle,
       sized: true,
@@ -133,16 +109,30 @@ Widget _wrapWithBackground({
     child: result,
   );
 
-  if (backgroundColor.alpha == 0xFF) return childWithBackground;
+  if (backgroundColor.alpha == 0xFF)
+    return childWithBackground;
 
-  return childWithBackground;
-  // TODO(flutter_web): Support ImageFilter.blur.
-  //  return ClipRect(
-  //    child: BackdropFilter(
-  //      filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-  //      child: childWithBackground,
-  //    ),
-  //  );
+  return ClipRect(
+    child: BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+      child: childWithBackground,
+    ),
+  );
+}
+
+// This exists to support backward compatibility with arguments like
+// `actionsForegroundColor`. CupertinoThemes can be used to support these
+// scenarios now. To support `actionsForegroundColor`, the nav bar rewraps
+// its children with a CupertinoTheme.
+Widget _wrapActiveColor(Color color, BuildContext context, Widget child) {
+  if (color == null) {
+    return child;
+  }
+
+  return CupertinoTheme(
+    data: CupertinoTheme.of(context).copyWith(primaryColor: color),
+    child: child,
+  );
 }
 
 // Whether the current route supports nav bar hero transitions from or to.
@@ -195,8 +185,7 @@ bool _isTransitionable(BuildContext context) {
 ///    [CupertinoNavigationBar].
 ///  * [CupertinoSliverNavigationBar] for a navigation bar to be placed in a
 ///    scrolling list and that supports iOS-11-style large titles.
-class CupertinoNavigationBar extends StatefulWidget
-    implements ObstructingPreferredSizeWidget {
+class CupertinoNavigationBar extends StatefulWidget implements ObstructingPreferredSizeWidget {
   /// Creates a navigation bar in the iOS style.
   const CupertinoNavigationBar({
     Key key,
@@ -207,23 +196,25 @@ class CupertinoNavigationBar extends StatefulWidget
     this.middle,
     this.trailing,
     this.border = _kDefaultNavBarBorder,
-    this.backgroundColor = _kDefaultNavBarBackgroundColor,
+    this.backgroundColor,
     this.padding,
-    this.actionsForegroundColor = CupertinoColors.activeBlue,
+    this.actionsForegroundColor,
     this.transitionBetweenRoutes = true,
     this.heroTag = _defaultHeroTag,
-  })  : assert(automaticallyImplyLeading != null),
-        assert(automaticallyImplyMiddle != null),
-        assert(transitionBetweenRoutes != null),
-        assert(
-            heroTag != null,
-            'heroTag cannot be null. Use transitionBetweenRoutes = false to '
-            'disable Hero transition on this navigation bar.'),
-        assert(
-            !transitionBetweenRoutes || identical(heroTag, _defaultHeroTag),
-            'Cannot specify a heroTag override if this navigation bar does not '
-            'transition due to transitionBetweenRoutes = false.'),
-        super(key: key);
+  }) : assert(automaticallyImplyLeading != null),
+       assert(automaticallyImplyMiddle != null),
+       assert(transitionBetweenRoutes != null),
+       assert(
+         heroTag != null,
+         'heroTag cannot be null. Use transitionBetweenRoutes = false to '
+         'disable Hero transition on this navigation bar.'
+       ),
+       assert(
+         !transitionBetweenRoutes || identical(heroTag, _defaultHeroTag),
+         'Cannot specify a heroTag override if this navigation bar does not '
+         'transition due to transitionBetweenRoutes = false.'
+       ),
+       super(key: key);
 
   /// {@template flutter.cupertino.navBar.leading}
   /// Widget to place at the start of the navigation bar. Normally a back button
@@ -295,6 +286,8 @@ class CupertinoNavigationBar extends StatefulWidget
   /// The background color of the navigation bar. If it contains transparency, the
   /// tab bar will automatically produce a blurring effect to the content
   /// behind it.
+  ///
+  /// Defaults to [CupertinoTheme]'s `barBackgroundColor` if null.
   /// {@endtemplate}
   final Color backgroundColor;
 
@@ -320,11 +313,16 @@ class CupertinoNavigationBar extends StatefulWidget
   /// {@endtemplate}
   final Border border;
 
+  /// {@template flutter.cupertino.navBar.actionsForegroundColor}
   /// Default color used for text and icons of the [leading] and [trailing]
   /// widgets in the navigation bar.
   ///
+  /// Defaults to the `primaryColor` of the [CupertinoTheme] when null.
+  /// {@endtemplate}
+  ///
   /// The default color for text in the [middle] slot is always black, as per
   /// iOS standard design.
+  @Deprecated('Use CupertinoTheme and primaryColor to propagate color')
   final Color actionsForegroundColor;
 
   /// {@template flutter.cupertino.navBar.transitionBetweenRoutes}
@@ -365,7 +363,7 @@ class CupertinoNavigationBar extends StatefulWidget
 
   /// True if the navigation bar's background color has no transparency.
   @override
-  bool get fullObstruction => backgroundColor.alpha == 0xFF;
+  bool get fullObstruction => backgroundColor == null ? null : backgroundColor.alpha == 0xFF;
 
   @override
   Size get preferredSize {
@@ -392,8 +390,10 @@ class _CupertinoNavigationBarState extends State<CupertinoNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    final _NavigationBarStaticComponents components =
-        _NavigationBarStaticComponents(
+    final Color backgroundColor =
+        widget.backgroundColor ?? CupertinoTheme.of(context).barBackgroundColor;
+
+    final _NavigationBarStaticComponents components = _NavigationBarStaticComponents(
       keys: keys,
       route: ModalRoute.of(context),
       userLeading: widget.leading,
@@ -403,40 +403,55 @@ class _CupertinoNavigationBarState extends State<CupertinoNavigationBar> {
       userMiddle: widget.middle,
       userTrailing: widget.trailing,
       padding: widget.padding,
-      actionsForegroundColor: widget.actionsForegroundColor,
       userLargeTitle: null,
       large: false,
     );
 
     final Widget navBar = _wrapWithBackground(
       border: widget.border,
-      backgroundColor: widget.backgroundColor,
-      child: _PersistentNavigationBar(
-        components: components,
-        padding: widget.padding,
+      backgroundColor: backgroundColor,
+      child: DefaultTextStyle(
+        style: CupertinoTheme.of(context).textTheme.textStyle,
+        child: _PersistentNavigationBar(
+          components: components,
+          padding: widget.padding,
+        ),
       ),
     );
 
     if (!widget.transitionBetweenRoutes || !_isTransitionable(context)) {
-      return navBar;
+      // Lint ignore to maintain backward compatibility.
+      return _wrapActiveColor(widget.actionsForegroundColor, context, navBar); // ignore: deprecated_member_use_from_same_package
     }
 
-    return Hero(
-      tag: widget.heroTag == _defaultHeroTag
-          ? _HeroTag(Navigator.of(context))
-          : widget.heroTag,
-      createRectTween: _linearTranslateWithLargestRectSizeTween,
-      placeholderBuilder: _navBarHeroLaunchPadBuilder,
-      flightShuttleBuilder: _navBarHeroFlightShuttleBuilder,
-      transitionOnUserGestures: true,
-      child: _TransitionableNavigationBar(
-        componentsKeys: keys,
-        backgroundColor: widget.backgroundColor,
-        actionsForegroundColor: widget.actionsForegroundColor,
-        border: widget.border,
-        hasUserMiddle: widget.middle != null,
-        largeExpanded: false,
-        child: navBar,
+    return _wrapActiveColor(
+      // Lint ignore to maintain backward compatibility.
+      widget.actionsForegroundColor, // ignore: deprecated_member_use_from_same_package
+      context,
+      Builder(
+        // Get the context that might have a possibly changed CupertinoTheme.
+        builder: (BuildContext context) {
+          return Hero(
+            tag: widget.heroTag == _defaultHeroTag
+                ? _HeroTag(Navigator.of(context))
+                : widget.heroTag,
+            createRectTween: _linearTranslateWithLargestRectSizeTween,
+            placeholderBuilder: _navBarHeroLaunchPadBuilder,
+            flightShuttleBuilder: _navBarHeroFlightShuttleBuilder,
+            transitionOnUserGestures: true,
+            child: _TransitionableNavigationBar(
+              componentsKeys: keys,
+              backgroundColor: backgroundColor,
+              backButtonTextStyle: CupertinoTheme.of(context).textTheme.navActionTextStyle,
+              titleTextStyle: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
+              largeTitleTextStyle: null,
+              border: widget.border,
+              hasUserMiddle: widget.middle != null,
+              largeExpanded: false,
+              child: navBar,
+            ),
+          );
+        },
       ),
     );
   }
@@ -502,19 +517,20 @@ class CupertinoSliverNavigationBar extends StatefulWidget {
     this.middle,
     this.trailing,
     this.border = _kDefaultNavBarBorder,
-    this.backgroundColor = _kDefaultNavBarBackgroundColor,
+    this.backgroundColor,
     this.padding,
-    this.actionsForegroundColor = CupertinoColors.activeBlue,
+    this.actionsForegroundColor,
     this.transitionBetweenRoutes = true,
     this.heroTag = _defaultHeroTag,
-  })  : assert(automaticallyImplyLeading != null),
-        assert(automaticallyImplyTitle != null),
-        assert(
-            automaticallyImplyTitle == true || largeTitle != null,
-            'No largeTitle has been provided but automaticallyImplyTitle is also '
-            'false. Either provide a largeTitle or set automaticallyImplyTitle to '
-            'true.'),
-        super(key: key);
+  }) : assert(automaticallyImplyLeading != null),
+       assert(automaticallyImplyTitle != null),
+       assert(
+         automaticallyImplyTitle == true || largeTitle != null,
+         'No largeTitle has been provided but automaticallyImplyTitle is also '
+         'false. Either provide a largeTitle or set automaticallyImplyTitle to '
+         'true.'
+       ),
+       super(key: key);
 
   /// The navigation bar's title.
   ///
@@ -581,11 +597,11 @@ class CupertinoSliverNavigationBar extends StatefulWidget {
   /// {@macro flutter.cupertino.navBar.border}
   final Border border;
 
-  /// Default color used for text and icons of the [leading] and [trailing]
-  /// widgets in the navigation bar.
+  /// {@macro flutter.cupertino.navBar.actionsForegroundColor}
   ///
   /// The default color for text in the [largeTitle] slot is always black, as per
   /// iOS standard design.
+  @Deprecated('Use CupertinoTheme and primaryColor to propagate color')
   final Color actionsForegroundColor;
 
   /// {@macro flutter.cupertino.navBar.transitionBetweenRoutes}
@@ -598,15 +614,13 @@ class CupertinoSliverNavigationBar extends StatefulWidget {
   bool get opaque => backgroundColor.alpha == 0xFF;
 
   @override
-  _CupertinoSliverNavigationBarState createState() =>
-      _CupertinoSliverNavigationBarState();
+  _CupertinoSliverNavigationBarState createState() => _CupertinoSliverNavigationBarState();
 }
 
 // A state class exists for the nav bar so that the keys of its sub-components
 // don't change when rebuilding the nav bar, causing the sub-components to
 // lose their own states.
-class _CupertinoSliverNavigationBarState
-    extends State<CupertinoSliverNavigationBar> {
+class _CupertinoSliverNavigationBarState extends State<CupertinoSliverNavigationBar> {
   _NavigationBarStaticComponentsKeys keys;
 
   @override
@@ -617,8 +631,10 @@ class _CupertinoSliverNavigationBarState
 
   @override
   Widget build(BuildContext context) {
-    final _NavigationBarStaticComponents components =
-        _NavigationBarStaticComponents(
+    // Lint ignore to maintain backward compatibility.
+    final Color actionsForegroundColor = widget.actionsForegroundColor ?? CupertinoTheme.of(context).primaryColor; // ignore: deprecated_member_use_from_same_package
+
+    final _NavigationBarStaticComponents components = _NavigationBarStaticComponents(
       keys: keys,
       route: ModalRoute.of(context),
       userLeading: widget.leading,
@@ -629,25 +645,28 @@ class _CupertinoSliverNavigationBarState
       userTrailing: widget.trailing,
       userLargeTitle: widget.largeTitle,
       padding: widget.padding,
-      actionsForegroundColor: widget.actionsForegroundColor,
       large: true,
     );
 
-    return SliverPersistentHeader(
-      pinned: true, // iOS navigation bars are always pinned.
-      delegate: _LargeTitleNavigationBarSliverDelegate(
-        keys: keys,
-        components: components,
-        userMiddle: widget.middle,
-        backgroundColor: widget.backgroundColor,
-        border: widget.border,
-        padding: widget.padding,
-        actionsForegroundColor: widget.actionsForegroundColor,
-        transitionBetweenRoutes: widget.transitionBetweenRoutes,
-        heroTag: widget.heroTag,
-        persistentHeight:
-            _kNavBarPersistentHeight + MediaQuery.of(context).padding.top,
-        alwaysShowMiddle: widget.middle != null,
+    return _wrapActiveColor(
+      // Lint ignore to maintain backward compatibility.
+      widget.actionsForegroundColor, // ignore: deprecated_member_use_from_same_package
+      context,
+      SliverPersistentHeader(
+        pinned: true, // iOS navigation bars are always pinned.
+        delegate: _LargeTitleNavigationBarSliverDelegate(
+          keys: keys,
+          components: components,
+          userMiddle: widget.middle,
+          backgroundColor: widget.backgroundColor ?? CupertinoTheme.of(context).barBackgroundColor,
+          border: widget.border,
+          padding: widget.padding,
+          actionsForegroundColor: actionsForegroundColor,
+          transitionBetweenRoutes: widget.transitionBetweenRoutes,
+          heroTag: widget.heroTag,
+          persistentHeight: _kNavBarPersistentHeight + MediaQuery.of(context).padding.top,
+          alwaysShowMiddle: widget.middle != null,
+        ),
       ),
     );
   }
@@ -667,9 +686,9 @@ class _LargeTitleNavigationBarSliverDelegate
     @required this.heroTag,
     @required this.persistentHeight,
     @required this.alwaysShowMiddle,
-  })  : assert(persistentHeight != null),
-        assert(alwaysShowMiddle != null),
-        assert(transitionBetweenRoutes != null);
+  }) : assert(persistentHeight != null),
+       assert(alwaysShowMiddle != null),
+       assert(transitionBetweenRoutes != null);
 
   final _NavigationBarStaticComponentsKeys keys;
   final _NavigationBarStaticComponents components;
@@ -690,10 +709,8 @@ class _LargeTitleNavigationBarSliverDelegate
   double get maxExtent => persistentHeight + _kNavBarLargeTitleHeightExtension;
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final bool showLargeTitle =
-        shrinkOffset < maxExtent - minExtent - _kNavBarShowLargeTitleThreshold;
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final bool showLargeTitle = shrinkOffset < maxExtent - minExtent - _kNavBarShowLargeTitleThreshold;
 
     final _PersistentNavigationBar persistentNavigationBar =
         _PersistentNavigationBar(
@@ -707,40 +724,43 @@ class _LargeTitleNavigationBarSliverDelegate
     final Widget navBar = _wrapWithBackground(
       border: border,
       backgroundColor: backgroundColor,
-      child: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          Positioned(
-            top: persistentHeight,
-            left: 0.0,
-            right: 0.0,
-            bottom: 0.0,
-            child: ClipRect(
-              // The large title starts at the persistent bar.
-              // It's aligned with the bottom of the sliver and expands clipped
-              // and behind the persistent bar.
-              child: OverflowBox(
-                minHeight: 0.0,
-                maxHeight: double.infinity,
-                alignment: AlignmentDirectional.bottomStart,
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                    start: _kNavBarEdgePadding,
-                    bottom: 8.0, // Bottom has a different padding.
-                  ),
-                  child: SafeArea(
-                    top: false,
-                    bottom: false,
-                    child: AnimatedOpacity(
-                      opacity: showLargeTitle ? 1.0 : 0.0,
-                      duration: _kNavBarTitleFadeDuration,
-                      child: Semantics(
-                        header: true,
-                        child: DefaultTextStyle(
-                          style: _kLargeTitleTextStyle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          child: components.largeTitle,
+      child: DefaultTextStyle(
+        style: CupertinoTheme.of(context).textTheme.textStyle,
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Positioned(
+              top: persistentHeight,
+              left: 0.0,
+              right: 0.0,
+              bottom: 0.0,
+              child: ClipRect(
+                // The large title starts at the persistent bar.
+                // It's aligned with the bottom of the sliver and expands clipped
+                // and behind the persistent bar.
+                child: OverflowBox(
+                  minHeight: 0.0,
+                  maxHeight: double.infinity,
+                  alignment: AlignmentDirectional.bottomStart,
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: _kNavBarEdgePadding,
+                      bottom: 8.0, // Bottom has a different padding.
+                    ),
+                    child: SafeArea(
+                      top: false,
+                      bottom: false,
+                      child: AnimatedOpacity(
+                        opacity: showLargeTitle ? 1.0 : 0.0,
+                        duration: _kNavBarTitleFadeDuration,
+                        child: Semantics(
+                          header: true,
+                          child: DefaultTextStyle(
+                            style: CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            child: components.largeTitle,
+                          ),
                         ),
                       ),
                     ),
@@ -748,14 +768,14 @@ class _LargeTitleNavigationBarSliverDelegate
                 ),
               ),
             ),
-          ),
-          Positioned(
-            left: 0.0,
-            right: 0.0,
-            top: 0.0,
-            child: persistentNavigationBar,
-          ),
-        ],
+            Positioned(
+              left: 0.0,
+              right: 0.0,
+              top: 0.0,
+              child: persistentNavigationBar,
+            ),
+          ],
+        ),
       ),
     );
 
@@ -777,7 +797,9 @@ class _LargeTitleNavigationBarSliverDelegate
       child: _TransitionableNavigationBar(
         componentsKeys: keys,
         backgroundColor: backgroundColor,
-        actionsForegroundColor: actionsForegroundColor,
+        backButtonTextStyle: CupertinoTheme.of(context).textTheme.navActionTextStyle,
+        titleTextStyle: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
+        largeTitleTextStyle: CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle,
         border: border,
         hasUserMiddle: userMiddle != null,
         largeExpanded: showLargeTitle,
@@ -788,16 +810,16 @@ class _LargeTitleNavigationBarSliverDelegate
 
   @override
   bool shouldRebuild(_LargeTitleNavigationBarSliverDelegate oldDelegate) {
-    return components != oldDelegate.components ||
-        userMiddle != oldDelegate.userMiddle ||
-        backgroundColor != oldDelegate.backgroundColor ||
-        border != oldDelegate.border ||
-        padding != oldDelegate.padding ||
-        actionsForegroundColor != oldDelegate.actionsForegroundColor ||
-        transitionBetweenRoutes != oldDelegate.transitionBetweenRoutes ||
-        persistentHeight != oldDelegate.persistentHeight ||
-        alwaysShowMiddle != oldDelegate.alwaysShowMiddle ||
-        heroTag != oldDelegate.heroTag;
+    return components != oldDelegate.components
+        || userMiddle != oldDelegate.userMiddle
+        || backgroundColor != oldDelegate.backgroundColor
+        || border != oldDelegate.border
+        || padding != oldDelegate.padding
+        || actionsForegroundColor != oldDelegate.actionsForegroundColor
+        || transitionBetweenRoutes != oldDelegate.transitionBetweenRoutes
+        || persistentHeight != oldDelegate.persistentHeight
+        || alwaysShowMiddle != oldDelegate.alwaysShowMiddle
+        || heroTag != oldDelegate.heroTag;
   }
 }
 
@@ -817,7 +839,6 @@ class _PersistentNavigationBar extends StatelessWidget {
   final _NavigationBarStaticComponents components;
 
   final EdgeInsetsDirectional padding;
-
   /// Whether the middle widget has a visible animated opacity. A null value
   /// means the middle opacity will not be animated.
   final bool middleVisible;
@@ -828,18 +849,18 @@ class _PersistentNavigationBar extends StatelessWidget {
 
     if (middle != null) {
       middle = DefaultTextStyle(
-        style: _kMiddleTitleTextStyle,
+        style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
         child: Semantics(header: true, child: middle),
       );
       // When the middle's visibility can change on the fly like with large title
       // slivers, wrap with animated opacity.
       middle = middleVisible == null
-          ? middle
-          : AnimatedOpacity(
-              opacity: middleVisible ? 1.0 : 0.0,
-              duration: _kNavBarTitleFadeDuration,
-              child: middle,
-            );
+        ? middle
+        : AnimatedOpacity(
+          opacity: middleVisible ? 1.0 : 0.0,
+          duration: _kNavBarTitleFadeDuration,
+          child: middle,
+        );
     }
 
     Widget leading = components.leading;
@@ -850,7 +871,6 @@ class _PersistentNavigationBar extends StatelessWidget {
       leading = CupertinoNavigationBarBackButton._assemble(
         backChevron,
         backLabel,
-        components.actionsForegroundColor,
       );
     }
 
@@ -891,13 +911,13 @@ class _PersistentNavigationBar extends StatelessWidget {
 @immutable
 class _NavigationBarStaticComponentsKeys {
   _NavigationBarStaticComponentsKeys()
-      : navBarBoxKey = GlobalKey(debugLabel: 'Navigation bar render box'),
-        leadingKey = GlobalKey(debugLabel: 'Leading'),
-        backChevronKey = GlobalKey(debugLabel: 'Back chevron'),
-        backLabelKey = GlobalKey(debugLabel: 'Back label'),
-        middleKey = GlobalKey(debugLabel: 'Middle'),
-        trailingKey = GlobalKey(debugLabel: 'Trailing'),
-        largeTitleKey = GlobalKey(debugLabel: 'Large title');
+    : navBarBoxKey = GlobalKey(debugLabel: 'Navigation bar render box'),
+      leadingKey = GlobalKey(debugLabel: 'Leading'),
+      backChevronKey = GlobalKey(debugLabel: 'Back chevron'),
+      backLabelKey = GlobalKey(debugLabel: 'Back label'),
+      middleKey = GlobalKey(debugLabel: 'Middle'),
+      trailingKey = GlobalKey(debugLabel: 'Trailing'),
+      largeTitleKey = GlobalKey(debugLabel: 'Large title');
 
   final GlobalKey navBarBoxKey;
   final GlobalKey leadingKey;
@@ -925,50 +945,47 @@ class _NavigationBarStaticComponents {
     @required Widget userTrailing,
     @required Widget userLargeTitle,
     @required EdgeInsetsDirectional padding,
-    @required this.actionsForegroundColor,
     @required bool large,
-  })  : leading = createLeading(
-          leadingKey: keys.leadingKey,
-          userLeading: userLeading,
-          route: route,
-          automaticallyImplyLeading: automaticallyImplyLeading,
-          padding: padding,
-          actionsForegroundColor: actionsForegroundColor,
-        ),
-        backChevron = createBackChevron(
-          backChevronKey: keys.backChevronKey,
-          userLeading: userLeading,
-          route: route,
-          automaticallyImplyLeading: automaticallyImplyLeading,
-        ),
-        backLabel = createBackLabel(
-          backLabelKey: keys.backLabelKey,
-          userLeading: userLeading,
-          route: route,
-          previousPageTitle: previousPageTitle,
-          automaticallyImplyLeading: automaticallyImplyLeading,
-        ),
-        middle = createMiddle(
-          middleKey: keys.middleKey,
-          userMiddle: userMiddle,
-          userLargeTitle: userLargeTitle,
-          route: route,
-          automaticallyImplyTitle: automaticallyImplyTitle,
-          large: large,
-        ),
-        trailing = createTrailing(
-          trailingKey: keys.trailingKey,
-          userTrailing: userTrailing,
-          padding: padding,
-          actionsForegroundColor: actionsForegroundColor,
-        ),
-        largeTitle = createLargeTitle(
-          largeTitleKey: keys.largeTitleKey,
-          userLargeTitle: userLargeTitle,
-          route: route,
-          automaticImplyTitle: automaticallyImplyTitle,
-          large: large,
-        );
+  }) : leading = createLeading(
+         leadingKey: keys.leadingKey,
+         userLeading: userLeading,
+         route: route,
+         automaticallyImplyLeading: automaticallyImplyLeading,
+         padding: padding,
+       ),
+       backChevron = createBackChevron(
+         backChevronKey: keys.backChevronKey,
+         userLeading: userLeading,
+         route: route,
+         automaticallyImplyLeading: automaticallyImplyLeading,
+       ),
+       backLabel = createBackLabel(
+         backLabelKey: keys.backLabelKey,
+         userLeading: userLeading,
+         route: route,
+         previousPageTitle: previousPageTitle,
+         automaticallyImplyLeading: automaticallyImplyLeading,
+       ),
+       middle = createMiddle(
+         middleKey: keys.middleKey,
+         userMiddle: userMiddle,
+         userLargeTitle: userLargeTitle,
+         route: route,
+         automaticallyImplyTitle: automaticallyImplyTitle,
+         large: large,
+       ),
+       trailing = createTrailing(
+         trailingKey: keys.trailingKey,
+         userTrailing: userTrailing,
+         padding: padding,
+       ),
+       largeTitle = createLargeTitle(
+         largeTitleKey: keys.largeTitleKey,
+         userLargeTitle: userLargeTitle,
+         route: route,
+         automaticImplyTitle: automaticallyImplyTitle,
+         large: large,
+       );
 
   static Widget _derivedTitle({
     bool automaticallyImplyTitle,
@@ -984,30 +1001,28 @@ class _NavigationBarStaticComponents {
     return null;
   }
 
-  final Color actionsForegroundColor;
-
   final KeyedSubtree leading;
-  static KeyedSubtree createLeading(
-      {@required GlobalKey leadingKey,
-      @required Widget userLeading,
-      @required ModalRoute<dynamic> route,
-      @required bool automaticallyImplyLeading,
-      @required EdgeInsetsDirectional padding,
-      @required Color actionsForegroundColor}) {
+  static KeyedSubtree createLeading({
+    @required GlobalKey leadingKey,
+    @required Widget userLeading,
+    @required ModalRoute<dynamic> route,
+    @required bool automaticallyImplyLeading,
+    @required EdgeInsetsDirectional padding,
+  }) {
     Widget leadingContent;
 
     if (userLeading != null) {
       leadingContent = userLeading;
-    } else if (automaticallyImplyLeading &&
-        route is PageRoute &&
-        route.canPop &&
-        route.fullscreenDialog) {
+    } else if (
+      automaticallyImplyLeading &&
+      route is PageRoute &&
+      route.canPop &&
+      route.fullscreenDialog
+    ) {
       leadingContent = CupertinoButton(
         child: const Text('Close'),
         padding: EdgeInsets.zero,
-        onPressed: () {
-          route.navigator.maybePop();
-        },
+        onPressed: () { route.navigator.maybePop(); },
       );
     }
 
@@ -1021,15 +1036,11 @@ class _NavigationBarStaticComponents {
         padding: EdgeInsetsDirectional.only(
           start: padding?.start ?? _kNavBarEdgePadding,
         ),
-        child: DefaultTextStyle(
-          style: _navBarItemStyle(actionsForegroundColor),
-          child: IconTheme.merge(
-            data: IconThemeData(
-              color: actionsForegroundColor,
-              size: 32.0,
-            ),
-            child: leadingContent,
+        child: IconTheme.merge(
+          data: const IconThemeData(
+            size: 32.0,
           ),
+          child: leadingContent,
         ),
       ),
     );
@@ -1042,11 +1053,13 @@ class _NavigationBarStaticComponents {
     @required ModalRoute<dynamic> route,
     @required bool automaticallyImplyLeading,
   }) {
-    if (userLeading != null ||
-        !automaticallyImplyLeading ||
-        route == null ||
-        !route.canPop ||
-        (route is PageRoute && route.fullscreenDialog)) {
+    if (
+      userLeading != null ||
+      !automaticallyImplyLeading ||
+      route == null ||
+      !route.canPop ||
+      (route is PageRoute && route.fullscreenDialog)
+    ) {
       return null;
     }
 
@@ -1063,11 +1076,13 @@ class _NavigationBarStaticComponents {
     @required bool automaticallyImplyLeading,
     @required String previousPageTitle,
   }) {
-    if (userLeading != null ||
-        !automaticallyImplyLeading ||
-        route == null ||
-        !route.canPop ||
-        (route is PageRoute && route.fullscreenDialog)) {
+    if (
+      userLeading != null ||
+      !automaticallyImplyLeading ||
+      route == null ||
+      !route.canPop ||
+      (route is PageRoute && route.fullscreenDialog)
+    ) {
       return null;
     }
 
@@ -1117,7 +1132,6 @@ class _NavigationBarStaticComponents {
     @required GlobalKey trailingKey,
     @required Widget userTrailing,
     @required EdgeInsetsDirectional padding,
-    @required Color actionsForegroundColor,
   }) {
     if (userTrailing == null) {
       return null;
@@ -1129,15 +1143,11 @@ class _NavigationBarStaticComponents {
         padding: EdgeInsetsDirectional.only(
           end: padding?.end ?? _kNavBarEdgePadding,
         ),
-        child: DefaultTextStyle(
-          style: _navBarItemStyle(actionsForegroundColor),
-          child: IconTheme.merge(
-            data: IconThemeData(
-              color: actionsForegroundColor,
-              size: 32.0,
-            ),
-            child: userTrailing,
+        child: IconTheme.merge(
+          data: const IconThemeData(
+            size: 32.0,
           ),
+          child: userTrailing,
         ),
       ),
     );
@@ -1157,11 +1167,10 @@ class _NavigationBarStaticComponents {
       return null;
     }
 
-    final Widget largeTitleContent = userLargeTitle ??
-        _derivedTitle(
-          automaticallyImplyTitle: automaticImplyTitle,
-          currentRoute: route,
-        );
+    final Widget largeTitleContent = userLargeTitle ?? _derivedTitle(
+      automaticallyImplyTitle: automaticImplyTitle,
+      currentRoute: route,
+    );
 
     assert(
       largeTitleContent != null,
@@ -1181,6 +1190,10 @@ class _NavigationBarStaticComponents {
 /// [CupertinoSliverNavigationBar]'s `leading` slot when
 /// `automaticallyImplyLeading` is true.
 ///
+/// When manually inserted, the [CupertinoNavigationBarBackButton] should only
+/// be used in routes that can be popped unless a custom [onPressed] is
+/// provided.
+///
 /// Shows a back chevron and the previous route's title when available from
 /// the previous [CupertinoPageRoute.title]. If [previousPageTitle] is specified,
 /// it will be shown instead.
@@ -1190,30 +1203,41 @@ class CupertinoNavigationBarBackButton extends StatelessWidget {
   ///
   /// The [color] parameter must not be null.
   const CupertinoNavigationBarBackButton({
-    @required this.color,
+    this.color,
     this.previousPageTitle,
-  })  : _backChevron = null,
-        _backLabel = null,
-        assert(color != null);
+    this.onPressed,
+  }) : _backChevron = null,
+       _backLabel = null;
 
   // Allow the back chevron and label to be separately created (and keyed)
   // because they animate separately during page transitions.
   const CupertinoNavigationBarBackButton._assemble(
     this._backChevron,
     this._backLabel,
-    this.color,
-  )   : previousPageTitle = null,
-        assert(color != null);
+  ) : previousPageTitle = null,
+      color = null,
+      onPressed = null;
 
   /// The [Color] of the back button.
   ///
-  /// Must not be null.
+  /// Can be used to override the color of the back button chevron and label.
+  ///
+  /// Defaults to [CupertinoTheme]'s `primaryColor` if null.
   final Color color;
 
   /// An override for showing the previous route's title. If null, it will be
   /// automatically derived from [CupertinoPageRoute.title] if the current and
   /// previous routes are both [CupertinoPageRoute]s.
   final String previousPageTitle;
+
+  /// An override callback to perform instead of the default behavior which is
+  /// to pop the [Navigator].
+  ///
+  /// It can, for instance, be used to pop the platform's navigation stack
+  /// instead of Flutter's [Navigator].
+  ///
+  /// Defaults to null.
+  final VoidCallback onPressed;
 
   final Widget _backChevron;
 
@@ -1222,10 +1246,17 @@ class CupertinoNavigationBarBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ModalRoute<dynamic> currentRoute = ModalRoute.of(context);
-    assert(
-      currentRoute.canPop,
-      'CupertinoNavigationBarBackButton should only be used in routes that can be popped',
-    );
+    if (onPressed == null) {
+      assert(
+        currentRoute?.canPop == true,
+        'CupertinoNavigationBarBackButton should only be used in routes that can be popped',
+      );
+    }
+
+    TextStyle actionTextStyle = CupertinoTheme.of(context).textTheme.navActionTextStyle;
+    if (color != null) {
+      actionTextStyle = actionTextStyle.copyWith(color: color);
+    }
 
     return CupertinoButton(
       child: Semantics(
@@ -1233,11 +1264,10 @@ class CupertinoNavigationBarBackButton extends StatelessWidget {
         excludeSemantics: true,
         label: 'Back',
         button: true,
-        child: ConstrainedBox(
-          constraints:
-              const BoxConstraints(minWidth: _kNavBarBackButtonTapWidth),
-          child: DefaultTextStyle(
-            style: _navBarItemStyle(color),
+        child: DefaultTextStyle(
+          style: actionTextStyle,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: _kNavBarBackButtonTapWidth),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -1246,11 +1276,10 @@ class CupertinoNavigationBarBackButton extends StatelessWidget {
                 _backChevron ?? const _BackChevron(),
                 const Padding(padding: EdgeInsetsDirectional.only(start: 6.0)),
                 Flexible(
-                  child: _backLabel ??
-                      _BackLabel(
-                        specifiedPreviousTitle: previousPageTitle,
-                        route: currentRoute,
-                      ),
+                  child: _backLabel ?? _BackLabel(
+                    specifiedPreviousTitle: previousPageTitle,
+                    route: currentRoute,
+                  ),
                 ),
               ],
             ),
@@ -1259,14 +1288,19 @@ class CupertinoNavigationBarBackButton extends StatelessWidget {
       ),
       padding: EdgeInsets.zero,
       onPressed: () {
-        Navigator.maybePop(context);
+        if (onPressed != null) {
+          onPressed();
+        } else {
+          Navigator.maybePop(context);
+        }
       },
     );
   }
 }
 
+
 class _BackChevron extends StatelessWidget {
-  const _BackChevron({Key key}) : super(key: key);
+  const _BackChevron({ Key key }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -1311,16 +1345,14 @@ class _BackLabel extends StatelessWidget {
     Key key,
     @required this.specifiedPreviousTitle,
     @required this.route,
-  })  : assert(route != null),
-        super(key: key);
+  }) : super(key: key);
 
   final String specifiedPreviousTitle;
   final ModalRoute<dynamic> route;
 
   // `child` is never passed in into ValueListenableBuilder so it's always
   // null here and unused.
-  Widget _buildPreviousTitleWidget(
-      BuildContext context, String previousTitle, Widget child) {
+  Widget _buildPreviousTitleWidget(BuildContext context, String previousTitle, Widget child) {
     if (previousTitle == null) {
       return const SizedBox(height: 0.0, width: 0.0);
     }
@@ -1346,7 +1378,7 @@ class _BackLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     if (specifiedPreviousTitle != null) {
       return _buildPreviousTitleWidget(context, specifiedPreviousTitle, null);
-    } else if (route is CupertinoPageRoute<dynamic>) {
+    } else if (route is CupertinoPageRoute<dynamic> && !route.isFirst) {
       final CupertinoPageRoute<dynamic> cupertinoRoute = route;
       // There is no timing issue because the previousTitle Listenable changes
       // happen during route modifications before the ValueListenableBuilder
@@ -1373,26 +1405,30 @@ class _TransitionableNavigationBar extends StatelessWidget {
   _TransitionableNavigationBar({
     @required this.componentsKeys,
     @required this.backgroundColor,
-    @required this.actionsForegroundColor,
+    @required this.backButtonTextStyle,
+    @required this.titleTextStyle,
+    @required this.largeTitleTextStyle,
     @required this.border,
     @required this.hasUserMiddle,
     @required this.largeExpanded,
     @required this.child,
-  })  : assert(componentsKeys != null),
-        assert(largeExpanded != null),
-        super(key: componentsKeys.navBarBoxKey);
+  }) : assert(componentsKeys != null),
+       assert(largeExpanded != null),
+       assert(!largeExpanded || largeTitleTextStyle != null),
+       super(key: componentsKeys.navBarBoxKey);
 
   final _NavigationBarStaticComponentsKeys componentsKeys;
   final Color backgroundColor;
-  final Color actionsForegroundColor;
+  final TextStyle backButtonTextStyle;
+  final TextStyle titleTextStyle;
+  final TextStyle largeTitleTextStyle;
   final Border border;
   final bool hasUserMiddle;
   final bool largeExpanded;
   final Widget child;
 
   RenderBox get renderBox {
-    final RenderBox box =
-        componentsKeys.navBarBoxKey.currentContext.findRenderObject();
+    final RenderBox box = componentsKeys.navBarBoxKey.currentContext.findRenderObject();
     assert(
       box.attached,
       '_TransitionableNavigationBar.renderBox should be called when building '
@@ -1453,18 +1489,18 @@ class _NavigationBarTransition extends StatelessWidget {
     @required this.animation,
     @required this.topNavBar,
     @required this.bottomNavBar,
-  })  : heightTween = Tween<double>(
-          begin: bottomNavBar.renderBox.size.height,
-          end: topNavBar.renderBox.size.height,
-        ),
-        backgroundTween = ColorTween(
-          begin: bottomNavBar.backgroundColor,
-          end: topNavBar.backgroundColor,
-        ),
-        borderTween = BorderTween(
-          begin: bottomNavBar.border,
-          end: topNavBar.border,
-        );
+  }) : heightTween = Tween<double>(
+         begin: bottomNavBar.renderBox.size.height,
+         end: topNavBar.renderBox.size.height,
+       ),
+       backgroundTween = ColorTween(
+         begin: bottomNavBar.backgroundColor,
+         end: topNavBar.backgroundColor,
+       ),
+       borderTween = BorderTween(
+         begin: bottomNavBar.border,
+         end: topNavBar.border,
+       );
 
   final Animation<double> animation;
   final _TransitionableNavigationBar topNavBar;
@@ -1476,8 +1512,7 @@ class _NavigationBarTransition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _NavigationBarComponentsTransition componentsTransition =
-        _NavigationBarComponentsTransition(
+    final _NavigationBarComponentsTransition componentsTransition = _NavigationBarComponentsTransition(
       animation: animation,
       bottomNavBar: bottomNavBar,
       topNavBar: topNavBar,
@@ -1525,8 +1560,7 @@ class _NavigationBarTransition extends StatelessWidget {
     // can actually be outside the linearly lerp'ed Rect in the middle of
     // the animation, such as the topLargeTitle.
     return SizedBox(
-      height: math.max(heightTween.begin, heightTween.end) +
-          MediaQuery.of(context).padding.top,
+      height: math.max(heightTween.begin, heightTween.end) + MediaQuery.of(context).padding.top,
       width: double.infinity,
       child: Stack(
         children: children,
@@ -1563,22 +1597,24 @@ class _NavigationBarComponentsTransition {
     @required _TransitionableNavigationBar bottomNavBar,
     @required _TransitionableNavigationBar topNavBar,
     @required TextDirection directionality,
-  })  : bottomComponents = bottomNavBar.componentsKeys,
-        topComponents = topNavBar.componentsKeys,
-        bottomNavBarBox = bottomNavBar.renderBox,
-        topNavBarBox = topNavBar.renderBox,
-        bottomActionsStyle =
-            _navBarItemStyle(bottomNavBar.actionsForegroundColor),
-        topActionsStyle = _navBarItemStyle(topNavBar.actionsForegroundColor),
-        bottomHasUserMiddle = bottomNavBar.hasUserMiddle,
-        topHasUserMiddle = topNavBar.hasUserMiddle,
-        bottomLargeExpanded = bottomNavBar.largeExpanded,
-        topLargeExpanded = topNavBar.largeExpanded,
-        transitionBox =
-            // paintBounds are based on offset zero so it's ok to expand the Rects.
-            bottomNavBar.renderBox.paintBounds
-                .expandToInclude(topNavBar.renderBox.paintBounds),
-        forwardDirection = directionality == TextDirection.ltr ? 1.0 : -1.0;
+  }) : bottomComponents = bottomNavBar.componentsKeys,
+       topComponents = topNavBar.componentsKeys,
+       bottomNavBarBox = bottomNavBar.renderBox,
+       topNavBarBox = topNavBar.renderBox,
+       bottomBackButtonTextStyle = bottomNavBar.backButtonTextStyle,
+       topBackButtonTextStyle = topNavBar.backButtonTextStyle,
+       bottomTitleTextStyle = bottomNavBar.titleTextStyle,
+       topTitleTextStyle = topNavBar.titleTextStyle,
+       bottomLargeTitleTextStyle = bottomNavBar.largeTitleTextStyle,
+       topLargeTitleTextStyle = topNavBar.largeTitleTextStyle,
+       bottomHasUserMiddle = bottomNavBar.hasUserMiddle,
+       topHasUserMiddle = topNavBar.hasUserMiddle,
+       bottomLargeExpanded = bottomNavBar.largeExpanded,
+       topLargeExpanded = topNavBar.largeExpanded,
+       transitionBox =
+           // paintBounds are based on offset zero so it's ok to expand the Rects.
+           bottomNavBar.renderBox.paintBounds.expandToInclude(topNavBar.renderBox.paintBounds),
+       forwardDirection = directionality == TextDirection.ltr ? 1.0 : -1.0;
 
   static final Animatable<double> fadeOut = Tween<double>(
     begin: 1.0,
@@ -1599,8 +1635,13 @@ class _NavigationBarComponentsTransition {
   final RenderBox bottomNavBarBox;
   final RenderBox topNavBarBox;
 
-  final TextStyle bottomActionsStyle;
-  final TextStyle topActionsStyle;
+  final TextStyle bottomBackButtonTextStyle;
+  final TextStyle topBackButtonTextStyle;
+  final TextStyle bottomTitleTextStyle;
+  final TextStyle topTitleTextStyle;
+  final TextStyle bottomLargeTitleTextStyle;
+  final TextStyle topLargeTitleTextStyle;
+
   final bool bottomHasUserMiddle;
   final bool topHasUserMiddle;
   final bool bottomLargeExpanded;
@@ -1623,8 +1664,7 @@ class _NavigationBarComponentsTransition {
     assert(componentBox.attached);
 
     return RelativeRect.fromRect(
-      componentBox.localToGlobal(Offset.zero, ancestor: from) &
-          componentBox.size,
+      componentBox.localToGlobal(Offset.zero, ancestor: from) & componentBox.size,
       transitionBox,
     );
   }
@@ -1645,8 +1685,7 @@ class _NavigationBarComponentsTransition {
     @required GlobalKey toKey,
     @required RenderBox toNavBarBox,
   }) {
-    final RelativeRect fromRect =
-        positionInTransitionBox(fromKey, from: fromNavBarBox);
+    final RelativeRect fromRect = positionInTransitionBox(fromKey, from: fromNavBarBox);
 
     final RenderBox fromBox = fromKey.currentContext.findRenderObject();
     final RenderBox toBox = toKey.currentContext.findRenderObject();
@@ -1654,49 +1693,48 @@ class _NavigationBarComponentsTransition {
     // We move a box with the size of the 'from' render object such that its
     // upper left corner is at the upper left corner of the 'to' render object.
     // With slight y axis adjustment for those render objects' height differences.
-    Rect toRect = toBox
-            .localToGlobal(
-              Offset.zero,
-              ancestor: toNavBarBox,
-            )
-            .translate(0.0, -fromBox.size.height / 2 + toBox.size.height / 2) &
-        fromBox.size; // Keep the from render object's size.
+    Rect toRect =
+        toBox.localToGlobal(
+          Offset.zero,
+          ancestor: toNavBarBox,
+        ).translate(
+          0.0,
+          - fromBox.size.height / 2 + toBox.size.height / 2,
+        ) & fromBox.size; // Keep the from render object's size.
 
     if (forwardDirection < 0) {
       // If RTL, move the center right to the center right instead of matching
       // the center lefts.
-      toRect = toRect.translate(-fromBox.size.width + toBox.size.width, 0.0);
+      toRect = toRect.translate(- fromBox.size.width + toBox.size.width, 0.0);
     }
 
     return RelativeRectTween(
-      begin: fromRect,
-      end: RelativeRect.fromRect(toRect, transitionBox),
-    );
+        begin: fromRect,
+        end: RelativeRect.fromRect(toRect, transitionBox),
+      );
   }
 
-  Animation<double> fadeInFrom(double t, {Curve curve = Curves.easeIn}) {
+  Animation<double> fadeInFrom(double t, { Curve curve = Curves.easeIn }) {
     return animation.drive(fadeIn.chain(
       CurveTween(curve: Interval(t, 1.0, curve: curve)),
     ));
   }
 
-  Animation<double> fadeOutBy(double t, {Curve curve = Curves.easeOut}) {
+  Animation<double> fadeOutBy(double t, { Curve curve = Curves.easeOut }) {
     return animation.drive(fadeOut.chain(
       CurveTween(curve: Interval(0.0, t, curve: curve)),
     ));
   }
 
   Widget get bottomLeading {
-    final KeyedSubtree bottomLeading =
-        bottomComponents.leadingKey.currentWidget;
+    final KeyedSubtree bottomLeading = bottomComponents.leadingKey.currentWidget;
 
     if (bottomLeading == null) {
       return null;
     }
 
     return Positioned.fromRelativeRect(
-      rect: positionInTransitionBox(bottomComponents.leadingKey,
-          from: bottomNavBarBox),
+      rect: positionInTransitionBox(bottomComponents.leadingKey, from: bottomNavBarBox),
       child: FadeTransition(
         opacity: fadeOutBy(0.4),
         child: bottomLeading.child,
@@ -1705,20 +1743,18 @@ class _NavigationBarComponentsTransition {
   }
 
   Widget get bottomBackChevron {
-    final KeyedSubtree bottomBackChevron =
-        bottomComponents.backChevronKey.currentWidget;
+    final KeyedSubtree bottomBackChevron = bottomComponents.backChevronKey.currentWidget;
 
     if (bottomBackChevron == null) {
       return null;
     }
 
     return Positioned.fromRelativeRect(
-      rect: positionInTransitionBox(bottomComponents.backChevronKey,
-          from: bottomNavBarBox),
+      rect: positionInTransitionBox(bottomComponents.backChevronKey, from: bottomNavBarBox),
       child: FadeTransition(
         opacity: fadeOutBy(0.6),
         child: DefaultTextStyle(
-          style: bottomActionsStyle,
+          style: bottomBackButtonTextStyle,
           child: bottomBackChevron.child,
         ),
       ),
@@ -1726,16 +1762,13 @@ class _NavigationBarComponentsTransition {
   }
 
   Widget get bottomBackLabel {
-    final KeyedSubtree bottomBackLabel =
-        bottomComponents.backLabelKey.currentWidget;
+    final KeyedSubtree bottomBackLabel = bottomComponents.backLabelKey.currentWidget;
 
     if (bottomBackLabel == null) {
       return null;
     }
 
-    final RelativeRect from = positionInTransitionBox(
-        bottomComponents.backLabelKey,
-        from: bottomNavBarBox);
+    final RelativeRect from = positionInTransitionBox(bottomComponents.backLabelKey, from: bottomNavBarBox);
 
     // Transition away by sliding horizontally to the leading edge off of the screen.
     final RelativeRectTween positionTween = RelativeRectTween(
@@ -1753,7 +1786,7 @@ class _NavigationBarComponentsTransition {
       child: FadeTransition(
         opacity: fadeOutBy(0.2),
         child: DefaultTextStyle(
-          style: bottomActionsStyle,
+          style: bottomBackButtonTextStyle,
           child: bottomBackLabel.child,
         ),
       ),
@@ -1789,8 +1822,8 @@ class _NavigationBarComponentsTransition {
             alignment: AlignmentDirectional.centerStart,
             child: DefaultTextStyleTransition(
               style: animation.drive(TextStyleTween(
-                begin: _kMiddleTitleTextStyle,
-                end: topActionsStyle,
+                begin: bottomTitleTextStyle,
+                end: topBackButtonTextStyle,
               )),
               child: bottomMiddle.child,
             ),
@@ -1804,13 +1837,12 @@ class _NavigationBarComponentsTransition {
     // fade.
     if (bottomMiddle != null && topLeading != null) {
       return Positioned.fromRelativeRect(
-        rect: positionInTransitionBox(bottomComponents.middleKey,
-            from: bottomNavBarBox),
+        rect: positionInTransitionBox(bottomComponents.middleKey, from: bottomNavBarBox),
         child: FadeTransition(
           opacity: fadeOutBy(bottomHasUserMiddle ? 0.4 : 0.7),
           // Keep the font when transitioning into a non-back label leading.
           child: DefaultTextStyle(
-            style: _kMiddleTitleTextStyle,
+            style: bottomTitleTextStyle,
             child: bottomMiddle.child,
           ),
         ),
@@ -1821,8 +1853,7 @@ class _NavigationBarComponentsTransition {
   }
 
   Widget get bottomLargeTitle {
-    final KeyedSubtree bottomLargeTitle =
-        bottomComponents.largeTitleKey.currentWidget;
+    final KeyedSubtree bottomLargeTitle = bottomComponents.largeTitleKey.currentWidget;
     final KeyedSubtree topBackLabel = topComponents.backLabelKey.currentWidget;
     final KeyedSubtree topLeading = topComponents.leadingKey.currentWidget;
 
@@ -1847,8 +1878,8 @@ class _NavigationBarComponentsTransition {
             alignment: AlignmentDirectional.centerStart,
             child: DefaultTextStyleTransition(
               style: animation.drive(TextStyleTween(
-                begin: _kLargeTitleTextStyle,
-                end: topActionsStyle,
+                begin: bottomLargeTitleTextStyle,
+                end: topBackButtonTextStyle,
               )),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -1862,9 +1893,7 @@ class _NavigationBarComponentsTransition {
     if (bottomLargeTitle != null && topLeading != null) {
       // Unlike bottom middle, the bottom large title moves when it can't
       // transition to the top back label position.
-      final RelativeRect from = positionInTransitionBox(
-          bottomComponents.largeTitleKey,
-          from: bottomNavBarBox);
+      final RelativeRect from = positionInTransitionBox(bottomComponents.largeTitleKey, from: bottomNavBarBox);
 
       final RelativeRectTween positionTween = RelativeRectTween(
         begin: from,
@@ -1884,7 +1913,7 @@ class _NavigationBarComponentsTransition {
           opacity: fadeOutBy(0.4),
           // Keep the font when transitioning into a non-back-label leading.
           child: DefaultTextStyle(
-            style: _kLargeTitleTextStyle,
+            style: bottomLargeTitleTextStyle,
             child: bottomLargeTitle.child,
           ),
         ),
@@ -1895,16 +1924,14 @@ class _NavigationBarComponentsTransition {
   }
 
   Widget get bottomTrailing {
-    final KeyedSubtree bottomTrailing =
-        bottomComponents.trailingKey.currentWidget;
+    final KeyedSubtree bottomTrailing = bottomComponents.trailingKey.currentWidget;
 
     if (bottomTrailing == null) {
       return null;
     }
 
     return Positioned.fromRelativeRect(
-      rect: positionInTransitionBox(bottomComponents.trailingKey,
-          from: bottomNavBarBox),
+      rect: positionInTransitionBox(bottomComponents.trailingKey, from: bottomNavBarBox),
       child: FadeTransition(
         opacity: fadeOutBy(0.6),
         child: bottomTrailing.child,
@@ -1920,8 +1947,7 @@ class _NavigationBarComponentsTransition {
     }
 
     return Positioned.fromRelativeRect(
-      rect:
-          positionInTransitionBox(topComponents.leadingKey, from: topNavBarBox),
+      rect: positionInTransitionBox(topComponents.leadingKey, from: topNavBarBox),
       child: FadeTransition(
         opacity: fadeInFrom(0.6),
         child: topLeading.child,
@@ -1930,25 +1956,20 @@ class _NavigationBarComponentsTransition {
   }
 
   Widget get topBackChevron {
-    final KeyedSubtree topBackChevron =
-        topComponents.backChevronKey.currentWidget;
-    final KeyedSubtree bottomBackChevron =
-        bottomComponents.backChevronKey.currentWidget;
+    final KeyedSubtree topBackChevron = topComponents.backChevronKey.currentWidget;
+    final KeyedSubtree bottomBackChevron = bottomComponents.backChevronKey.currentWidget;
 
     if (topBackChevron == null) {
       return null;
     }
 
-    final RelativeRect to = positionInTransitionBox(
-        topComponents.backChevronKey,
-        from: topNavBarBox);
+    final RelativeRect to = positionInTransitionBox(topComponents.backChevronKey, from: topNavBarBox);
     RelativeRect from = to;
 
     // If it's the first page with a back chevron, shift in slightly from the
     // right.
     if (bottomBackChevron == null) {
-      final RenderBox topBackChevronBox =
-          topComponents.backChevronKey.currentContext.findRenderObject();
+      final RenderBox topBackChevronBox = topComponents.backChevronKey.currentContext.findRenderObject();
       from = to.shift(
         Offset(
           forwardDirection * topBackChevronBox.size.width * 2.0,
@@ -1967,7 +1988,7 @@ class _NavigationBarComponentsTransition {
       child: FadeTransition(
         opacity: fadeInFrom(bottomBackChevron == null ? 0.7 : 0.4),
         child: DefaultTextStyle(
-          style: topActionsStyle,
+          style: topBackButtonTextStyle,
           child: topBackChevron.child,
         ),
       ),
@@ -1976,8 +1997,7 @@ class _NavigationBarComponentsTransition {
 
   Widget get topBackLabel {
     final KeyedSubtree bottomMiddle = bottomComponents.middleKey.currentWidget;
-    final KeyedSubtree bottomLargeTitle =
-        bottomComponents.largeTitleKey.currentWidget;
+    final KeyedSubtree bottomLargeTitle = bottomComponents.largeTitleKey.currentWidget;
     final KeyedSubtree topBackLabel = topComponents.backLabelKey.currentWidget;
 
     if (topBackLabel == null) {
@@ -1986,11 +2006,11 @@ class _NavigationBarComponentsTransition {
 
     final RenderAnimatedOpacity topBackLabelOpacity =
         topComponents.backLabelKey.currentContext?.ancestorRenderObjectOfType(
-            const TypeMatcher<RenderAnimatedOpacity>());
+          const TypeMatcher<RenderAnimatedOpacity>()
+        );
 
     Animation<double> midClickOpacity;
-    if (topBackLabelOpacity != null &&
-        topBackLabelOpacity.opacity.value < 1.0) {
+    if (topBackLabelOpacity != null && topBackLabelOpacity.opacity.value < 1.0) {
       midClickOpacity = animation.drive(Tween<double>(
         begin: 0.0,
         end: topBackLabelOpacity.opacity.value,
@@ -2016,8 +2036,8 @@ class _NavigationBarComponentsTransition {
           opacity: midClickOpacity ?? fadeInFrom(0.4),
           child: DefaultTextStyleTransition(
             style: animation.drive(TextStyleTween(
-              begin: _kLargeTitleTextStyle,
-              end: topActionsStyle,
+              begin: bottomLargeTitleTextStyle,
+              end: topBackButtonTextStyle,
             )),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -2041,8 +2061,8 @@ class _NavigationBarComponentsTransition {
           opacity: midClickOpacity ?? fadeInFrom(0.3),
           child: DefaultTextStyleTransition(
             style: animation.drive(TextStyleTween(
-              begin: _kMiddleTitleTextStyle,
-              end: topActionsStyle,
+              begin: bottomTitleTextStyle,
+              end: topBackButtonTextStyle,
             )),
             child: topBackLabel.child,
           ),
@@ -2066,8 +2086,7 @@ class _NavigationBarComponentsTransition {
       return null;
     }
 
-    final RelativeRect to =
-        positionInTransitionBox(topComponents.middleKey, from: topNavBarBox);
+    final RelativeRect to = positionInTransitionBox(topComponents.middleKey, from: topNavBarBox);
 
     // Shift in from the trailing edge of the screen.
     final RelativeRectTween positionTween = RelativeRectTween(
@@ -2085,7 +2104,7 @@ class _NavigationBarComponentsTransition {
       child: FadeTransition(
         opacity: fadeInFrom(0.25),
         child: DefaultTextStyle(
-          style: _kMiddleTitleTextStyle,
+          style: topTitleTextStyle,
           child: topMiddle.child,
         ),
       ),
@@ -2100,8 +2119,7 @@ class _NavigationBarComponentsTransition {
     }
 
     return Positioned.fromRelativeRect(
-      rect: positionInTransitionBox(topComponents.trailingKey,
-          from: topNavBarBox),
+      rect: positionInTransitionBox(topComponents.trailingKey, from: topNavBarBox),
       child: FadeTransition(
         opacity: fadeInFrom(0.4),
         child: topTrailing.child,
@@ -2110,15 +2128,13 @@ class _NavigationBarComponentsTransition {
   }
 
   Widget get topLargeTitle {
-    final KeyedSubtree topLargeTitle =
-        topComponents.largeTitleKey.currentWidget;
+    final KeyedSubtree topLargeTitle = topComponents.largeTitleKey.currentWidget;
 
     if (topLargeTitle == null || !topLargeExpanded) {
       return null;
     }
 
-    final RelativeRect to = positionInTransitionBox(topComponents.largeTitleKey,
-        from: topNavBarBox);
+    final RelativeRect to = positionInTransitionBox(topComponents.largeTitleKey, from: topNavBarBox);
 
     // Shift in from the trailing edge of the screen.
     final RelativeRectTween positionTween = RelativeRectTween(
@@ -2136,7 +2152,7 @@ class _NavigationBarComponentsTransition {
       child: FadeTransition(
         opacity: fadeInFrom(0.3),
         child: DefaultTextStyle(
-          style: _kLargeTitleTextStyle,
+          style: topLargeTitleTextStyle,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           child: topLargeTitle.child,
@@ -2148,8 +2164,7 @@ class _NavigationBarComponentsTransition {
 
 /// Navigation bars' hero rect tween that will move between the static bars
 /// but keep a constant size that's the bigger of both navigation bars.
-CreateRectTween _linearTranslateWithLargestRectSizeTween =
-    (Rect begin, Rect end) {
+CreateRectTween _linearTranslateWithLargestRectSizeTween = (Rect begin, Rect end) {
   final Size largestSize = Size(
     math.max(begin.size.width, end.size.width),
     math.max(begin.size.height, end.size.height),
@@ -2160,8 +2175,9 @@ CreateRectTween _linearTranslateWithLargestRectSizeTween =
   );
 };
 
-final TransitionBuilder _navBarHeroLaunchPadBuilder = (
+final HeroPlaceholderBuilder _navBarHeroLaunchPadBuilder = (
   BuildContext context,
+  Size heroSize,
   Widget child,
 ) {
   assert(child is _TransitionableNavigationBar);
@@ -2236,5 +2252,5 @@ final HeroFlightShuttleBuilder _navBarHeroFlightShuttleBuilder = (
         topNavBar: fromNavBar,
       );
   }
-  throw ArgumentError.value(flightDirection, 'flightDirection');
+  return null;
 };

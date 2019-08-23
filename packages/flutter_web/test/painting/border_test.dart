@@ -48,9 +48,9 @@ void main() {
     );
     expect(
       () => Border.merge(
-        const Border(left: magenta3),
-        const Border(left: yellow2),
-      ),
+            const Border(left: magenta3),
+            const Border(left: yellow2),
+          ),
       throwsAssertionError,
     );
   });

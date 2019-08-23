@@ -1,9 +1,11 @@
 // Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// Synced 2019-05-30T14:20:56.214586.
+// Synced 2019-08-12T13:26:26.565670.
 
 import 'dart:collection';
+
+import 'package:vector_math/vector_math_64.dart';
 import 'package:flutter_web/foundation.dart';
 import 'events.dart';
 
@@ -12,10 +14,8 @@ typedef PointerRoute = void Function(PointerEvent event);
 
 /// A routing table for [PointerEvent] events.
 class PointerRouter {
-  final Map<int, LinkedHashSet<PointerRoute>> _routeMap =
-      <int, LinkedHashSet<PointerRoute>>{};
-  final LinkedHashSet<PointerRoute> _globalRoutes =
-      LinkedHashSet<PointerRoute>();
+  final Map<int, LinkedHashSet<_RouteEntry>> _routeMap = <int, LinkedHashSet<_RouteEntry>>{};
+  final LinkedHashSet<_RouteEntry> _globalRoutes = LinkedHashSet<_RouteEntry>();
 
   /// Adds a route to the routing table.
   ///
@@ -24,11 +24,10 @@ class PointerRouter {
   ///
   /// Routes added reentrantly within [PointerRouter.route] will take effect when
   /// routing the next event.
-  void addRoute(int pointer, PointerRoute route) {
-    final LinkedHashSet<PointerRoute> routes =
-        _routeMap.putIfAbsent(pointer, () => LinkedHashSet<PointerRoute>());
-    assert(!routes.contains(route));
-    routes.add(route);
+  void addRoute(int pointer, PointerRoute route, [Matrix4 transform]) {
+    final LinkedHashSet<_RouteEntry> routes = _routeMap.putIfAbsent(pointer, () => LinkedHashSet<_RouteEntry>());
+    assert(!routes.any(_RouteEntry.isRoutePredicate(route)));
+    routes.add(_RouteEntry(route: route, transform: transform));
   }
 
   /// Removes a route from the routing table.
@@ -40,10 +39,11 @@ class PointerRouter {
   /// immediately.
   void removeRoute(int pointer, PointerRoute route) {
     assert(_routeMap.containsKey(pointer));
-    final LinkedHashSet<PointerRoute> routes = _routeMap[pointer];
-    assert(routes.contains(route));
-    routes.remove(route);
-    if (routes.isEmpty) _routeMap.remove(pointer);
+    final LinkedHashSet<_RouteEntry> routes = _routeMap[pointer];
+    assert(routes.any(_RouteEntry.isRoutePredicate(route)));
+    routes.removeWhere(_RouteEntry.isRoutePredicate(route));
+    if (routes.isEmpty)
+      _routeMap.remove(pointer);
   }
 
   /// Adds a route to the global entry in the routing table.
@@ -52,9 +52,9 @@ class PointerRouter {
   ///
   /// Routes added reentrantly within [PointerRouter.route] will take effect when
   /// routing the next event.
-  void addGlobalRoute(PointerRoute route) {
-    assert(!_globalRoutes.contains(route));
-    _globalRoutes.add(route);
+  void addGlobalRoute(PointerRoute route, [Matrix4 transform]) {
+    assert(!_globalRoutes.any(_RouteEntry.isRoutePredicate(route)));
+    _globalRoutes.add(_RouteEntry(route: route, transform: transform));
   }
 
   /// Removes a route from the global entry in the routing table.
@@ -65,13 +65,14 @@ class PointerRouter {
   /// Routes removed reentrantly within [PointerRouter.route] will take effect
   /// immediately.
   void removeGlobalRoute(PointerRoute route) {
-    assert(_globalRoutes.contains(route));
-    _globalRoutes.remove(route);
+    assert(_globalRoutes.any(_RouteEntry.isRoutePredicate(route)));
+    _globalRoutes.removeWhere(_RouteEntry.isRoutePredicate(route));
   }
 
-  void _dispatch(PointerEvent event, PointerRoute route) {
+  void _dispatch(PointerEvent event, _RouteEntry entry) {
     try {
-      route(event);
+      event = event.transformed(entry.transform);
+      entry.route(event);
     } catch (exception, stack) {
       FlutterError.reportError(FlutterErrorDetailsForPointerRouter(
         exception: exception,
@@ -79,11 +80,10 @@ class PointerRouter {
         library: 'gesture library',
         context: ErrorDescription('while routing a pointer event'),
         router: this,
-        route: route,
+        route: entry.route,
         event: event,
         informationCollector: () sync* {
-          yield DiagnosticsProperty<PointerEvent>('Event', event,
-              style: DiagnosticsTreeStyle.errorProperty);
+          yield DiagnosticsProperty<PointerEvent>('Event', event, style: DiagnosticsTreeStyle.errorProperty);
         },
       ));
     }
@@ -94,16 +94,17 @@ class PointerRouter {
   /// Routes are called in the order in which they were added to the
   /// PointerRouter object.
   void route(PointerEvent event) {
-    final LinkedHashSet<PointerRoute> routes = _routeMap[event.pointer];
-    final List<PointerRoute> globalRoutes =
-        List<PointerRoute>.from(_globalRoutes);
+    final LinkedHashSet<_RouteEntry> routes = _routeMap[event.pointer];
+    final List<_RouteEntry> globalRoutes = List<_RouteEntry>.from(_globalRoutes);
     if (routes != null) {
-      for (PointerRoute route in List<PointerRoute>.from(routes)) {
-        if (routes.contains(route)) _dispatch(event, route);
+      for (_RouteEntry entry in List<_RouteEntry>.from(routes)) {
+        if (routes.any(_RouteEntry.isRoutePredicate(entry.route)))
+          _dispatch(event, entry);
       }
     }
-    for (PointerRoute route in globalRoutes) {
-      if (_globalRoutes.contains(route)) _dispatch(event, route);
+    for (_RouteEntry entry in globalRoutes) {
+      if (_globalRoutes.any(_RouteEntry.isRoutePredicate(entry.route)))
+        _dispatch(event, entry);
     }
   }
 }
@@ -130,12 +131,13 @@ class FlutterErrorDetailsForPointerRouter extends FlutterErrorDetails {
     InformationCollector informationCollector,
     bool silent = false,
   }) : super(
-            exception: exception,
-            stack: stack,
-            library: library,
-            context: context,
-            informationCollector: informationCollector,
-            silent: silent);
+    exception: exception,
+    stack: stack,
+    library: library,
+    context: context,
+    informationCollector: informationCollector,
+    silent: silent
+  );
 
   /// The pointer router that caught the exception.
   ///
@@ -148,4 +150,20 @@ class FlutterErrorDetailsForPointerRouter extends FlutterErrorDetails {
 
   /// The pointer event that was being routed when the exception was raised.
   final PointerEvent event;
+}
+
+typedef _RouteEntryPredicate = bool Function(_RouteEntry entry);
+
+class _RouteEntry {
+  const _RouteEntry({
+    @required this.route,
+    @required this.transform,
+  });
+
+  final PointerRoute route;
+  final Matrix4 transform;
+
+  static _RouteEntryPredicate isRoutePredicate(PointerRoute route) {
+    return (_RouteEntry entry) => entry.route == route;
+  }
 }

@@ -93,15 +93,12 @@ class PageController extends ScrollController {
   /// The [hasClients] property can be used to check if a [PageView] is attached
   /// prior to accessing [page].
   double get page {
+    assert(positions.isNotEmpty,
+        'PageController.page cannot be accessed before a PageView is built with it.',);
     assert(
-      positions.isNotEmpty,
-      'PageController.page cannot be accessed before a PageView is built with it.',
-    );
-    assert(
-      positions.length == 1,
-      'The page property cannot be read when multiple PageViews are attached to '
-      'the same PageController.',
-    );
+        positions.length == 1,
+        'The page property cannot be read when multiple PageViews are attached to '
+        'the same PageController.',);
     final _PagePosition position = this.position;
     return position.page;
   }

@@ -126,10 +126,8 @@ class TabbedComponentDemoScaffold extends StatelessWidget {
 class MaterialDemoDocumentationButton extends StatelessWidget {
   MaterialDemoDocumentationButton(String routeName, {Key key})
       : documentationUrl = 'todo',
-        assert(
-          'todo' != null,
-          'A documentation URL was not specified for demo route $routeName in kAllGalleryDemos',
-        ),
+        assert('todo' != null,
+            'A documentation URL was not specified for demo route $routeName in kAllGalleryDemos',),
         super(key: key);
 
   final String documentationUrl;
@@ -179,10 +177,8 @@ Widget wrapScaffold(String title, BuildContext context, Key key, Widget child,
 class CupertinoDemoDocumentationButton extends StatelessWidget {
   CupertinoDemoDocumentationButton(String routeName, {Key key})
       : documentationUrl = 'todo',
-        assert(
-          'todo' != null,
-          'A documentation URL was not specified for demo route $routeName in kAllGalleryDemos',
-        ),
+        assert('todo' != null,
+            'A documentation URL was not specified for demo route $routeName in kAllGalleryDemos',),
         super(key: key);
 
   final String documentationUrl;

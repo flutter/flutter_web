@@ -1392,18 +1392,18 @@ void main() {
           initialEntries: <OverlayEntry>[
             new OverlayEntry(
               builder: (BuildContext context) => new GestureDetector(
-                onTap: () {/* registers a tap recognizer */},
-                child: new Draggable<dynamic>(
-                  child: new Container(
-                    color: const Color(0xFFFFFF00),
+                    onTap: () {/* registers a tap recognizer */},
+                    child: new Draggable<dynamic>(
+                      child: new Container(
+                        color: const Color(0xFFFFFF00),
+                      ),
+                      feedback: new Container(
+                        width: 100.0,
+                        height: 100.0,
+                        color: const Color(0xFFFF0000),
+                      ),
+                    ),
                   ),
-                  feedback: new Container(
-                    width: 100.0,
-                    height: 100.0,
-                    color: const Color(0xFFFF0000),
-                  ),
-                ),
-              ),
             ),
           ],
         ),
@@ -1701,20 +1701,20 @@ void main() {
           initialEntries: <OverlayEntry>[
             new OverlayEntry(
               builder: (BuildContext context) => new GestureDetector(
-                onTap: () {
-                  didTap = true;
-                },
-                child: new Draggable<dynamic>(
-                  child: new Container(
-                    color: const Color(0xFFFFFF00),
+                    onTap: () {
+                      didTap = true;
+                    },
+                    child: new Draggable<dynamic>(
+                      child: new Container(
+                        color: const Color(0xFFFFFF00),
+                      ),
+                      feedback: new Container(
+                        width: 100.0,
+                        height: 100.0,
+                        color: const Color(0xFFFF0000),
+                      ),
+                    ),
                   ),
-                  feedback: new Container(
-                    width: 100.0,
-                    height: 100.0,
-                    color: const Color(0xFFFF0000),
-                  ),
-                ),
-              ),
             ),
           ],
         ),

@@ -151,11 +151,11 @@ class IconButton extends StatelessWidget {
     @required this.onPressed,
     this.focusNode,
     this.tooltip,
-  })  : assert(iconSize != null),
-        assert(padding != null),
-        assert(alignment != null),
-        assert(icon != null),
-        super(key: key);
+  }) : assert(iconSize != null),
+       assert(padding != null),
+       assert(alignment != null),
+       assert(icon != null),
+       super(key: key);
 
   /// The size of the icon inside the button.
   ///
@@ -280,8 +280,7 @@ class IconButton extends StatelessWidget {
       currentColor = disabledColor ?? Theme.of(context).disabledColor;
 
     Widget result = ConstrainedBox(
-      constraints: const BoxConstraints(
-          minWidth: _kMinButtonSize, minHeight: _kMinButtonSize),
+      constraints: const BoxConstraints(minWidth: _kMinButtonSize, minHeight: _kMinButtonSize),
       child: Padding(
         padding: padding,
         child: SizedBox(
@@ -334,25 +333,15 @@ class IconButton extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<Widget>('icon', icon, showName: false));
-    properties.add(
-        StringProperty('tooltip', tooltip, defaultValue: null, quoted: false));
-    properties.add(ObjectFlagProperty<VoidCallback>('onPressed', onPressed,
-        ifNull: 'disabled'));
-    properties
-        .add(DiagnosticsProperty<Color>('color', color, defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>('disabledColor', disabledColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>('focusColor', focusColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>('hoverColor', hoverColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>('highlightColor', highlightColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<Color>('splashColor', splashColor,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode,
-        defaultValue: null));
+    properties.add(StringProperty('tooltip', tooltip, defaultValue: null, quoted: false));
+    properties.add(ObjectFlagProperty<VoidCallback>('onPressed', onPressed, ifNull: 'disabled'));
+    properties.add(DiagnosticsProperty<Color>('color', color, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('disabledColor', disabledColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('focusColor', focusColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('hoverColor', hoverColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('highlightColor', highlightColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<Color>('splashColor', splashColor, defaultValue: null));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding, defaultValue: null));
+    properties.add(DiagnosticsProperty<FocusNode>('focusNode', focusNode, defaultValue: null));
   }
 }

@@ -1,14 +1,13 @@
 // Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// Synced. * Contains Web DELTA *
+// Synced 2019-08-02T12:40:49.955897.
 
 import 'dart:math' as math;
 import 'package:flutter_web_ui/ui.dart' show lerpDouble, hashValues;
 
 import 'package:flutter_web/foundation.dart';
 
-import '../util.dart';
 import 'box.dart';
 import 'object.dart';
 
@@ -26,14 +25,13 @@ class RelativeRect {
   ///
   /// The arguments must not be null.
   const RelativeRect.fromLTRB(this.left, this.top, this.right, this.bottom)
-      : assert(left != null && top != null && right != null && bottom != null);
+    : assert(left != null && top != null && right != null && bottom != null);
 
   /// Creates a RelativeRect from a Rect and a Size. The Rect (first argument)
   /// and the RelativeRect (the output) are in the coordinate space of the
   /// rectangle described by the Size, with 0,0 being at the top left.
   factory RelativeRect.fromSize(Rect rect, Size container) {
-    return RelativeRect.fromLTRB(rect.left, rect.top,
-        container.width - rect.right, container.height - rect.bottom);
+    return RelativeRect.fromLTRB(rect.left, rect.top, container.width - rect.right, container.height - rect.bottom);
   }
 
   /// Creates a RelativeRect from two Rects. The second Rect provides the
@@ -88,14 +86,12 @@ class RelativeRect {
 
   /// Returns a new rectangle object translated by the given offset.
   RelativeRect shift(Offset offset) {
-    return RelativeRect.fromLTRB(left + offset.dx, top + offset.dy,
-        right - offset.dx, bottom - offset.dy);
+    return RelativeRect.fromLTRB(left + offset.dx, top + offset.dy, right - offset.dx, bottom - offset.dy);
   }
 
   /// Returns a new rectangle with edges moved outwards by the given delta.
   RelativeRect inflate(double delta) {
-    return RelativeRect.fromLTRB(
-        left - delta, top - delta, right - delta, bottom - delta);
+    return RelativeRect.fromLTRB(left - delta, top - delta, right - delta, bottom - delta);
   }
 
   /// Returns a new rectangle with edges moved inwards by the given delta.
@@ -120,8 +116,7 @@ class RelativeRect {
   ///  * [toSize], which returns the size part of the rect, based on the size of
   ///    the container.
   Rect toRect(Rect container) {
-    return Rect.fromLTRB(
-        left, top, container.width - right, container.height - bottom);
+    return Rect.fromLTRB(left, top, container.width - right, container.height - bottom);
   }
 
   /// Convert this [RelativeRect] to a [Size], assuming a container with the given size.
@@ -130,8 +125,7 @@ class RelativeRect {
   ///
   ///  * [toRect], which also computes the position relative to the container.
   Size toSize(Size container) {
-    return Size(
-        container.width - left - right, container.height - top - bottom);
+    return Size(container.width - left - right, container.height - top - bottom);
   }
 
   /// Linearly interpolate between two RelativeRects.
@@ -141,14 +135,13 @@ class RelativeRect {
   /// {@macro dart.ui.shadow.lerp}
   static RelativeRect lerp(RelativeRect a, RelativeRect b, double t) {
     assert(t != null);
-    if (a == null && b == null) return null;
+    if (a == null && b == null)
+      return null;
     if (a == null)
-      return RelativeRect.fromLTRB(
-          b.left * t, b.top * t, b.right * t, b.bottom * t);
+      return RelativeRect.fromLTRB(b.left * t, b.top * t, b.right * t, b.bottom * t);
     if (b == null) {
       final double k = 1.0 - t;
-      return RelativeRect.fromLTRB(
-          b.left * k, b.top * k, b.right * k, b.bottom * k);
+      return RelativeRect.fromLTRB(b.left * k, b.top * k, b.right * k, b.bottom * k);
     }
     return RelativeRect.fromLTRB(
       lerpDouble(a.left, b.left, t),
@@ -160,22 +153,22 @@ class RelativeRect {
 
   @override
   bool operator ==(dynamic other) {
-    if (identical(this, other)) return true;
-    if (other is! RelativeRect) return false;
+    if (identical(this, other))
+      return true;
+    if (other is! RelativeRect)
+      return false;
     final RelativeRect typedOther = other;
     return left == typedOther.left &&
-        top == typedOther.top &&
-        right == typedOther.right &&
-        bottom == typedOther.bottom;
+           top == typedOther.top &&
+           right == typedOther.right &&
+           bottom == typedOther.bottom;
   }
 
   @override
   int get hashCode => hashValues(left, top, right, bottom);
 
   @override
-  String toString() => assertionsEnabled
-      ? 'RelativeRect.fromLTRB(${left?.toStringAsFixed(1)}, ${top?.toStringAsFixed(1)}, ${right?.toStringAsFixed(1)}, ${bottom?.toStringAsFixed(1)})'
-      : super.toString();
+  String toString() => 'RelativeRect.fromLTRB(${left?.toStringAsFixed(1)}, ${top?.toStringAsFixed(1)}, ${right?.toStringAsFixed(1)}, ${bottom?.toStringAsFixed(1)})';
 }
 
 /// Parent data for use with [RenderStack].
@@ -217,32 +210,27 @@ class StackParentData extends ContainerBoxParentData<RenderBox> {
   /// are non-null. Positioned children do not factor into determining the size
   /// of the stack but are instead placed relative to the non-positioned
   /// children in the stack.
-  bool get isPositioned =>
-      top != null ||
-      right != null ||
-      bottom != null ||
-      left != null ||
-      width != null ||
-      height != null;
+  bool get isPositioned => top != null || right != null || bottom != null || left != null || width != null || height != null;
 
-  // TODO(flutter_web): upstream debugPrintDouble otherwise tests fail or need
-  // to be special cased for web.
   @override
   String toString() {
-    if (assertionsEnabled) {
-      final List<String> values = <String>[];
-      if (top != null) values.add('top=${debugPrintDouble(top)}');
-      if (right != null) values.add('right=${debugPrintDouble(right)}');
-      if (bottom != null) values.add('bottom=${debugPrintDouble(bottom)}');
-      if (left != null) values.add('left=${debugPrintDouble(left)}');
-      if (width != null) values.add('width=${debugPrintDouble(width)}');
-      if (height != null) values.add('height=${debugPrintDouble(height)}');
-      if (values.isEmpty) values.add('not positioned');
-      values.add(super.toString());
-      return values.join('; ');
-    } else {
-      return super.toString();
-    }
+    final List<String> values = <String>[];
+    if (top != null)
+      values.add('top=${debugFormatDouble(top)}');
+    if (right != null)
+      values.add('right=${debugFormatDouble(right)}');
+    if (bottom != null)
+      values.add('bottom=${debugFormatDouble(bottom)}');
+    if (left != null)
+      values.add('left=${debugFormatDouble(left)}');
+    if (width != null)
+      values.add('width=${debugFormatDouble(width)}');
+    if (height != null)
+      values.add('height=${debugFormatDouble(height)}');
+    if (values.isEmpty)
+      values.add('not positioned');
+    values.add(super.toString());
+    return values.join('; ');
   }
 }
 
@@ -335,9 +323,8 @@ enum Overflow {
 ///
 ///  * [RenderFlow]
 class RenderStack extends RenderBox
-    with
-        ContainerRenderObjectMixin<RenderBox, StackParentData>,
-        RenderBoxContainerDefaultsMixin<RenderBox, StackParentData> {
+    with ContainerRenderObjectMixin<RenderBox, StackParentData>,
+         RenderBoxContainerDefaultsMixin<RenderBox, StackParentData> {
   /// Creates a stack render object.
   ///
   /// By default, the non-positioned children of the stack are aligned by their
@@ -348,13 +335,13 @@ class RenderStack extends RenderBox
     TextDirection textDirection,
     StackFit fit = StackFit.loose,
     Overflow overflow = Overflow.clip,
-  })  : assert(alignment != null),
-        assert(fit != null),
-        assert(overflow != null),
-        _alignment = alignment,
-        _textDirection = textDirection,
-        _fit = fit,
-        _overflow = overflow {
+  }) : assert(alignment != null),
+       assert(fit != null),
+       assert(overflow != null),
+       _alignment = alignment,
+       _textDirection = textDirection,
+       _fit = fit,
+       _overflow = overflow {
     addAll(children);
   }
 
@@ -369,7 +356,8 @@ class RenderStack extends RenderBox
   Alignment _resolvedAlignment;
 
   void _resolve() {
-    if (_resolvedAlignment != null) return;
+    if (_resolvedAlignment != null)
+      return;
     _resolvedAlignment = alignment.resolve(textDirection);
   }
 
@@ -397,7 +385,8 @@ class RenderStack extends RenderBox
   AlignmentGeometry _alignment;
   set alignment(AlignmentGeometry value) {
     assert(value != null);
-    if (_alignment == value) return;
+    if (_alignment == value)
+      return;
     _alignment = value;
     _markNeedResolution();
   }
@@ -409,7 +398,8 @@ class RenderStack extends RenderBox
   TextDirection get textDirection => _textDirection;
   TextDirection _textDirection;
   set textDirection(TextDirection value) {
-    if (_textDirection == value) return;
+    if (_textDirection == value)
+      return;
     _textDirection = value;
     _markNeedResolution();
   }
@@ -458,26 +448,22 @@ class RenderStack extends RenderBox
 
   @override
   double computeMinIntrinsicWidth(double height) {
-    return _getIntrinsicDimension(
-        (RenderBox child) => child.getMinIntrinsicWidth(height));
+    return _getIntrinsicDimension((RenderBox child) => child.getMinIntrinsicWidth(height));
   }
 
   @override
   double computeMaxIntrinsicWidth(double height) {
-    return _getIntrinsicDimension(
-        (RenderBox child) => child.getMaxIntrinsicWidth(height));
+    return _getIntrinsicDimension((RenderBox child) => child.getMaxIntrinsicWidth(height));
   }
 
   @override
   double computeMinIntrinsicHeight(double width) {
-    return _getIntrinsicDimension(
-        (RenderBox child) => child.getMinIntrinsicHeight(width));
+    return _getIntrinsicDimension((RenderBox child) => child.getMinIntrinsicHeight(width));
   }
 
   @override
   double computeMaxIntrinsicHeight(double width) {
-    return _getIntrinsicDimension(
-        (RenderBox child) => child.getMaxIntrinsicHeight(width));
+    return _getIntrinsicDimension((RenderBox child) => child.getMaxIntrinsicHeight(width));
   }
 
   @override
@@ -547,25 +533,19 @@ class RenderStack extends RenderBox
       final StackParentData childParentData = child.parentData;
 
       if (!childParentData.isPositioned) {
-        childParentData.offset =
-            _resolvedAlignment.alongOffset(size - child.size);
+        childParentData.offset = _resolvedAlignment.alongOffset(size - child.size);
       } else {
         BoxConstraints childConstraints = const BoxConstraints();
 
         if (childParentData.left != null && childParentData.right != null)
-          childConstraints = childConstraints.tighten(
-              width: size.width - childParentData.right - childParentData.left);
+          childConstraints = childConstraints.tighten(width: size.width - childParentData.right - childParentData.left);
         else if (childParentData.width != null)
-          childConstraints =
-              childConstraints.tighten(width: childParentData.width);
+          childConstraints = childConstraints.tighten(width: childParentData.width);
 
         if (childParentData.top != null && childParentData.bottom != null)
-          childConstraints = childConstraints.tighten(
-              height:
-                  size.height - childParentData.bottom - childParentData.top);
+          childConstraints = childConstraints.tighten(height: size.height - childParentData.bottom - childParentData.top);
         else if (childParentData.height != null)
-          childConstraints =
-              childConstraints.tighten(height: childParentData.height);
+          childConstraints = childConstraints.tighten(height: childParentData.height);
 
         child.layout(childConstraints, parentUsesSize: true);
 
@@ -602,7 +582,7 @@ class RenderStack extends RenderBox
   }
 
   @override
-  bool hitTestChildren(BoxHitTestResult result, {Offset position}) {
+  bool hitTestChildren(BoxHitTestResult result, { Offset position }) {
     return defaultHitTestChildren(result, position: position);
   }
 
@@ -618,22 +598,19 @@ class RenderStack extends RenderBox
   @override
   void paint(PaintingContext context, Offset offset) {
     if (_overflow == Overflow.clip && _hasVisualOverflow) {
-      context.pushClipRect(
-          needsCompositing, offset, Offset.zero & size, paintStack);
+      context.pushClipRect(needsCompositing, offset, Offset.zero & size, paintStack);
     } else {
       paintStack(context, offset);
     }
   }
 
   @override
-  Rect describeApproximatePaintClip(RenderObject child) =>
-      _hasVisualOverflow ? Offset.zero & size : null;
+  Rect describeApproximatePaintClip(RenderObject child) => _hasVisualOverflow ? Offset.zero & size : null;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties
-        .add(DiagnosticsProperty<AlignmentGeometry>('alignment', alignment));
+    properties.add(DiagnosticsProperty<AlignmentGeometry>('alignment', alignment));
     properties.add(EnumProperty<TextDirection>('textDirection', textDirection));
     properties.add(EnumProperty<StackFit>('fit', fit));
     properties.add(EnumProperty<Overflow>('overflow', overflow));
@@ -654,16 +631,17 @@ class RenderIndexedStack extends RenderStack {
     AlignmentGeometry alignment = AlignmentDirectional.topStart,
     TextDirection textDirection,
     int index = 0,
-  })  : _index = index,
-        super(
-          children: children,
-          alignment: alignment,
-          textDirection: textDirection,
-        );
+  }) : _index = index,
+       super(
+         children: children,
+         alignment: alignment,
+         textDirection: textDirection,
+       );
 
   @override
   void visitChildrenForSemantics(RenderObjectVisitor visitor) {
-    if (index != null) visitor(_childAtIndex());
+    if (index != null && firstChild != null)
+      visitor(_childAtIndex());
   }
 
   /// The index of the child to show, null if nothing is to be displayed.
@@ -691,8 +669,9 @@ class RenderIndexedStack extends RenderStack {
   }
 
   @override
-  bool hitTestChildren(BoxHitTestResult result, {@required Offset position}) {
-    if (firstChild == null || index == null) return false;
+  bool hitTestChildren(BoxHitTestResult result, { @required Offset position }) {
+    if (firstChild == null || index == null)
+      return false;
     assert(position != null);
     final RenderBox child = _childAtIndex();
     final StackParentData childParentData = child.parentData;
@@ -708,7 +687,8 @@ class RenderIndexedStack extends RenderStack {
 
   @override
   void paintStack(PaintingContext context, Offset offset) {
-    if (firstChild == null || index == null) return;
+    if (firstChild == null || index == null)
+      return;
     final RenderBox child = _childAtIndex();
     final StackParentData childParentData = child.parentData;
     context.paintChild(child, childParentData.offset + offset);

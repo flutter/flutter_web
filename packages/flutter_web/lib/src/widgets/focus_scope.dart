@@ -228,11 +228,10 @@ class Focus extends StatefulWidget {
   /// [nullOk].
   ///
   /// The [context] and [nullOk] arguments must not be null.
-  static FocusNode of(BuildContext context, {bool nullOk = false}) {
+  static FocusNode of(BuildContext context, { bool nullOk = false }) {
     assert(context != null);
     assert(nullOk != null);
-    final _FocusMarker marker =
-        context.inheritFromWidgetOfExactType(_FocusMarker);
+    final _FocusMarker marker = context.inheritFromWidgetOfExactType(_FocusMarker);
     final FocusNode node = marker?.notifier;
     if (node is FocusScopeNode) {
       if (!nullOk) {
@@ -244,7 +243,8 @@ class Focus extends StatefulWidget {
             'because you are using a widget that looks for a Focus ancestor, and do not have a '
             'Focus widget ancestor in the current FocusScope.\n'
             'The context used was:\n'
-            '  $context');
+            '  $context'
+        );
       }
       return null;
     }
@@ -256,7 +256,8 @@ class Focus extends StatefulWidget {
             'Focus.of(). This can happen because you are using a widget that looks for a Focus '
             'ancestor, and do not have a Focus widget descendant in the nearest FocusScope.\n'
             'The context used was:\n'
-            '  $context');
+            '  $context'
+        );
       }
       return null;
     }
@@ -272,18 +273,14 @@ class Focus extends StatefulWidget {
   /// Returns false if no [Focus] widget is found before reaching the nearest
   /// [FocusScope], or if the root of the focus tree is reached without finding
   /// a [Focus] widget.
-  static bool isAt(BuildContext context) =>
-      Focus.of(context, nullOk: true)?.hasFocus ?? false;
+  static bool isAt(BuildContext context) => Focus.of(context, nullOk: true)?.hasFocus ?? false;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties
-        .add(StringProperty('debugLabel', debugLabel, defaultValue: null));
-    properties.add(FlagProperty('autofocus',
-        value: autofocus, ifTrue: 'AUTOFOCUS', defaultValue: false));
-    properties.add(
-        DiagnosticsProperty<FocusNode>('node', focusNode, defaultValue: null));
+    properties.add(StringProperty('debugLabel', debugLabel, defaultValue: null));
+    properties.add(FlagProperty('autofocus', value: autofocus, ifTrue: 'AUTOFOCUS', defaultValue: false));
+    properties.add(DiagnosticsProperty<FocusNode>('node', focusNode, defaultValue: null));
   }
 
   @override
@@ -474,10 +471,8 @@ class FocusScope extends Focus {
   /// The [context] argument must not be null.
   static FocusScopeNode of(BuildContext context) {
     assert(context != null);
-    final _FocusMarker marker =
-        context.inheritFromWidgetOfExactType(_FocusMarker);
-    return marker?.notifier?.nearestScope ??
-        context.owner.focusManager.rootScope;
+    final _FocusMarker marker = context.inheritFromWidgetOfExactType(_FocusMarker);
+    return marker?.notifier?.nearestScope ?? context.owner.focusManager.rootScope;
   }
 
   @override

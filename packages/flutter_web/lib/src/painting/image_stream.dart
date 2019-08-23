@@ -249,8 +249,7 @@ abstract class ImageStreamCompleter extends Diagnosticable {
           FlutterErrorDetails(
             exception: exception,
             library: 'image resource service',
-            context: ErrorDescription(
-                'by a synchronously-called image error listener'),
+            context: ErrorDescription('by a synchronously-called image error listener'),
             stack: stack,
           ),
         );

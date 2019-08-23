@@ -11,14 +11,16 @@ import 'rendering_tester.dart';
 
 class RealRoot extends AbstractNode {
   RealRoot(this.child) {
-    if (child != null) adoptChild(child);
+    if (child != null)
+      adoptChild(child);
   }
 
   final RenderObject child;
 
   @override
   void redepthChildren() {
-    if (child != null) redepthChild(child);
+    if (child != null)
+      redepthChild(child);
   }
 
   @override
@@ -44,9 +46,12 @@ class RealRoot extends AbstractNode {
 void main() {
   test('non-RenderObject roots', () {
     RenderPositionedBox child;
-    final RealRoot root = RealRoot(child = RenderPositionedBox(
+    final RealRoot root = RealRoot(
+      child = RenderPositionedBox(
         alignment: Alignment.center,
-        child: RenderSizedBox(const Size(100.0, 100.0))));
+        child: RenderSizedBox(const Size(100.0, 100.0))
+      )
+    );
     root.attach(PipelineOwner());
 
     child.scheduleInitialLayout();

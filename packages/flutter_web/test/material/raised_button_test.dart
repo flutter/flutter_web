@@ -8,11 +8,10 @@ import 'package:flutter_web_test/flutter_web_test.dart';
 import 'package:flutter_web/rendering.dart';
 
 void main() {
-  testWidgets('RaisedButton implements debugFillProperties',
-      (WidgetTester tester) async {
+  testWidgets('RaisedButton implements debugFillProperties', (WidgetTester tester) async {
     final DiagnosticPropertiesBuilder builder = DiagnosticPropertiesBuilder();
     RaisedButton(
-      onPressed: () {},
+      onPressed: () { },
       textColor: const Color(0xFF00FF00),
       disabledTextColor: const Color(0xFFFF0000),
       color: const Color(0xFF000000),
@@ -22,9 +21,8 @@ void main() {
     ).debugFillProperties(builder);
 
     final List<String> description = builder.properties
-        .where((DiagnosticsNode node) => !node.isFiltered(DiagnosticLevel.info))
-        .map((DiagnosticsNode node) => node.toString())
-        .toList();
+      .where((DiagnosticsNode node) => !node.isFiltered(DiagnosticLevel.info))
+      .map((DiagnosticsNode node) => node.toString()).toList();
 
     expect(description, <String>[
       'textColor: Color(0xff00ff00)',

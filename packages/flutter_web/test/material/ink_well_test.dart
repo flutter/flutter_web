@@ -62,24 +62,21 @@ void main() {
     expect(log, equals(<String>['tap-down', 'tap-cancel', 'long-press']));
 
     log.clear();
-    TestGesture gesture =
-        await tester.startGesture(tester.getRect(find.byType(InkWell)).center);
+    TestGesture gesture = await tester.startGesture(tester.getRect(find.byType(InkWell)).center);
     await tester.pump(const Duration(milliseconds: 100));
     expect(log, equals(<String>['tap-down']));
     await gesture.up();
     await tester.pump(const Duration(seconds: 1));
 
     log.clear();
-    gesture =
-        await tester.startGesture(tester.getRect(find.byType(InkWell)).center);
+    gesture = await tester.startGesture(tester.getRect(find.byType(InkWell)).center);
     await tester.pump(const Duration(milliseconds: 100));
     await gesture.moveBy(const Offset(0.0, 200.0));
     await gesture.cancel();
     expect(log, equals(<String>['tap-down', 'tap-cancel']));
   });
 
-  testWidgets('long-press and tap on disabled should not throw',
-      (WidgetTester tester) async {
+  testWidgets('long-press and tap on disabled should not throw', (WidgetTester tester) async {
     await tester.pumpWidget(const Material(
       child: Directionality(
         textDirection: TextDirection.ltr,
@@ -103,37 +100,29 @@ void main() {
             width: 100,
             height: 100,
             child: InkWell(
-                hoverColor: const Color(0xff00ff00),
-                splashColor: const Color(0xffff0000),
-                focusColor: const Color(0xff0000ff),
-                highlightColor: const Color(0xf00fffff),
-                onTap: () {},
-                onLongPress: () {},
-                onHover: (bool hover) {}),
+              hoverColor: const Color(0xff00ff00),
+              splashColor: const Color(0xffff0000),
+              focusColor: const Color(0xff0000ff),
+              highlightColor: const Color(0xf00fffff),
+              onTap: () {},
+              onLongPress: () {},
+              onHover: (bool hover) {}
+            ),
           ),
         ),
       ),
     ));
-    final TestGesture gesture =
-        await tester.createGesture(kind: PointerDeviceKind.mouse);
+    final TestGesture gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
     await gesture.addPointer();
     await gesture.moveTo(tester.getCenter(find.byType(Container)));
     await tester.pumpAndSettle();
-    final RenderObject inkFeatures = tester.allRenderObjects.firstWhere(
-        (RenderObject object) =>
-            object.runtimeType.toString() == '_RenderInkFeatures');
-    expect(
-        inkFeatures,
-        paints
-          ..rect(
-              rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0),
-              color: const Color(0xff00ff00)));
+    final RenderObject inkFeatures = tester.allRenderObjects.firstWhere((RenderObject object) => object.runtimeType.toString() == '_RenderInkFeatures');
+    expect(inkFeatures, paints..rect(rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0), color: const Color(0xff00ff00)));
 
     await gesture.removePointer();
   }, skip: true); // TODO(flutter_web): re-enable.
 
-  testWidgets('ink response changes color on focus',
-      (WidgetTester tester) async {
+  testWidgets('ink response changes color on focus', (WidgetTester tester) async {
     final FocusNode focusNode = FocusNode(debugLabel: 'Ink Focus');
     await tester.pumpWidget(Material(
       child: Directionality(
@@ -145,31 +134,26 @@ void main() {
               width: 100,
               height: 100,
               child: InkWell(
-                  hoverColor: const Color(0xff00ff00),
-                  splashColor: const Color(0xffff0000),
-                  focusColor: const Color(0xff0000ff),
-                  highlightColor: const Color(0xf00fffff),
-                  onTap: () {},
-                  onLongPress: () {},
-                  onHover: (bool hover) {}),
+                hoverColor: const Color(0xff00ff00),
+                splashColor: const Color(0xffff0000),
+                focusColor: const Color(0xff0000ff),
+                highlightColor: const Color(0xf00fffff),
+                onTap: () {},
+                onLongPress: () {},
+                onHover: (bool hover) {}
+              ),
             ),
           ),
         ),
       ),
     ));
     await tester.pumpAndSettle();
-    final RenderObject inkFeatures = tester.allRenderObjects.firstWhere(
-        (RenderObject object) =>
-            object.runtimeType.toString() == '_RenderInkFeatures');
+    final RenderObject inkFeatures = tester.allRenderObjects.firstWhere((RenderObject object) => object.runtimeType.toString() == '_RenderInkFeatures');
     expect(inkFeatures, paintsExactlyCountTimes(#rect, 0));
     focusNode.requestFocus();
     await tester.pumpAndSettle();
-    expect(
-        inkFeatures,
-        paints
-          ..rect(
-              rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0),
-              color: const Color(0xff0000ff)));
+    expect(inkFeatures, paints
+      ..rect(rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0), color: const Color(0xff0000ff)));
   });
 
   group('feedback', () {
@@ -236,8 +220,7 @@ void main() {
     });
   });
 
-  testWidgets('splashing survives scrolling when keep-alive is enabled',
-      (WidgetTester tester) async {
+  testWidgets('splashing survives scrolling when keep-alive is enabled', (WidgetTester tester) async {
     Future<void> runTest(bool keepAlive) async {
       await tester.pumpWidget(
         Directionality(
@@ -250,9 +233,7 @@ void main() {
                 addAutomaticKeepAlives: keepAlive,
                 dragStartBehavior: DragStartBehavior.down,
                 children: <Widget>[
-                  Container(
-                      height: 500.0,
-                      child: InkWell(onTap: () {}, child: const Placeholder())),
+                  Container(height: 500.0, child: InkWell(onTap: () {}, child: const Placeholder())),
                   Container(height: 500.0),
                   Container(height: 500.0),
                 ],
@@ -261,15 +242,11 @@ void main() {
           ),
         ),
       );
-      expect(
-          tester.renderObject<RenderProxyBox>(find.byType(PhysicalModel)).child,
-          isNot(paints..circle()));
+      expect(tester.renderObject<RenderProxyBox>(find.byType(PhysicalModel)).child, isNot(paints..circle()));
       await tester.tap(find.byType(InkWell));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 10));
-      expect(
-          tester.renderObject<RenderProxyBox>(find.byType(PhysicalModel)).child,
-          paints..circle());
+      expect(tester.renderObject<RenderProxyBox>(find.byType(PhysicalModel)).child, paints..circle());
       await tester.drag(find.byType(ListView), const Offset(0.0, -1000.0));
       await tester.pump(const Duration(milliseconds: 10));
       await tester.drag(find.byType(ListView), const Offset(0.0, 1000.0));
@@ -296,10 +273,7 @@ void main() {
         ),
       ),
     ));
-    expect(
-        semantics,
-        includesNodeWith(
-            label: 'Button', actions: <SemanticsAction>[SemanticsAction.tap]));
+    expect(semantics, includesNodeWith(label: 'Button', actions: <SemanticsAction>[SemanticsAction.tap]));
 
     await tester.pumpWidget(Directionality(
       textDirection: TextDirection.ltr,
@@ -311,10 +285,7 @@ void main() {
         ),
       ),
     ));
-    expect(
-        semantics,
-        isNot(includesNodeWith(
-            label: 'Button', actions: <SemanticsAction>[SemanticsAction.tap])));
+    expect(semantics, isNot(includesNodeWith(label: 'Button', actions: <SemanticsAction>[SemanticsAction.tap])));
 
     semantics.dispose();
   });

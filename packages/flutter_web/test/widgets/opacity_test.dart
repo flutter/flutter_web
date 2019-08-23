@@ -24,20 +24,18 @@ void main() {
         opacity: 1.0,
       ),
     );
-    expect(
-        semantics,
-        hasSemantics(
-          TestSemantics.root(
-            children: <TestSemantics>[
-              TestSemantics.rootChild(
-                id: 1,
-                rect: const Rect.fromLTRB(0.0, 0.0, 800.0, 600.0),
-                label: 'a',
-                textDirection: TextDirection.rtl,
-              ),
-            ],
+    expect(semantics, hasSemantics(
+      TestSemantics.root(
+        children: <TestSemantics>[
+          TestSemantics.rootChild(
+            id: 1,
+            rect: const Rect.fromLTRB(0.0, 0.0, 800.0, 600.0),
+            label: 'a',
+            textDirection: TextDirection.rtl,
           ),
-        ));
+        ],
+      ),
+    ));
     expect(find.byType(Opacity), paints..paragraph());
 
     // Opacity 0.0: Nothing
@@ -47,11 +45,9 @@ void main() {
         opacity: 0.0,
       ),
     );
-    expect(
-        semantics,
-        hasSemantics(
-          TestSemantics.root(),
-        ));
+    expect(semantics, hasSemantics(
+      TestSemantics.root(),
+    ));
     expect(find.byType(Opacity), paintsNothing);
 
     // Opacity 0.0 with semantics: Just semantics
@@ -62,20 +58,18 @@ void main() {
         alwaysIncludeSemantics: true,
       ),
     );
-    expect(
-        semantics,
-        hasSemantics(
-          TestSemantics.root(
-            children: <TestSemantics>[
-              TestSemantics.rootChild(
-                id: 1,
-                rect: const Rect.fromLTRB(0.0, 0.0, 800.0, 600.0),
-                label: 'a',
-                textDirection: TextDirection.rtl,
-              ),
-            ],
+    expect(semantics, hasSemantics(
+      TestSemantics.root(
+        children: <TestSemantics>[
+          TestSemantics.rootChild(
+            id: 1,
+            rect: const Rect.fromLTRB(0.0, 0.0, 800.0, 600.0),
+            label: 'a',
+            textDirection: TextDirection.rtl,
           ),
-        ));
+        ],
+      ),
+    ));
     expect(find.byType(Opacity), paintsNothing);
 
     // Opacity 0.0 without semantics: Nothing
@@ -86,11 +80,9 @@ void main() {
         alwaysIncludeSemantics: false,
       ),
     );
-    expect(
-        semantics,
-        hasSemantics(
-          TestSemantics.root(),
-        ));
+    expect(semantics, hasSemantics(
+      TestSemantics.root(),
+    ));
     expect(find.byType(Opacity), paintsNothing);
 
     // Opacity 0.1: Semantics and painting
@@ -100,20 +92,18 @@ void main() {
         opacity: 0.1,
       ),
     );
-    expect(
-        semantics,
-        hasSemantics(
-          TestSemantics.root(
-            children: <TestSemantics>[
-              TestSemantics.rootChild(
-                id: 1,
-                rect: const Rect.fromLTRB(0.0, 0.0, 800.0, 600.0),
-                label: 'a',
-                textDirection: TextDirection.rtl,
-              ),
-            ],
+    expect(semantics, hasSemantics(
+      TestSemantics.root(
+        children: <TestSemantics>[
+          TestSemantics.rootChild(
+            id: 1,
+            rect: const Rect.fromLTRB(0.0, 0.0, 800.0, 600.0),
+            label: 'a',
+            textDirection: TextDirection.rtl,
           ),
-        ));
+        ],
+      ),
+    ));
     expect(find.byType(Opacity), paints..paragraph());
 
     // Opacity 0.1 without semantics: Still has semantics and painting
@@ -124,20 +114,18 @@ void main() {
         alwaysIncludeSemantics: false,
       ),
     );
-    expect(
-        semantics,
-        hasSemantics(
-          TestSemantics.root(
-            children: <TestSemantics>[
-              TestSemantics.rootChild(
-                id: 1,
-                rect: const Rect.fromLTRB(0.0, 0.0, 800.0, 600.0),
-                label: 'a',
-                textDirection: TextDirection.rtl,
-              ),
-            ],
+    expect(semantics, hasSemantics(
+      TestSemantics.root(
+        children: <TestSemantics>[
+          TestSemantics.rootChild(
+            id: 1,
+            rect: const Rect.fromLTRB(0.0, 0.0, 800.0, 600.0),
+            label: 'a',
+            textDirection: TextDirection.rtl,
           ),
-        ));
+        ],
+      ),
+    ));
     expect(find.byType(Opacity), paints..paragraph());
 
     // Opacity 0.1 with semantics: Semantics and painting
@@ -148,50 +136,49 @@ void main() {
         alwaysIncludeSemantics: true,
       ),
     );
-    expect(
-        semantics,
-        hasSemantics(
-          TestSemantics.root(
-            children: <TestSemantics>[
-              TestSemantics.rootChild(
-                id: 1,
-                rect: const Rect.fromLTRB(0.0, 0.0, 800.0, 600.0),
-                label: 'a',
-                textDirection: TextDirection.rtl,
-              ),
-            ],
+    expect(semantics, hasSemantics(
+      TestSemantics.root(
+        children: <TestSemantics>[
+          TestSemantics.rootChild(
+            id: 1,
+            rect: const Rect.fromLTRB(0.0, 0.0, 800.0, 600.0),
+            label: 'a',
+            textDirection: TextDirection.rtl,
           ),
-        ));
+        ],
+      ),
+    ));
     expect(find.byType(Opacity), paints..paragraph());
 
     semantics.dispose();
   });
 
-  testWidgets('offset is correctly handled in Opacity',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: SingleChildScrollView(
-          child: RepaintBoundary(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: List<Widget>.generate(10, (int index) {
-                return Opacity(
-                  opacity: 0.5,
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Container(
-                      color: Colors.blue,
-                      height: 50,
-                    ),
-                  ),
-                );
-              }),
+  testWidgets('offset is correctly handled in Opacity', (WidgetTester tester) async {
+    await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: RepaintBoundary(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: List<Widget>.generate(10, (int index) {
+                    return Opacity(
+                      opacity: 0.5,
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Container(
+                          color: Colors.blue,
+                          height: 50,
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-    ));
+        )
+    );
     await expectLater(
       find.byType(RepaintBoundary).first,
       matchesGoldenFile('opacity_test.offset.1.png'),
@@ -203,8 +190,7 @@ void main() {
     await tester.pumpWidget(
       RepaintBoundary(child: Opacity(opacity: 0.5, child: Container())),
     );
-    final Element element =
-        find.byType(RepaintBoundary).first.evaluate().single;
+    final Element element = find.byType(RepaintBoundary).first.evaluate().single;
     // The following line will send the layer to engine and cause crash if an
     // empty opacity layer is sent.
     final OffsetLayer offsetLayer = element.renderObject.layer;

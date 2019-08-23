@@ -1,15 +1,15 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter_web/painting.dart';
+import 'package:flutter_web_ui/ui.dart';
 
-import 'package:test_api/test_api.dart' hide TypeMatcher, isInstanceOf;
+import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
 
 void main() {
   test('RRect.contains()', () {
     final RRect rrect = RRect.fromRectAndCorners(
-        Rect.fromLTRB(1.0, 1.0, 2.0, 2.0),
+        const Rect.fromLTRB(1.0, 1.0, 2.0, 2.0),
         topLeft: const Radius.circular(0.5),
         topRight: const Radius.circular(0.25),
         bottomRight: const Radius.elliptical(0.25, 0.75),
@@ -27,7 +27,7 @@ void main() {
 
   test('RRect.contains() large radii', () {
     final RRect rrect = RRect.fromRectAndCorners(
-        Rect.fromLTRB(1.0, 1.0, 2.0, 2.0),
+        const Rect.fromLTRB(1.0, 1.0, 2.0, 2.0),
         topLeft: const Radius.circular(5000.0),
         topRight: const Radius.circular(2500.0),
         bottomRight: const Radius.elliptical(2500.0, 7500.0),

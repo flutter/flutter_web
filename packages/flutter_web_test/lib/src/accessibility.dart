@@ -114,7 +114,7 @@ class MinimumTapTargetGuideline extends AccessibilityGuideline {
           candidateSize.height < size.height) {
         result += Evaluation.fail(
             '$node: expected tap target size of at least $size, but found $candidateSize\n'
-            'See also: $link');
+                'See also: $link');
       }
       return result;
     }
@@ -417,8 +417,7 @@ class _ContrastReport {
       r /= 12.92;
     } else {
       r = math.pow((r + 0.055) / 1.055, 2.4);
-    }
-    if (g <= 0.03928) {
+    } if (g <= 0.03928) {
       g /= 12.92;
     } else {
       g = math.pow((g + 0.055) / 1.055, 2.4);

@@ -43,8 +43,7 @@ export 'package:flutter_web_ui/ui.dart' show Locale;
 ///  * [LocaleResolutionCallback], which takes only one default locale (instead of a list)
 ///    and is attempted only after this callback fails or is null. [LocaleListResolutionCallback]
 ///    is recommended over [LocaleResolutionCallback].
-typedef LocaleListResolutionCallback = Locale Function(
-    List<Locale> locales, Iterable<Locale> supportedLocales);
+typedef LocaleListResolutionCallback = Locale Function(List<Locale> locales, Iterable<Locale> supportedLocales);
 
 /// The signature of [WidgetsApp.localeResolutionCallback].
 ///
@@ -70,8 +69,7 @@ typedef LocaleListResolutionCallback = Locale Function(
 ///
 ///  * [LocaleListResolutionCallback], which takes a list of preferred locales (instead of one locale).
 ///    Resolutions by [LocaleListResolutionCallback] take precedence over [LocaleResolutionCallback].
-typedef LocaleResolutionCallback = Locale Function(
-    Locale locale, Iterable<Locale> supportedLocales);
+typedef LocaleResolutionCallback = Locale Function(Locale locale, Iterable<Locale> supportedLocales);
 
 /// The signature of [WidgetsApp.onGenerateTitle].
 ///
@@ -86,8 +84,7 @@ typedef GenerateAppTitle = String Function(BuildContext context);
 /// The signature of [WidgetsApp.pageRouteBuilder].
 ///
 /// Creates a [PageRoute] using the given [RouteSettings] and [WidgetBuilder].
-typedef PageRouteFactory = PageRoute<T> Function<T>(
-    RouteSettings settings, WidgetBuilder builder);
+typedef PageRouteFactory = PageRoute<T> Function<T>(RouteSettings settings, WidgetBuilder builder);
 
 /// A convenience class that wraps a number of widgets that are commonly
 /// required for an application.
@@ -140,8 +137,7 @@ class WidgetsApp extends StatefulWidget {
   ///
   /// The `supportedLocales` argument must be a list of one or more elements.
   /// By default supportedLocales is `[const Locale('en', 'US')]`.
-  WidgetsApp({
-    // can't be const because the asserts use methods on Iterable :-(
+  WidgetsApp({ // can't be const because the asserts use methods on Iterable :-(
     Key key,
     this.navigatorKey,
     this.onGenerateRoute,
@@ -168,58 +164,64 @@ class WidgetsApp extends StatefulWidget {
     this.debugShowWidgetInspector = false,
     this.debugShowCheckedModeBanner = true,
     this.inspectorSelectButtonBuilder,
-  })  : assert(navigatorObservers != null),
-        assert(routes != null),
-        assert(
-            home == null || !routes.containsKey(Navigator.defaultRouteName),
-            'If the home property is specified, the routes table '
-            'cannot include an entry for "/", since it would be redundant.'),
-        assert(
-            builder != null ||
-                home != null ||
-                routes.containsKey(Navigator.defaultRouteName) ||
-                onGenerateRoute != null ||
-                onUnknownRoute != null,
-            'Either the home property must be specified, '
-            'or the routes table must include an entry for "/", '
-            'or there must be on onGenerateRoute callback specified, '
-            'or there must be an onUnknownRoute callback specified, '
-            'or the builder property must be specified, '
-            'because otherwise there is nothing to fall back on if the '
-            'app is started with an intent that specifies an unknown route.'),
-        assert(
-            (home != null ||
-                    routes.isNotEmpty ||
-                    onGenerateRoute != null ||
-                    onUnknownRoute != null) ||
-                (builder != null &&
-                    navigatorKey == null &&
-                    initialRoute == null &&
-                    navigatorObservers.isEmpty),
-            'If no route is provided using '
-            'home, routes, onGenerateRoute, or onUnknownRoute, '
-            'a non-null callback for the builder property must be provided, '
-            'and the other navigator-related properties, '
-            'navigatorKey, initialRoute, and navigatorObservers, '
-            'must have their initial values '
-            '(null, null, and the empty list, respectively).'),
-        assert(
-            builder != null ||
-                onGenerateRoute != null ||
-                pageRouteBuilder != null,
-            'If neither builder nor onGenerateRoute are provided, the '
-            'pageRouteBuilder must be specified so that the default handler '
-            'will know what kind of PageRoute transition to build.'),
-        assert(title != null),
-        assert(color != null),
-        assert(supportedLocales != null && supportedLocales.isNotEmpty),
-        assert(showPerformanceOverlay != null),
-        assert(checkerboardRasterCacheImages != null),
-        assert(checkerboardOffscreenLayers != null),
-        assert(showSemanticsDebugger != null),
-        assert(debugShowCheckedModeBanner != null),
-        assert(debugShowWidgetInspector != null),
-        super(key: key);
+  }) : assert(navigatorObservers != null),
+       assert(routes != null),
+       assert(
+         home == null ||
+         !routes.containsKey(Navigator.defaultRouteName),
+         'If the home property is specified, the routes table '
+         'cannot include an entry for "/", since it would be redundant.'
+       ),
+       assert(
+         builder != null ||
+         home != null ||
+         routes.containsKey(Navigator.defaultRouteName) ||
+         onGenerateRoute != null ||
+         onUnknownRoute != null,
+         'Either the home property must be specified, '
+         'or the routes table must include an entry for "/", '
+         'or there must be on onGenerateRoute callback specified, '
+         'or there must be an onUnknownRoute callback specified, '
+         'or the builder property must be specified, '
+         'because otherwise there is nothing to fall back on if the '
+         'app is started with an intent that specifies an unknown route.'
+       ),
+       assert(
+         (home != null ||
+          routes.isNotEmpty ||
+          onGenerateRoute != null ||
+          onUnknownRoute != null)
+         ||
+         (builder != null &&
+          navigatorKey == null &&
+          initialRoute == null &&
+          navigatorObservers.isEmpty),
+         'If no route is provided using '
+         'home, routes, onGenerateRoute, or onUnknownRoute, '
+         'a non-null callback for the builder property must be provided, '
+         'and the other navigator-related properties, '
+         'navigatorKey, initialRoute, and navigatorObservers, '
+         'must have their initial values '
+         '(null, null, and the empty list, respectively).'
+       ),
+       assert(
+         builder != null ||
+         onGenerateRoute != null ||
+         pageRouteBuilder != null,
+         'If neither builder nor onGenerateRoute are provided, the '
+         'pageRouteBuilder must be specified so that the default handler '
+         'will know what kind of PageRoute transition to build.'
+       ),
+       assert(title != null),
+       assert(color != null),
+       assert(supportedLocales != null && supportedLocales.isNotEmpty),
+       assert(showPerformanceOverlay != null),
+       assert(checkerboardRasterCacheImages != null),
+       assert(checkerboardOffscreenLayers != null),
+       assert(showSemanticsDebugger != null),
+       assert(debugShowCheckedModeBanner != null),
+       assert(debugShowWidgetInspector != null),
+       super(key: key);
 
   /// {@template flutter.widgets.widgetsApp.navigatorKey}
   /// A key to use when building the [Navigator].
@@ -702,23 +704,23 @@ class WidgetsApp extends StatefulWidget {
   _WidgetsAppState createState() => _WidgetsAppState();
 }
 
-class _WidgetsAppState extends State<WidgetsApp>
-    implements WidgetsBindingObserver {
+class _WidgetsAppState extends State<WidgetsApp> implements WidgetsBindingObserver {
+
   // STATE LIFECYCLE
 
   @override
   void initState() {
     super.initState();
     _updateNavigator();
-    _locale = _resolveLocales(
-        WidgetsBinding.instance.window.locales, widget.supportedLocales);
+    _locale = _resolveLocales(WidgetsBinding.instance.window.locales, widget.supportedLocales);
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void didUpdateWidget(WidgetsApp oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.navigatorKey != oldWidget.navigatorKey) _updateNavigator();
+    if (widget.navigatorKey != oldWidget.navigatorKey)
+      _updateNavigator();
   }
 
   @override
@@ -728,10 +730,11 @@ class _WidgetsAppState extends State<WidgetsApp>
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {}
+  void didChangeAppLifecycleState(AppLifecycleState state) { }
 
   @override
-  void didHaveMemoryPressure() {}
+  void didHaveMemoryPressure() { }
+
 
   // NAVIGATOR
 
@@ -743,25 +746,24 @@ class _WidgetsAppState extends State<WidgetsApp>
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
     final String name = settings.name;
-    final WidgetBuilder pageContentBuilder =
-        name == Navigator.defaultRouteName && widget.home != null
-            ? (BuildContext context) => widget.home
-            : widget.routes[name];
+    final WidgetBuilder pageContentBuilder = name == Navigator.defaultRouteName && widget.home != null
+        ? (BuildContext context) => widget.home
+        : widget.routes[name];
 
     if (pageContentBuilder != null) {
-      assert(
-          widget.pageRouteBuilder != null,
-          'The default onGenerateRoute handler for WidgetsApp must have a '
-          'pageRouteBuilder set if the home or routes properties are set.');
+      assert(widget.pageRouteBuilder != null,
+        'The default onGenerateRoute handler for WidgetsApp must have a '
+        'pageRouteBuilder set if the home or routes properties are set.');
       final Route<dynamic> route = widget.pageRouteBuilder<dynamic>(
         settings,
         pageContentBuilder,
       );
       assert(route != null,
-          'The pageRouteBuilder for WidgetsApp must return a valid non-null Route.');
+        'The pageRouteBuilder for WidgetsApp must return a valid non-null Route.');
       return route;
     }
-    if (widget.onGenerateRoute != null) return widget.onGenerateRoute(settings);
+    if (widget.onGenerateRoute != null)
+      return widget.onGenerateRoute(settings);
     return null;
   }
 
@@ -769,25 +771,28 @@ class _WidgetsAppState extends State<WidgetsApp>
     assert(() {
       if (widget.onUnknownRoute == null) {
         throw FlutterError(
-            'Could not find a generator for route $settings in the $runtimeType.\n'
-            'Generators for routes are searched for in the following order:\n'
-            ' 1. For the "/" route, the "home" property, if non-null, is used.\n'
-            ' 2. Otherwise, the "routes" table is used, if it has an entry for '
-            'the route.\n'
-            ' 3. Otherwise, onGenerateRoute is called. It should return a '
-            'non-null value for any valid route not handled by "home" and "routes".\n'
-            ' 4. Finally if all else fails onUnknownRoute is called.\n'
-            'Unfortunately, onUnknownRoute was not set.');
+          'Could not find a generator for route $settings in the $runtimeType.\n'
+          'Generators for routes are searched for in the following order:\n'
+          ' 1. For the "/" route, the "home" property, if non-null, is used.\n'
+          ' 2. Otherwise, the "routes" table is used, if it has an entry for '
+          'the route.\n'
+          ' 3. Otherwise, onGenerateRoute is called. It should return a '
+          'non-null value for any valid route not handled by "home" and "routes".\n'
+          ' 4. Finally if all else fails onUnknownRoute is called.\n'
+          'Unfortunately, onUnknownRoute was not set.'
+        );
       }
       return true;
     }());
     final Route<dynamic> result = widget.onUnknownRoute(settings);
     assert(() {
       if (result == null) {
-        throw FlutterError('The onUnknownRoute callback returned null.\n'
-            'When the $runtimeType requested the route $settings from its '
-            'onUnknownRoute callback, the callback returned null. Such callbacks '
-            'must never return null.');
+        throw FlutterError(
+          'The onUnknownRoute callback returned null.\n'
+          'When the $runtimeType requested the route $settings from its '
+          'onUnknownRoute callback, the callback returned null. Such callbacks '
+          'must never return null.'
+        );
       }
       return true;
     }());
@@ -799,7 +804,8 @@ class _WidgetsAppState extends State<WidgetsApp>
   Future<bool> didPopRoute() async {
     assert(mounted);
     final NavigatorState navigator = _navigator?.currentState;
-    if (navigator == null) return false;
+    if (navigator == null)
+      return false;
     return await navigator.maybePop();
   }
 
@@ -807,33 +813,33 @@ class _WidgetsAppState extends State<WidgetsApp>
   Future<bool> didPushRoute(String route) async {
     assert(mounted);
     final NavigatorState navigator = _navigator?.currentState;
-    if (navigator == null) return false;
+    if (navigator == null)
+      return false;
     navigator.pushNamed(route);
     return true;
   }
+
 
   // LOCALIZATION
 
   /// This is the resolved locale, and is one of the supportedLocales.
   Locale _locale;
 
-  Locale _resolveLocales(
-      List<Locale> preferredLocales, Iterable<Locale> supportedLocales) {
+  Locale _resolveLocales(List<Locale> preferredLocales, Iterable<Locale> supportedLocales) {
     // Attempt to use localeListResolutionCallback.
     if (widget.localeListResolutionCallback != null) {
-      final Locale locale = widget.localeListResolutionCallback(
-          preferredLocales, widget.supportedLocales);
-      if (locale != null) return locale;
+      final Locale locale = widget.localeListResolutionCallback(preferredLocales, widget.supportedLocales);
+      if (locale != null)
+        return locale;
     }
     // localeListResolutionCallback failed, falling back to localeResolutionCallback.
     if (widget.localeResolutionCallback != null) {
       final Locale locale = widget.localeResolutionCallback(
-        preferredLocales != null && preferredLocales.isNotEmpty
-            ? preferredLocales.first
-            : null,
+        preferredLocales != null && preferredLocales.isNotEmpty ? preferredLocales.first : null,
         widget.supportedLocales,
       );
-      if (locale != null) return locale;
+      if (locale != null)
+        return locale;
     }
     // Both callbacks failed, falling back to default algorithm.
     return basicLocaleListResolution(preferredLocales, supportedLocales);
@@ -880,8 +886,7 @@ class _WidgetsAppState extends State<WidgetsApp>
   /// into account, and will not handle edge cases such as resolving `de` to `fr` rather than `zh`
   /// when `de` is not supported and `zh` is listed before `fr` (German is closer to French
   /// than Chinese).
-  static Locale basicLocaleListResolution(
-      List<Locale> preferredLocales, Iterable<Locale> supportedLocales) {
+  static Locale basicLocaleListResolution(List<Locale> preferredLocales, Iterable<Locale> supportedLocales) {
     // preferredLocales can be null when called before the platform has had a chance to
     // initialize the locales. Platforms without locale passing support will provide an empty list.
     // We default to the first supported locale in these cases.
@@ -891,20 +896,14 @@ class _WidgetsAppState extends State<WidgetsApp>
     // Hash the supported locales because apps can support many locales and would
     // be expensive to search through them many times.
     final Map<String, Locale> allSupportedLocales = HashMap<String, Locale>();
-    final Map<String, Locale> languageAndCountryLocales =
-        HashMap<String, Locale>();
-    final Map<String, Locale> languageAndScriptLocales =
-        HashMap<String, Locale>();
+    final Map<String, Locale> languageAndCountryLocales = HashMap<String, Locale>();
+    final Map<String, Locale> languageAndScriptLocales = HashMap<String, Locale>();
     final Map<String, Locale> languageLocales = HashMap<String, Locale>();
     final Map<String, Locale> countryLocales = HashMap<String, Locale>();
     for (Locale locale in supportedLocales) {
-      allSupportedLocales[
-              '${locale.languageCode}_${locale.scriptCode}_${locale.countryCode}'] ??=
-          locale;
-      languageAndScriptLocales[
-          '${locale.languageCode}_${locale.scriptCode}'] ??= locale;
-      languageAndCountryLocales[
-          '${locale.languageCode}_${locale.countryCode}'] ??= locale;
+      allSupportedLocales['${locale.languageCode}_${locale.scriptCode}_${locale.countryCode}'] ??= locale;
+      languageAndScriptLocales['${locale.languageCode}_${locale.scriptCode}'] ??= locale;
+      languageAndCountryLocales['${locale.languageCode}_${locale.countryCode}'] ??= locale;
       languageLocales[locale.languageCode] ??= locale;
       countryLocales[locale.countryCode] ??= locale;
     }
@@ -917,27 +916,22 @@ class _WidgetsAppState extends State<WidgetsApp>
     Locale matchesLanguageCode;
     Locale matchesCountryCode;
     // Loop over user's preferred locales
-    for (int localeIndex = 0;
-        localeIndex < preferredLocales.length;
-        localeIndex += 1) {
+    for (int localeIndex = 0; localeIndex < preferredLocales.length; localeIndex += 1) {
       final Locale userLocale = preferredLocales[localeIndex];
       // Look for perfect match.
-      if (allSupportedLocales.containsKey(
-          '${userLocale.languageCode}_${userLocale.scriptCode}_${userLocale.countryCode}')) {
+      if (allSupportedLocales.containsKey('${userLocale.languageCode}_${userLocale.scriptCode}_${userLocale.countryCode}')) {
         return userLocale;
       }
       // Look for language+script match.
       if (userLocale.scriptCode != null) {
-        final Locale match = languageAndScriptLocales[
-            '${userLocale.languageCode}_${userLocale.scriptCode}'];
+        final Locale match = languageAndScriptLocales['${userLocale.languageCode}_${userLocale.scriptCode}'];
         if (match != null) {
           return match;
         }
       }
       // Look for language+country match.
       if (userLocale.countryCode != null) {
-        final Locale match = languageAndCountryLocales[
-            '${userLocale.languageCode}_${userLocale.countryCode}'];
+        final Locale match = languageAndCountryLocales['${userLocale.languageCode}_${userLocale.countryCode}'];
         if (match != null) {
           return match;
         }
@@ -957,9 +951,7 @@ class _WidgetsAppState extends State<WidgetsApp>
         // languageCode is the same, we defer hastily returning until the next iteration
         // since at worst it is the same and at best an improved match.
         if (localeIndex == 0 &&
-            !(localeIndex + 1 < preferredLocales.length &&
-                preferredLocales[localeIndex + 1].languageCode ==
-                    userLocale.languageCode)) {
+            !(localeIndex + 1 < preferredLocales.length && preferredLocales[localeIndex + 1].languageCode == userLocale.languageCode)) {
           return matchesLanguageCode;
         }
       }
@@ -976,8 +968,7 @@ class _WidgetsAppState extends State<WidgetsApp>
     // When there is no languageCode-only match. Fallback to matching countryCode only. Country
     // fallback only applies on iOS. When there is no countryCode-only match, we return first
     // suported locale.
-    final Locale resolvedLocale =
-        matchesLanguageCode ?? matchesCountryCode ?? supportedLocales.first;
+    final Locale resolvedLocale = matchesLanguageCode ?? matchesCountryCode ?? supportedLocales.first;
     return resolvedLocale;
   }
 
@@ -1012,6 +1003,7 @@ class _WidgetsAppState extends State<WidgetsApp>
     });
   }
 
+
   // METRICS
 
   @override
@@ -1045,40 +1037,44 @@ class _WidgetsAppState extends State<WidgetsApp>
 
   bool _debugCheckLocalizations(Locale appLocale) {
     assert(() {
-      final Set<Type> unsupportedTypes = _localizationsDelegates
-          .map<Type>((LocalizationsDelegate<dynamic> delegate) => delegate.type)
-          .toSet();
+      final Set<Type> unsupportedTypes =
+        _localizationsDelegates.map<Type>((LocalizationsDelegate<dynamic> delegate) => delegate.type).toSet();
       for (LocalizationsDelegate<dynamic> delegate in _localizationsDelegates) {
-        if (!unsupportedTypes.contains(delegate.type)) continue;
+        if (!unsupportedTypes.contains(delegate.type))
+          continue;
         if (delegate.isSupported(appLocale))
           unsupportedTypes.remove(delegate.type);
       }
-      if (unsupportedTypes.isEmpty) return true;
+      if (unsupportedTypes.isEmpty)
+        return true;
 
       // Currently the Cupertino library only provides english localizations.
       // Remove this when https://github.com/flutter/flutter/issues/23847
       // is fixed.
-      if (listEquals(
-          unsupportedTypes.map((Type type) => type.toString()).toList(),
-          <String>['CupertinoLocalizations'])) return true;
+      if (listEquals(unsupportedTypes.map((Type type) => type.toString()).toList(), <String>['CupertinoLocalizations']))
+        return true;
 
       final StringBuffer message = StringBuffer();
       message.writeln('\u2550' * 8);
       message.writeln(
-          'Warning: This application\'s locale, $appLocale, is not supported by all of its\n'
-          'localization delegates.');
+        'Warning: This application\'s locale, $appLocale, is not supported by all of its\n'
+        'localization delegates.'
+      );
       for (Type unsupportedType in unsupportedTypes) {
         // Currently the Cupertino library only provides english localizations.
         // Remove this when https://github.com/flutter/flutter/issues/23847
         // is fixed.
-        if (unsupportedType.toString() == 'CupertinoLocalizations') continue;
+        if (unsupportedType.toString() == 'CupertinoLocalizations')
+          continue;
         message.writeln(
-            '> A $unsupportedType delegate that supports the $appLocale locale was not found.');
+          '> A $unsupportedType delegate that supports the $appLocale locale was not found.'
+        );
       }
       message.writeln(
-          'See https://flutter.dev/tutorials/internationalization/ for more\n'
-          'information about configuring an app\'s locale, supportedLocales,\n'
-          'and localizationsDelegates parameters.');
+        'See https://flutter.dev/tutorials/internationalization/ for more\n'
+        'information about configuring an app\'s locale, supportedLocales,\n'
+        'and localizationsDelegates parameters.'
+      );
       message.writeln('\u2550' * 8);
       debugPrint(message.toString());
       return true;
@@ -1095,11 +1091,9 @@ class _WidgetsAppState extends State<WidgetsApp>
         // If window.defaultRouteName isn't '/', we should assume it was set
         // intentionally via `setInitialRoute`, and should override whatever
         // is in [widget.initialRoute].
-        initialRoute: WidgetsBinding.instance.window.defaultRouteName !=
-                Navigator.defaultRouteName
+        initialRoute: WidgetsBinding.instance.window.defaultRouteName != Navigator.defaultRouteName
             ? WidgetsBinding.instance.window.defaultRouteName
-            : widget.initialRoute ??
-                WidgetsBinding.instance.window.defaultRouteName,
+            : widget.initialRoute ?? WidgetsBinding.instance.window.defaultRouteName,
         onGenerateRoute: _onGenerateRoute,
         onUnknownRoute: _onUnknownRoute,
         observers: widget.navigatorObservers,
@@ -1128,14 +1122,12 @@ class _WidgetsAppState extends State<WidgetsApp>
     PerformanceOverlay performanceOverlay;
     // We need to push a performance overlay if any of the display or checkerboarding
     // options are set.
-    if (widget.showPerformanceOverlay ||
-        WidgetsApp.showPerformanceOverlayOverride) {
+    if (widget.showPerformanceOverlay || WidgetsApp.showPerformanceOverlayOverride) {
       performanceOverlay = PerformanceOverlay.allEnabled(
         checkerboardRasterCacheImages: widget.checkerboardRasterCacheImages,
         checkerboardOffscreenLayers: widget.checkerboardOffscreenLayers,
       );
-    } else if (widget.checkerboardRasterCacheImages ||
-        widget.checkerboardOffscreenLayers) {
+    } else if (widget.checkerboardRasterCacheImages || widget.checkerboardOffscreenLayers) {
       performanceOverlay = PerformanceOverlay(
         checkerboardRasterCacheImages: widget.checkerboardRasterCacheImages,
         checkerboardOffscreenLayers: widget.checkerboardOffscreenLayers,
@@ -1145,8 +1137,7 @@ class _WidgetsAppState extends State<WidgetsApp>
       result = Stack(
         children: <Widget>[
           result,
-          Positioned(
-              top: 0.0, left: 0.0, right: 0.0, child: performanceOverlay),
+          Positioned(top: 0.0, left: 0.0, right: 0.0, child: performanceOverlay),
         ],
       );
     }
@@ -1158,15 +1149,13 @@ class _WidgetsAppState extends State<WidgetsApp>
     }
 
     assert(() {
-      if (widget.debugShowWidgetInspector ||
-          WidgetsApp.debugShowWidgetInspectorOverride) {
+      if (widget.debugShowWidgetInspector || WidgetsApp.debugShowWidgetInspectorOverride) {
         result = WidgetInspector(
           child: result,
           selectButtonBuilder: widget.inspectorSelectButtonBuilder,
         );
       }
-      if (widget.debugShowCheckedModeBanner &&
-          WidgetsApp.debugAllowBannerOverride) {
+      if (widget.debugShowCheckedModeBanner && WidgetsApp.debugAllowBannerOverride) {
         result = CheckedModeBanner(
           child: result,
         );
@@ -1182,8 +1171,7 @@ class _WidgetsAppState extends State<WidgetsApp>
         // parameter.
         builder: (BuildContext context) {
           final String title = widget.onGenerateTitle(context);
-          assert(
-              title != null, 'onGenerateTitle must return a non-null String');
+          assert(title != null, 'onGenerateTitle must return a non-null String');
           return Title(
             title: title,
             color: widget.color,
@@ -1200,8 +1188,8 @@ class _WidgetsAppState extends State<WidgetsApp>
     }
 
     final Locale appLocale = widget.locale != null
-        ? _resolveLocales(<Locale>[widget.locale], widget.supportedLocales)
-        : _locale;
+      ? _resolveLocales(<Locale>[widget.locale], widget.supportedLocales)
+      : _locale;
 
     assert(_debugCheckLocalizations(appLocale));
 

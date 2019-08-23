@@ -13,7 +13,8 @@ class TestDataSource extends DataTableSource {
   int get generation => _generation;
   int _generation = 0;
   set generation(int value) {
-    if (_generation == value) return;
+    if (_generation == value)
+      return;
     _generation = value;
     notifyListeners();
   }
@@ -54,10 +55,7 @@ void main() {
         source: source,
         rowsPerPage: 2,
         availableRowsPerPage: const <int>[
-          2,
-          4,
-          8,
-          16,
+          2, 4, 8, 16,
         ],
         onRowsPerPageChanged: (int rowsPerPage) {
           log.add('rows-per-page-changed: $rowsPerPage');
@@ -110,7 +108,8 @@ void main() {
   });
 
   testWidgets('PaginatedDataTable control test', (WidgetTester tester) async {
-    TestDataSource source = TestDataSource()..generation = 42;
+    TestDataSource source = TestDataSource()
+      ..generation = 42;
 
     final List<String> log = <String>[];
 
@@ -158,8 +157,7 @@ void main() {
     final dynamic exception = tester.takeException();
     expect(exception, isInstanceOf<FlutterError>());
     expect(exception.diagnostics.first.level, DiagnosticLevel.summary);
-    expect(exception.diagnostics.first.toString(),
-        startsWith('A RenderFlex overflowed by '));
+    expect(exception.diagnostics.first.toString(), startsWith('A RenderFlex overflowed by '));
 
     expect(find.text('Gingerbread (0)'), findsOneWidget);
     expect(find.text('Gingerbread (1)'), findsNothing);
@@ -171,7 +169,8 @@ void main() {
     expect(find.text('42'), findsNothing);
     expect(find.text('43'), findsNWidgets(10));
 
-    source = TestDataSource()..generation = 15;
+    source = TestDataSource()
+      ..generation = 15;
 
     await tester.pumpWidget(MaterialApp(
       home: buildTable(source),
@@ -181,8 +180,7 @@ void main() {
     expect(find.text('43'), findsNothing);
     expect(find.text('15'), findsNWidgets(10));
 
-    final PaginatedDataTableState state =
-        tester.state(find.byType(PaginatedDataTable));
+    final PaginatedDataTableState state = tester.state(find.byType(PaginatedDataTable));
 
     expect(log, isEmpty);
     state.pageTo(23);
@@ -207,10 +205,9 @@ void main() {
         source: TestDataSource(),
         rowsPerPage: 8,
         availableRowsPerPage: const <int>[
-          8,
-          9,
+          8, 9,
         ],
-        onRowsPerPageChanged: (int rowsPerPage) {},
+        onRowsPerPageChanged: (int rowsPerPage) { },
         columns: const <DataColumn>[
           DataColumn(label: Text('COL1')),
           DataColumn(label: Text('COL2')),
@@ -220,12 +217,10 @@ void main() {
     ));
     expect(find.text('Rows per page:'), findsOneWidget);
     expect(find.text('8'), findsOneWidget);
-    expect(tester.getTopRight(find.text('8')).dx,
-        tester.getTopRight(find.text('Rows per page:')).dx + 40.0); // per spec
+    expect(tester.getTopRight(find.text('8')).dx, tester.getTopRight(find.text('Rows per page:')).dx + 40.0); // per spec
   });
 
-  testWidgets('PaginatedDataTable with large text',
-      (WidgetTester tester) async {
+  testWidgets('PaginatedDataTable with large text', (WidgetTester tester) async {
     final TestDataSource source = TestDataSource();
     await tester.pumpWidget(MaterialApp(
       home: MediaQuery(
@@ -236,8 +231,8 @@ void main() {
           header: const Text('HEADER'),
           source: source,
           rowsPerPage: 501,
-          availableRowsPerPage: const <int>[501],
-          onRowsPerPageChanged: (int rowsPerPage) {},
+          availableRowsPerPage: const <int>[ 501 ],
+          onRowsPerPageChanged: (int rowsPerPage) { },
           columns: const <DataColumn>[
             DataColumn(label: Text('COL1')),
             DataColumn(label: Text('COL2')),
@@ -250,18 +245,14 @@ void main() {
     final dynamic exception = tester.takeException();
     expect(exception, isInstanceOf<FlutterError>());
     expect(exception.diagnostics.first.level, DiagnosticLevel.summary);
-    expect(exception.diagnostics.first.toString(),
-        contains('A RenderFlex overflowed by'));
+    expect(exception.diagnostics.first.toString(), contains('A RenderFlex overflowed by'));
 
     expect(find.text('Rows per page:'), findsOneWidget);
     // Test that we will show some options in the drop down even if the lowest option is bigger than the source:
     assert(501 > source.rowCount);
     expect(find.text('501'), findsOneWidget);
     // Test that it fits:
-    expect(
-        tester.getTopRight(find.text('501')).dx,
-        greaterThanOrEqualTo(
-            tester.getTopRight(find.text('Rows per page:')).dx + 40.0));
+    expect(tester.getTopRight(find.text('501')).dx, greaterThanOrEqualTo(tester.getTopRight(find.text('Rows per page:')).dx + 40.0));
   });
 
   testWidgets('PaginatedDataTable footer scrolls', (WidgetTester tester) async {
@@ -277,8 +268,8 @@ void main() {
               source: source,
               rowsPerPage: 5,
               dragStartBehavior: DragStartBehavior.down,
-              availableRowsPerPage: const <int>[5],
-              onRowsPerPageChanged: (int rowsPerPage) {},
+              availableRowsPerPage: const <int>[ 5 ],
+              onRowsPerPageChanged: (int rowsPerPage) { },
               columns: const <DataColumn>[
                 DataColumn(label: Text('COL1')),
                 DataColumn(label: Text('COL2')),
@@ -290,15 +281,13 @@ void main() {
       ),
     );
     expect(find.text('Rows per page:'), findsOneWidget);
-    expect(tester.getTopLeft(find.text('Rows per page:')).dx,
-        lessThan(0.0)); // off screen
+    expect(tester.getTopLeft(find.text('Rows per page:')).dx, lessThan(0.0)); // off screen
     await tester.dragFrom(
       Offset(50.0, tester.getTopLeft(find.text('Rows per page:')).dy),
       const Offset(1000.0, 0.0),
     );
     await tester.pump();
     expect(find.text('Rows per page:'), findsOneWidget);
-    expect(tester.getTopLeft(find.text('Rows per page:')).dx,
-        18.0); // 14 padding in the footer row, 4 padding from the card
+    expect(tester.getTopLeft(find.text('Rows per page:')).dx, 18.0); // 14 padding in the footer row, 4 padding from the card
   });
 }

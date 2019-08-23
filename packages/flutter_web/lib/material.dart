@@ -1,7 +1,7 @@
 // Copyright 2015 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// Synced 2019-07-16T14:31:01.420458.
+// Synced 2019-08-15T10:04:31.498986.
 
 /// Flutter widgets implementing Material Design.
 ///
@@ -110,7 +110,9 @@ export 'src/material/theme_data.dart';
 export 'src/material/time.dart';
 export 'src/material/time_picker.dart';
 export 'src/material/toggleable.dart';
+export 'src/material/toggle_buttons_theme.dart';
 export 'src/material/tooltip.dart';
+export 'src/material/tooltip_theme.dart';
 export 'src/material/two_level_list.dart';
 export 'src/material/typography.dart';
 export 'src/material/user_accounts_drawer_header.dart';

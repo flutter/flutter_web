@@ -263,19 +263,16 @@ abstract class ImageProvider<T> {
           .putIfAbsent(key, () => load(key)));
     }).catchError((dynamic exception, StackTrace stack) async {
       FlutterError.reportError(FlutterErrorDetails(
-        exception: exception,
-        stack: stack,
-        library: 'services library',
-        context: ErrorDescription('while resolving an image'),
-        silent: true, // could be a network error or whatnot
-        informationCollector: () sync* {
-          yield DiagnosticsProperty<ImageProvider>('Image provider', this);
-          yield DiagnosticsProperty<ImageConfiguration>(
-              'Image configuration', configuration);
-          yield DiagnosticsProperty<T>('Image key', obtainedKey,
-              defaultValue: null);
-        },
-      ));
+          exception: exception,
+          stack: stack,
+          library: 'services library',
+          context: ErrorDescription('while resolving an image'),
+          silent: true, // could be a network error or whatnot
+          informationCollector: () sync* {
+            yield DiagnosticsProperty<ImageProvider>('Image provider', this);
+            yield DiagnosticsProperty<ImageConfiguration>('Image configuration', configuration);
+            yield DiagnosticsProperty<T>('Image key', obtainedKey, defaultValue: null);
+          },));
       return null;
     });
     return stream;
@@ -406,12 +403,12 @@ abstract class AssetBundleImageProvider
   @override
   ImageStreamCompleter load(AssetBundleImageKey key) {
     return MultiFrameImageStreamCompleter(
-      codec: _loadAsync(key),
-      scale: key.scale,
-      informationCollector: () sync* {
-        yield DiagnosticsProperty<ImageProvider>('Image provider', this);
-        yield DiagnosticsProperty<AssetBundleImageKey>('Image key', key);
-      },
+        codec: _loadAsync(key),
+        scale: key.scale,
+        informationCollector: () sync* {
+          yield DiagnosticsProperty<ImageProvider>('Image provider', this);
+          yield DiagnosticsProperty<AssetBundleImageKey>('Image key', key);
+        },
     );
   }
 
@@ -463,12 +460,12 @@ class NetworkImage extends ImageProvider<NetworkImage> {
   @override
   ImageStreamCompleter load(NetworkImage key) {
     return MultiFrameImageStreamCompleter(
-      codec: _loadAsync(key),
-      scale: key.scale,
-      informationCollector: () sync* {
-        yield DiagnosticsProperty<ImageProvider>('Image provider', this);
-        yield DiagnosticsProperty<NetworkImage>('Image key', key);
-      },
+        codec: _loadAsync(key),
+        scale: key.scale,
+        informationCollector: () sync* {
+          yield DiagnosticsProperty<ImageProvider>('Image provider', this);
+          yield DiagnosticsProperty<NetworkImage>('Image key', key);
+        },
     );
   }
 

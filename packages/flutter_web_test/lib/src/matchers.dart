@@ -10,7 +10,6 @@ import 'package:flutter_web_ui/ui.dart';
 import 'package:flutter_web/services.dart';
 import 'package:flutter_web_ui/ui.dart' as ui;
 import 'package:meta/meta.dart';
-import 'package:test_api/test_api.dart' hide TypeMatcher, isInstanceOf;
 import 'package:test_api/src/frontend/async_matcher.dart'; // ignore: implementation_imports
 import 'package:test/test.dart' hide TypeMatcher;
 import 'package:test/test.dart' as test_package show TypeMatcher;
@@ -231,7 +230,7 @@ Matcher moreOrLessEquals(double value, {double epsilon = 1e-10}) {
 ///  * [moreOrLessEquals], which is for [double]s.
 ///  * [within], which offers a generic version of this functionality that can
 ///    be used to match [Rect]s as well as other types.
-Matcher rectMoreOrLessEquals(Rect value, {double epsilon = 1e-10}) {
+Matcher rectMoreOrLessEquals(Rect value, { double epsilon = 1e-10 }) {
   return _IsWithinDistance<Rect>(_rectDistance, value, epsilon);
 }
 
@@ -302,7 +301,7 @@ Matcher coversSameAreaAs(Path expectedPath,
 ///    verify that two different code paths create identical images.
 ///  * [flutter_test] for a discussion of test configurations, whereby callers
 ///    may swap out the backend for this matcher.
-AsyncMatcher matchesGoldenFile(dynamic key) {
+AsyncMatcher matchesGoldenFile(dynamic key, {int version}) {
   throw UnimplementedError('matchesGoldenFile is not yet supported on the Web');
 }
 
@@ -761,10 +760,8 @@ class _EqualsIgnoringHashCodes extends Matcher {
         const int snippetLength = 20;
         int len = math.min(
             math.min(valueLength - i, actualLength - i), snippetLength);
-        String before =
-            _EqualsIgnoringHashCodes._normalize(_value.substring(i, i + len));
-        String after = _EqualsIgnoringHashCodes._normalize(
-            actualValue.substring(i, i + len));
+        String before = _EqualsIgnoringHashCodes._normalize(_value.substring(i, i + len));
+        String after = _EqualsIgnoringHashCodes._normalize(actualValue.substring(i, i + len));
         mismatchDescription.add('Mismatch at offset $i '
             '[$before] => '
             '[$after]');

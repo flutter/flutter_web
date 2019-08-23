@@ -57,8 +57,6 @@ void main() {
       expect(await imageProvider.evict(cache: otherCache), true);
       expect(otherCache.currentSize, 0);
       expect(imageCache.currentSize, 1);
-    },
-        skip:
-            true); // TODO(flutter_web): reenable after syncing ImageStream changes.
+    }, skip: true); // TODO(flutter_web): reenable after syncing ImageStream changes.
   });
 }

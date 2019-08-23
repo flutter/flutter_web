@@ -1,8 +1,9 @@
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// Synced 2019-08-02T12:40:49.799139.
 
-import 'package:flutter_web_ui/ui.dart' show lerpDouble;
+import 'package:flutter_web_ui/ui.dart';
 
 import 'package:flutter_web/foundation.dart';
 import 'package:flutter_web/widgets.dart';
@@ -27,6 +28,7 @@ import 'theme.dart';
 ///  * [ThemeData], which describes the overall theme information for the
 ///    application.
 class CardTheme extends Diagnosticable {
+
   /// Creates a theme that can be used for [ThemeData.cardTheme].
   ///
   /// The [elevation] must be null or non-negative.
@@ -36,9 +38,7 @@ class CardTheme extends Diagnosticable {
     this.elevation,
     this.margin,
     this.shape,
-  });
-  // TODO(flutter_web) enable after compiler support
-  // : assert(elevation == null || elevation >= 0.0);
+  }) : assert(elevation == null || elevation >= 0.0);
 
   /// Default value for [Card.clipBehavior].
   ///
@@ -119,28 +119,25 @@ class CardTheme extends Diagnosticable {
 
   @override
   bool operator ==(dynamic other) {
-    if (identical(this, other)) return true;
-    if (other.runtimeType != runtimeType) return false;
+    if (identical(this, other))
+      return true;
+    if (other.runtimeType != runtimeType)
+      return false;
     final CardTheme typedOther = other;
-    return typedOther.clipBehavior == clipBehavior &&
-        typedOther.color == color &&
-        typedOther.elevation == elevation &&
-        typedOther.margin == margin &&
-        typedOther.shape == shape;
+    return typedOther.clipBehavior == clipBehavior
+        && typedOther.color == color
+        && typedOther.elevation == elevation
+        && typedOther.margin == margin
+        && typedOther.shape == shape;
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Clip>('clipBehavior', clipBehavior,
-        defaultValue: null));
-    properties
-        .add(DiagnosticsProperty<Color>('color', color, defaultValue: null));
-    properties.add(DiagnosticsProperty<double>('elevation', elevation,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin,
-        defaultValue: null));
-    properties.add(
-        DiagnosticsProperty<ShapeBorder>('shape', shape, defaultValue: null));
+    properties.add(DiagnosticsProperty<Clip>('clipBehavior', clipBehavior, defaultValue: null));
+    properties.add(ColorProperty('color', color, defaultValue: null));
+    properties.add(DiagnosticsProperty<double>('elevation', elevation, defaultValue: null));
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin, defaultValue: null));
+    properties.add(DiagnosticsProperty<ShapeBorder>('shape', shape, defaultValue: null));
   }
 }

@@ -39,8 +39,7 @@ class SliverPrototypeExtentList extends SliverMultiBoxAdaptorWidget {
     Key key,
     @required SliverChildDelegate delegate,
     @required this.prototypeItem,
-  })  : assert(prototypeItem != null),
-        super(key: key, delegate: delegate);
+  }) : assert(prototypeItem != null), super(key: key, delegate: delegate);
 
   /// Defines the main axis extent of all of this sliver's children.
   ///
@@ -57,13 +56,11 @@ class SliverPrototypeExtentList extends SliverMultiBoxAdaptorWidget {
   }
 
   @override
-  _SliverPrototypeExtentListElement createElement() =>
-      _SliverPrototypeExtentListElement(this);
+  _SliverPrototypeExtentListElement createElement() => _SliverPrototypeExtentListElement(this);
 }
 
 class _SliverPrototypeExtentListElement extends SliverMultiBoxAdaptorElement {
-  _SliverPrototypeExtentListElement(SliverPrototypeExtentList widget)
-      : super(widget);
+  _SliverPrototypeExtentListElement(SliverPrototypeExtentList widget) : super(widget);
 
   @override
   SliverPrototypeExtentList get widget => super.widget;
@@ -75,8 +72,7 @@ class _SliverPrototypeExtentListElement extends SliverMultiBoxAdaptorElement {
   static final Object _prototypeSlot = Object();
 
   @override
-  void insertChildRenderObject(
-      covariant RenderObject child, covariant dynamic slot) {
+  void insertChildRenderObject(covariant RenderObject child, covariant dynamic slot) {
     if (slot == _prototypeSlot) {
       assert(child is RenderBox);
       renderObject.child = child;
@@ -87,7 +83,8 @@ class _SliverPrototypeExtentListElement extends SliverMultiBoxAdaptorElement {
 
   @override
   void didAdoptChild(RenderBox child) {
-    if (child != renderObject.child) super.didAdoptChild(child);
+    if (child != renderObject.child)
+      super.didAdoptChild(child);
   }
 
   @override
@@ -108,7 +105,8 @@ class _SliverPrototypeExtentListElement extends SliverMultiBoxAdaptorElement {
 
   @override
   void visitChildren(ElementVisitor visitor) {
-    if (_prototype != null) visitor(_prototype);
+    if (_prototype != null)
+      visitor(_prototype);
     super.visitChildren(visitor);
   }
 
@@ -126,8 +124,7 @@ class _SliverPrototypeExtentListElement extends SliverMultiBoxAdaptorElement {
   }
 }
 
-class _RenderSliverPrototypeExtentList
-    extends RenderSliverFixedExtentBoxAdaptor {
+class _RenderSliverPrototypeExtentList extends RenderSliverFixedExtentBoxAdaptor {
   _RenderSliverPrototypeExtentList({
     @required _SliverPrototypeExtentListElement childManager,
   }) : super(childManager: childManager);
@@ -135,9 +132,11 @@ class _RenderSliverPrototypeExtentList
   RenderBox _child;
   RenderBox get child => _child;
   set child(RenderBox value) {
-    if (_child != null) dropChild(_child);
+    if (_child != null)
+      dropChild(_child);
     _child = value;
-    if (_child != null) adoptChild(_child);
+    if (_child != null)
+      adoptChild(_child);
     markNeedsLayout();
   }
 
@@ -150,32 +149,34 @@ class _RenderSliverPrototypeExtentList
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
-    if (_child != null) _child.attach(owner);
+    if (_child != null)
+      _child.attach(owner);
   }
 
   @override
   void detach() {
     super.detach();
-    if (_child != null) _child.detach();
+    if (_child != null)
+      _child.detach();
   }
 
   @override
   void redepthChildren() {
-    if (_child != null) redepthChild(_child);
+    if (_child != null)
+      redepthChild(_child);
     super.redepthChildren();
   }
 
   @override
   void visitChildren(RenderObjectVisitor visitor) {
-    if (_child != null) visitor(_child);
+    if (_child != null)
+      visitor(_child);
     super.visitChildren(visitor);
   }
 
   @override
   double get itemExtent {
     assert(child != null && child.hasSize);
-    return constraints.axis == Axis.vertical
-        ? child.size.height
-        : child.size.width;
+    return constraints.axis == Axis.vertical ? child.size.height : child.size.width;
   }
 }

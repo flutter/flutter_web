@@ -246,8 +246,7 @@ abstract class TestWidgetsFlutterBinding extends BindingBase
   Future<void> setLocale(String languageCode, String countryCode) {
     return TestAsyncUtils.guard<void>(() async {
       assert(inTest);
-      final Locale locale =
-          Locale(languageCode, countryCode == '' ? null : countryCode);
+      final Locale locale = Locale(languageCode, countryCode == '' ? null : countryCode);
       dispatchLocalesChanged(<Locale>[locale]);
     });
   }
@@ -504,8 +503,7 @@ abstract class TestWidgetsFlutterBinding extends BindingBase
             FlutterErrorDetails(
               exception: exception,
               stack: _unmangle(stack),
-              context: ErrorDescription(
-                  'running a test (but after the test had completed)'),
+              context: ErrorDescription('running a test (but after the test had completed)'),
               library: 'Flutter test framework',
             ),
             forceReport: true);
@@ -541,15 +539,12 @@ abstract class TestWidgetsFlutterBinding extends BindingBase
       // directly called again.
       DiagnosticsNode treeDump;
       try {
-        treeDump = renderViewElement?.toDiagnosticsNode() ??
-            DiagnosticsNode.message('<no tree>');
+        treeDump = renderViewElement?.toDiagnosticsNode() ?? DiagnosticsNode.message('<no tree>');
         // TODO(jacobr): this is a hack to make sure the tree can safely be fully dumped.
         // Potentially everything is good enough without this case.
         treeDump.toStringDeep();
       } catch (exception) {
-        treeDump = DiagnosticsNode.message(
-            '<additional error caught while dumping tree: $exception>',
-            level: DiagnosticLevel.error);
+        treeDump = DiagnosticsNode.message('<additional error caught while dumping tree: $exception>', level: DiagnosticLevel.error);
       }
       final List<DiagnosticsNode> omittedFrames = <DiagnosticsNode>[];
       final int stackLinesToOmit = reportExpectCall(stack, omittedFrames);
@@ -562,38 +557,28 @@ abstract class TestWidgetsFlutterBinding extends BindingBase
           return FlutterError.defaultStackFilter(frames.skip(stackLinesToOmit));
         },
         informationCollector: () sync* {
-          if (stackLinesToOmit > 0) yield* omittedFrames;
+          if (stackLinesToOmit > 0)
+            yield* omittedFrames;
           if (showAppDumpInErrors) {
-            yield DiagnosticsProperty<DiagnosticsNode>(
-                'At the time of the failure, the widget tree looked as follows',
-                treeDump,
-                linePrefix: '# ',
-                style: DiagnosticsTreeStyle.flat);
+            yield DiagnosticsProperty<DiagnosticsNode>('At the time of the failure, the widget tree looked as follows', treeDump, linePrefix: '# ', style: DiagnosticsTreeStyle.flat);
           }
           if (description.isNotEmpty)
-            yield DiagnosticsProperty<String>(
-                'The test description was', description,
-                style: DiagnosticsTreeStyle.errorProperty);
+            yield DiagnosticsProperty<String>('The test description was', description, style: DiagnosticsTreeStyle.errorProperty);
         },
       ));
       assert(_parentZone != null);
-      assert(_pendingExceptionDetails != null,
-          'A test overrode FlutterError.onError but either failed to return it to its original state, or had unexpected additional errors that it could not handle. Typically, this is caused by using expect() before restoring FlutterError.onError.');
+      assert(_pendingExceptionDetails != null, 'A test overrode FlutterError.onError but either failed to return it to its original state, or had unexpected additional errors that it could not handle. Typically, this is caused by using expect() before restoring FlutterError.onError.');
       _parentZone.run<void>(testCompletionHandler);
     }
-
     final ZoneSpecification errorHandlingZoneSpecification = ZoneSpecification(
-        handleUncaughtError: (Zone self, ZoneDelegate parent, Zone zone,
-            dynamic exception, StackTrace stack) {
-      handleUncaughtError(exception, stack);
-    });
+      handleUncaughtError: (Zone self, ZoneDelegate parent, Zone zone, dynamic exception, StackTrace stack) {
+        handleUncaughtError(exception, stack);
+      }
+    );
     _parentZone = Zone.current;
-    final Zone testZone =
-        _parentZone.fork(specification: errorHandlingZoneSpecification);
-    testZone
-        .runBinary<Future<void>, Future<void> Function(), VoidCallback>(
-            _runTestBody, testBody, invariantTester)
-        .whenComplete(testCompletionHandler);
+    final Zone testZone = _parentZone.fork(specification: errorHandlingZoneSpecification);
+    testZone.runBinary<Future<void>, Future<void> Function(), VoidCallback>(_runTestBody, testBody, invariantTester)
+      .whenComplete(testCompletionHandler);
     timeout?.catchError(handleUncaughtError);
     return testCompleter.future;
   }
@@ -704,9 +689,8 @@ abstract class TestWidgetsFlutterBinding extends BindingBase
     _pendingExceptionDetails = null;
     _parentZone = null;
     buildOwner.focusManager = FocusManager();
-    assert(
-        !RendererBinding.instance.mouseTracker.mouseIsConnected,
-        'The MouseTracker thinks that there is still a mouse connected, which indicates that a '
+    assert(!RendererBinding.instance.mouseTracker.mouseIsConnected,
+    'The MouseTracker thinks that there is still a mouse connected, which indicates that a '
         'test has not removed the mouse pointer which it added. Call removePointer on the '
         'active mouse gesture to remove the mouse pointer.');
   }
@@ -895,7 +879,7 @@ class AutomatedTestWidgetsFlutterBinding extends TestWidgetsFlutterBinding {
       _timeoutCompleter.completeError(
         TimeoutException(
           'The test exceeded the timeout. It may have hung.\n'
-          'Consider using "addTime" to increase the timeout before expensive operations.',
+              'Consider using "addTime" to increase the timeout before expensive operations.',
           _timeout,
         ),
       );

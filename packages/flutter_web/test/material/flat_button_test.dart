@@ -9,11 +9,10 @@ import 'package:flutter_web/rendering.dart';
 import '../rendering/mock_canvas.dart';
 
 void main() {
-  testWidgets('FlatButton implements debugFillProperties',
-      (WidgetTester tester) async {
+  testWidgets('FlatButton implements debugFillProperties', (WidgetTester tester) async {
     final DiagnosticPropertiesBuilder builder = DiagnosticPropertiesBuilder();
     FlatButton(
-      onPressed: () {},
+      onPressed: () { },
       textColor: const Color(0xFF00FF00),
       disabledTextColor: const Color(0xFFFF0000),
       color: const Color(0xFF000000),
@@ -23,8 +22,7 @@ void main() {
     ).debugFillProperties(builder);
     final List<String> description = builder.properties
         .where((DiagnosticsNode n) => !n.isFiltered(DiagnosticLevel.info))
-        .map((DiagnosticsNode n) => n.toString())
-        .toList();
+        .map((DiagnosticsNode n) => n.toString()).toList();
     expect(description, <String>[
       'textColor: Color(0xff00ff00)',
       'disabledTextColor: Color(0xffff0000)',
@@ -34,34 +32,30 @@ void main() {
     ]);
   });
 
-  testWidgets(
-    'Default FlatButton meets a11y contrast guidelines',
-    (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: FlatButton(
-                child: const Text('FlatButton'),
-                onPressed: () {},
-              ),
+  testWidgets('Default FlatButton meets a11y contrast guidelines', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: FlatButton(
+              child: const Text('FlatButton'),
+              onPressed: () { },
             ),
           ),
         ),
-      );
+      ),
+    );
 
-      // Default, not disabled.
-      await expectLater(tester, meetsGuideline(textContrastGuideline));
+    // Default, not disabled.
+    await expectLater(tester, meetsGuideline(textContrastGuideline));
 
-      // Highlighted (pressed).
-      final Offset center = tester.getCenter(find.byType(FlatButton));
-      await tester.startGesture(center);
-      await tester.pump(); // Start the splash and highlight animations.
-      await tester.pump(const Duration(
-          milliseconds:
-              800)); // Wait for splash and highlight to be well under way.
-      await expectLater(tester, meetsGuideline(textContrastGuideline));
-    },
+    // Highlighted (pressed).
+    final Offset center = tester.getCenter(find.byType(FlatButton));
+    await tester.startGesture(center);
+    await tester.pump(); // Start the splash and highlight animations.
+    await tester.pump(const Duration(milliseconds: 800)); // Wait for splash and highlight to be well under way.
+    await expectLater(tester, meetsGuideline(textContrastGuideline));
+  },
     semanticsEnabled: true,
     skip: true, // TODO(flutter_web): enable after toImage API is supported.
   );
@@ -73,7 +67,7 @@ void main() {
         child: Material(
           child: FlatButton(
             child: Container(),
-            onPressed: () {/* to make sure the button is enabled */},
+            onPressed: () { /* to make sure the button is enabled */ },
           ),
         ),
       ),

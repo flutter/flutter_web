@@ -53,11 +53,13 @@ void main() {
           },
         ).toString(),
         '══╡ EXCEPTION CAUGHT BY LIBRARY ╞════════════════════════════════\n'
-        'The following message was thrown CONTEXTING:\n'
-        'MESSAGE\n'
-        '\n'
-        'INFO\n'
-        '═════════════════════════════════════════════════════════════════\n');
+            'The following message was thrown CONTEXTING:\n'
+            'MESSAGE\n'
+            '\n'
+            'INFO\n'
+            '═════════════════════════════════════════════════════════════════\n'
+
+    );
     expect(
       FlutterErrorDetails(
         library: 'LIBRARY',
@@ -67,11 +69,11 @@ void main() {
         },
       ).toString(),
       '══╡ EXCEPTION CAUGHT BY LIBRARY ╞════════════════════════════════\n'
-      'The following Null object was thrown CONTEXTING:\n'
-      '  null\n'
-      '\n'
-      'INFO\n'
-      '═════════════════════════════════════════════════════════════════\n',
+          'The following Null object was thrown CONTEXTING:\n'
+          '  null\n'
+          '\n'
+          'INFO\n'
+          '═════════════════════════════════════════════════════════════════\n',
     );
     expect(
         FlutterErrorDetails(
@@ -82,11 +84,12 @@ void main() {
           },
         ).toString(),
         '══╡ EXCEPTION CAUGHT BY FLUTTER FRAMEWORK ╞══════════════════════\n'
-        'The following message was thrown CONTEXTING:\n'
-        'MESSAGE\n'
-        '\n'
-        'INFO\n'
-        '═════════════════════════════════════════════════════════════════\n');
+            'The following message was thrown CONTEXTING:\n'
+            'MESSAGE\n'
+            '\n'
+            'INFO\n'
+            '═════════════════════════════════════════════════════════════════\n'
+    );
     expect(
       FlutterErrorDetails(
         exception: 'MESSAGE',
@@ -96,32 +99,36 @@ void main() {
         },
       ).toString(),
       '══╡ EXCEPTION CAUGHT BY FLUTTER FRAMEWORK ╞══════════════════════\n'
-      'The following message was thrown CONTEXTING SomeContext(BlaBla):\n'
-      'MESSAGE\n'
-      '\n'
-      'INFO\n'
-      '═════════════════════════════════════════════════════════════════\n',
+          'The following message was thrown CONTEXTING SomeContext(BlaBla):\n'
+          'MESSAGE\n'
+          '\n'
+          'INFO\n'
+          '═════════════════════════════════════════════════════════════════\n',
     );
     expect(
         const FlutterErrorDetails(
           exception: 'MESSAGE',
         ).toString(),
         '══╡ EXCEPTION CAUGHT BY FLUTTER FRAMEWORK ╞══════════════════════\n'
-        'The following message was thrown:\n'
-        'MESSAGE\n'
-        '═════════════════════════════════════════════════════════════════\n');
+            'The following message was thrown:\n'
+            'MESSAGE\n'
+            '═════════════════════════════════════════════════════════════════\n'
+    );
     expect(
         const FlutterErrorDetails().toString(),
         '══╡ EXCEPTION CAUGHT BY FLUTTER FRAMEWORK ╞══════════════════════\n'
-        'The following Null object was thrown:\n'
-        '  null\n'
-        '═════════════════════════════════════════════════════════════════\n');
+            'The following Null object was thrown:\n'
+            '  null\n'
+            '═════════════════════════════════════════════════════════════════\n'
+    );
   });
 
   test('FlutterError default constructor', () {
-    FlutterError error = FlutterError('My Error Summary.\n'
-        'My first description.\n'
-        'My second description.');
+    FlutterError error = FlutterError(
+        'My Error Summary.\n'
+            'My first description.\n'
+            'My second description.'
+    );
     expect(error.diagnostics.length, equals(3));
     expect(error.diagnostics[0].level, DiagnosticLevel.summary);
     expect(error.diagnostics[1].level, DiagnosticLevel.info);
@@ -132,14 +139,17 @@ void main() {
     expect(
         error.toStringDeep(),
         'FlutterError\n'
-        '   My Error Summary.\n'
-        '   My first description.\n'
-        '   My second description.\n');
+            '   My Error Summary.\n'
+            '   My first description.\n'
+            '   My second description.\n'
+    );
 
-    error = FlutterError('My Error Summary.\n'
-        'My first description.\n'
-        'My second description.\n'
-        '\n');
+    error = FlutterError(
+        'My Error Summary.\n'
+            'My first description.\n'
+            'My second description.\n'
+            '\n'
+    );
 
     expect(error.diagnostics.length, equals(5));
     expect(error.diagnostics[0].level, DiagnosticLevel.summary);
@@ -153,16 +163,19 @@ void main() {
     expect(
         error.toStringDeep(),
         'FlutterError\n'
-        '   My Error Summary.\n'
-        '   My first description.\n'
-        '   My second description.\n'
-        '\n'
-        '\n');
+            '   My Error Summary.\n'
+            '   My first description.\n'
+            '   My second description.\n'
+            '\n'
+            '\n'
+    );
 
-    error = FlutterError('My Error Summary.\n'
-        'My first description.\n'
-        '\n'
-        'My second description.');
+    error = FlutterError(
+        'My Error Summary.\n'
+            'My first description.\n'
+            '\n'
+            'My second description.'
+    );
     expect(error.diagnostics.length, equals(4));
     expect(error.diagnostics[0].level, DiagnosticLevel.summary);
     expect(error.diagnostics[1].level, DiagnosticLevel.info);
@@ -176,10 +189,11 @@ void main() {
     expect(
         error.toStringDeep(),
         'FlutterError\n'
-        '   My Error Summary.\n'
-        '   My first description.\n'
-        '\n'
-        '   My second description.\n');
+            '   My Error Summary.\n'
+            '   My first description.\n'
+            '\n'
+            '   My second description.\n'
+    );
     error = FlutterError('My Error Summary.');
     expect(error.diagnostics.length, 1);
     expect(error.diagnostics.first.level, DiagnosticLevel.summary);
@@ -188,7 +202,8 @@ void main() {
     expect(
         error.toStringDeep(),
         'FlutterError\n'
-        '   My Error Summary.\n');
+            '   My Error Summary.\n'
+    );
   });
 
   test('Malformed FlutterError objects', () {
@@ -202,9 +217,9 @@ void main() {
       expect(
         FlutterErrorDetails(exception: error).toString(),
         '══╡ EXCEPTION CAUGHT BY FLUTTER FRAMEWORK ╞══════════════════════\n'
-        'The following assertion was thrown:\n'
-        'Empty FlutterError\n'
-        '═════════════════════════════════════════════════════════════════\n',
+            'The following assertion was thrown:\n'
+            'Empty FlutterError\n'
+            '═════════════════════════════════════════════════════════════════\n',
       );
     }
 
@@ -212,26 +227,25 @@ void main() {
       AssertionError error;
       try {
         throw FlutterError.fromParts(<DiagnosticsNode>[
-          (ErrorDescription('Error description without a summary'))
-        ]);
+          (ErrorDescription('Error description without a summary'))]);
       } on AssertionError catch (e) {
         error = e;
       }
       expect(
         FlutterErrorDetails(exception: error).toString(),
         '══╡ EXCEPTION CAUGHT BY FLUTTER FRAMEWORK ╞══════════════════════\n'
-        'The following assertion was thrown:\n'
-        'FlutterError is missing a summary.\n'
-        'All FlutterError objects should start with a short (one line)\n'
-        'summary description of the problem that was detected.\n'
-        'Malformed FlutterError:\n'
-        '  Error description without a summary\n'
-        '\n'
-        'This error should still help you solve your problem, however\n'
-        'please also report this malformed error in the framework by\n'
-        'filing a bug on GitHub:\n'
-        '  https://github.com/flutter/flutter/issues/new?template=BUG.md\n'
-        '═════════════════════════════════════════════════════════════════\n',
+            'The following assertion was thrown:\n'
+            'FlutterError is missing a summary.\n'
+            'All FlutterError objects should start with a short (one line)\n'
+            'summary description of the problem that was detected.\n'
+            'Malformed FlutterError:\n'
+            '  Error description without a summary\n'
+            '\n'
+            'This error should still help you solve your problem, however\n'
+            'please also report this malformed error in the framework by\n'
+            'filing a bug on GitHub:\n'
+            '  https://github.com/flutter/flutter/issues/new?template=BUG.md\n'
+            '═════════════════════════════════════════════════════════════════\n',
       );
     }
 
@@ -250,25 +264,25 @@ void main() {
       expect(
         FlutterErrorDetails(exception: error).toString(),
         '══╡ EXCEPTION CAUGHT BY FLUTTER FRAMEWORK ╞══════════════════════\n'
-        'The following assertion was thrown:\n'
-        'FlutterError contained multiple error summaries.\n'
-        'All FlutterError objects should have only a single short (one\n'
-        'line) summary description of the problem that was detected.\n'
-        'Malformed FlutterError:\n'
-        '  Error Summary A\n'
-        '  Some descriptionA\n'
-        '  Error Summary B\n'
-        '  Some descriptionB\n'
-        '\n'
-        'The malformed error has 2 summaries.\n'
-        'Summary 1: Error Summary A\n'
-        'Summary 2: Error Summary B\n'
-        '\n'
-        'This error should still help you solve your problem, however\n'
-        'please also report this malformed error in the framework by\n'
-        'filing a bug on GitHub:\n'
-        '  https://github.com/flutter/flutter/issues/new?template=BUG.md\n'
-        '═════════════════════════════════════════════════════════════════\n',
+            'The following assertion was thrown:\n'
+            'FlutterError contained multiple error summaries.\n'
+            'All FlutterError objects should have only a single short (one\n'
+            'line) summary description of the problem that was detected.\n'
+            'Malformed FlutterError:\n'
+            '  Error Summary A\n'
+            '  Some descriptionA\n'
+            '  Error Summary B\n'
+            '  Some descriptionB\n'
+            '\n'
+            'The malformed error has 2 summaries.\n'
+            'Summary 1: Error Summary A\n'
+            'Summary 2: Error Summary B\n'
+            '\n'
+            'This error should still help you solve your problem, however\n'
+            'please also report this malformed error in the framework by\n'
+            'filing a bug on GitHub:\n'
+            '  https://github.com/flutter/flutter/issues/new?template=BUG.md\n'
+            '═════════════════════════════════════════════════════════════════\n',
       );
     }
 
@@ -285,19 +299,19 @@ void main() {
       expect(
         FlutterErrorDetails(exception: error).toString(),
         '══╡ EXCEPTION CAUGHT BY FLUTTER FRAMEWORK ╞══════════════════════\n'
-        'The following assertion was thrown:\n'
-        'FlutterError is missing a summary.\n'
-        'All FlutterError objects should start with a short (one line)\n'
-        'summary description of the problem that was detected.\n'
-        'Malformed FlutterError:\n'
-        '  Some description\n'
-        '  Error summary\n'
-        '\n'
-        'This error should still help you solve your problem, however\n'
-        'please also report this malformed error in the framework by\n'
-        'filing a bug on GitHub:\n'
-        '  https://github.com/flutter/flutter/issues/new?template=BUG.md\n'
-        '═════════════════════════════════════════════════════════════════\n',
+            'The following assertion was thrown:\n'
+            'FlutterError is missing a summary.\n'
+            'All FlutterError objects should start with a short (one line)\n'
+            'summary description of the problem that was detected.\n'
+            'Malformed FlutterError:\n'
+            '  Some description\n'
+            '  Error summary\n'
+            '\n'
+            'This error should still help you solve your problem, however\n'
+            'please also report this malformed error in the framework by\n'
+            'filing a bug on GitHub:\n'
+            '  https://github.com/flutter/flutter/issues/new?template=BUG.md\n'
+            '═════════════════════════════════════════════════════════════════\n',
       );
     }
   });

@@ -1,6 +1,7 @@
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// Synced. * Contains Web DELTA *
 
 import 'dart:async';
 
@@ -14,6 +15,7 @@ import 'package:flutter_web/services.dart';
 import 'box.dart';
 import 'layer.dart';
 import 'object.dart';
+
 
 /// How an embedded platform view behave during hit tests.
 enum PlatformViewHitTestBehavior {
@@ -41,7 +43,7 @@ bool _factoryTypesSetEquals<T>(Set<Factory<T>> a, Set<Factory<T>> b) {
   if (a == b) {
     return true;
   }
-  if (a == null || b == null) {
+  if (a == null ||  b == null) {
     return false;
   }
   return setEquals(_factoriesTypeSet(a), _factoriesTypeSet(b));
@@ -76,17 +78,17 @@ Set<Type> _factoriesTypeSet<T>(Set<Factory<T>> factories) {
 ///  * [AndroidView] which is a widget that is used to show an Android view.
 ///  * [PlatformViewsService] which is a service for controlling platform views.
 class RenderAndroidView extends RenderBox {
+
   /// Creates a render object for an Android view.
   RenderAndroidView({
     @required AndroidViewController viewController,
     @required this.hitTestBehavior,
     @required Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers,
-  })  : assert(viewController != null),
-        assert(hitTestBehavior != null),
-        assert(gestureRecognizers != null),
-        _viewController = viewController {
-    _motionEventsDispatcher =
-        _MotionEventsDispatcher(globalToLocal, viewController);
+  }) : assert(viewController != null),
+       assert(hitTestBehavior != null),
+       assert(gestureRecognizers != null),
+       _viewController = viewController {
+    _motionEventsDispatcher = _MotionEventsDispatcher(globalToLocal, viewController);
     updateGestureRecognizers(gestureRecognizers);
     _viewController.addOnPlatformViewCreatedListener(_onPlatformViewCreated);
   }
@@ -96,14 +98,14 @@ class RenderAndroidView extends RenderBox {
   /// The Android view controller for the Android view associated with this render object.
   AndroidViewController get viewcontroller => _viewController;
   AndroidViewController _viewController;
-
   /// Sets a new Android view controller.
   ///
   /// `viewController` must not be null.
   set viewController(AndroidViewController viewController) {
     assert(_viewController != null);
     assert(viewController != null);
-    if (_viewController == viewController) return;
+    if (_viewController == viewController)
+      return;
     _viewController.removeOnPlatformViewCreatedListener(_onPlatformViewCreated);
     _viewController = viewController;
     _sizePlatformView();
@@ -138,21 +140,17 @@ class RenderAndroidView extends RenderBox {
   ///
   /// Any active gesture arena the Android view participates in is rejected when the
   /// set of gesture recognizers is changed.
-  void updateGestureRecognizers(
-      Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers) {
+  void updateGestureRecognizers(Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers) {
     assert(gestureRecognizers != null);
     assert(
-      _factoriesTypeSet(gestureRecognizers).length == gestureRecognizers.length,
-      'There were multiple gesture recognizer factories for the same type, there must only be a single '
-      'gesture recognizer factory for each gesture recognizer type.',
-    );
-    if (_factoryTypesSetEquals(
-        gestureRecognizers, _gestureRecognizer?.gestureRecognizerFactories)) {
+    _factoriesTypeSet(gestureRecognizers).length == gestureRecognizers.length,
+    'There were multiple gesture recognizer factories for the same type, there must only be a single '
+        'gesture recognizer factory for each gesture recognizer type.',);
+    if (_factoryTypesSetEquals(gestureRecognizers, _gestureRecognizer?.gestureRecognizerFactories)) {
       return;
     }
     _gestureRecognizer?.dispose();
-    _gestureRecognizer = _AndroidViewGestureRecognizer(
-        _motionEventsDispatcher, gestureRecognizers);
+    _gestureRecognizer = _AndroidViewGestureRecognizer(_motionEventsDispatcher, gestureRecognizers);
   }
 
   @override
@@ -203,12 +201,12 @@ class RenderAndroidView extends RenderBox {
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    if (_viewController.textureId == null) return;
+    if (_viewController.textureId == null)
+      return;
 
     // Clip the texture if it's going to paint out of the bounds of the renter box
     // (see comment in _paintTexture for an explanation of when this happens).
-    if (size.width < _currentAndroidViewSize.width ||
-        size.height < _currentAndroidViewSize.height) {
+    if (size.width < _currentAndroidViewSize.width || size.height < _currentAndroidViewSize.height) {
       context.pushClipRect(true, offset, offset & size, _paintTexture);
       return;
     }
@@ -234,16 +232,15 @@ class RenderAndroidView extends RenderBox {
   }
 
   @override
-  bool hitTest(BoxHitTestResult result, {Offset position}) {
-    if (hitTestBehavior == PlatformViewHitTestBehavior.transparent ||
-        !size.contains(position)) return false;
+  bool hitTest(BoxHitTestResult result, { Offset position }) {
+    if (hitTestBehavior == PlatformViewHitTestBehavior.transparent || !size.contains(position))
+      return false;
     result.add(BoxHitTestEntry(this, position));
     return hitTestBehavior == PlatformViewHitTestBehavior.opaque;
   }
 
   @override
-  bool hitTestSelf(Offset position) =>
-      hitTestBehavior != PlatformViewHitTestBehavior.transparent;
+  bool hitTestSelf(Offset position) => hitTestBehavior != PlatformViewHitTestBehavior.transparent;
 
   @override
   void handleEvent(PointerEvent event, HitTestEntry entry) {
@@ -253,7 +250,7 @@ class RenderAndroidView extends RenderBox {
   }
 
   @override
-  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+  void describeSemanticsConfiguration (SemanticsConfiguration config) {
     super.describeSemanticsConfiguration(config);
 
     config.isSemanticBoundary = true;
@@ -300,12 +297,13 @@ class RenderUiKitView extends RenderBox {
     @required UiKitViewController viewController,
     @required this.hitTestBehavior,
     @required Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers,
-  })  : assert(viewController != null),
-        assert(hitTestBehavior != null),
-        assert(gestureRecognizers != null),
-        _viewController = viewController {
+  }) : assert(viewController != null),
+       assert(hitTestBehavior != null),
+       assert(gestureRecognizers != null),
+       _viewController = viewController {
     updateGestureRecognizers(gestureRecognizers);
   }
+
 
   /// The unique identifier of the UIView controlled by this controller.
   ///
@@ -329,21 +327,17 @@ class RenderUiKitView extends RenderBox {
   PlatformViewHitTestBehavior hitTestBehavior;
 
   /// {@macro flutter.rendering.platformView.updateGestureRecognizers}
-  void updateGestureRecognizers(
-      Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers) {
+  void updateGestureRecognizers(Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers) {
     assert(gestureRecognizers != null);
     assert(
-      _factoriesTypeSet(gestureRecognizers).length == gestureRecognizers.length,
-      'There were multiple gesture recognizer factories for the same type, there must only be a single '
-      'gesture recognizer factory for each gesture recognizer type.',
-    );
-    if (_factoryTypesSetEquals(
-        gestureRecognizers, _gestureRecognizer?.gestureRecognizerFactories)) {
+    _factoriesTypeSet(gestureRecognizers).length == gestureRecognizers.length,
+    'There were multiple gesture recognizer factories for the same type, there must only be a single '
+        'gesture recognizer factory for each gesture recognizer type.',);
+    if (_factoryTypesSetEquals(gestureRecognizers, _gestureRecognizer?.gestureRecognizerFactories)) {
       return;
     }
     _gestureRecognizer?.dispose();
-    _gestureRecognizer =
-        _UiKitViewGestureRecognizer(viewController, gestureRecognizers);
+    _gestureRecognizer = _UiKitViewGestureRecognizer(viewController, gestureRecognizers);
   }
 
   @override
@@ -373,16 +367,15 @@ class RenderUiKitView extends RenderBox {
   }
 
   @override
-  bool hitTest(BoxHitTestResult result, {Offset position}) {
-    if (hitTestBehavior == PlatformViewHitTestBehavior.transparent ||
-        !size.contains(position)) return false;
+  bool hitTest(BoxHitTestResult result, { Offset position }) {
+    if (hitTestBehavior == PlatformViewHitTestBehavior.transparent || !size.contains(position))
+      return false;
     result.add(BoxHitTestEntry(this, position));
     return hitTestBehavior == PlatformViewHitTestBehavior.opaque;
   }
 
   @override
-  bool hitTestSelf(Offset position) =>
-      hitTestBehavior != PlatformViewHitTestBehavior.transparent;
+  bool hitTestSelf(Offset position) => hitTestBehavior != PlatformViewHitTestBehavior.transparent;
 
   @override
   void handleEvent(PointerEvent event, HitTestEntry entry) {
@@ -390,7 +383,7 @@ class RenderUiKitView extends RenderBox {
       return;
     }
     _gestureRecognizer.addPointer(event);
-    _lastPointerDownEvent = event;
+    _lastPointerDownEvent = event.original ?? event;
   }
 
   // This is registered as a global PointerRoute while the render object is attached.
@@ -398,11 +391,10 @@ class RenderUiKitView extends RenderBox {
     if (event is! PointerDownEvent) {
       return;
     }
-    final Offset localOffset = globalToLocal(event.position);
-    if (!(Offset.zero & size).contains(localOffset)) {
+    if (!(Offset.zero & size).contains(event.localPosition)) {
       return;
     }
-    if (event != _lastPointerDownEvent) {
+    if ((event.original ?? event) != _lastPointerDownEvent) {
       // The pointer event is in the bounds of this render box, but we didn't get it in handleEvent.
       // This means that the pointer event was absorbed by a different render object.
       // Since on the platform side the FlutterTouchIntercepting view is seeing all events that are
@@ -413,7 +405,7 @@ class RenderUiKitView extends RenderBox {
   }
 
   @override
-  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+  void describeSemanticsConfiguration (SemanticsConfiguration config) {
     super.describeSemanticsConfiguration(config);
     config.isSemanticBoundary = true;
     config.platformViewId = _viewController.id;
@@ -422,14 +414,12 @@ class RenderUiKitView extends RenderBox {
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
-    GestureBinding.instance.pointerRouter
-        .addGlobalRoute(_handleGlobalPointerEvent);
+    GestureBinding.instance.pointerRouter.addGlobalRoute(_handleGlobalPointerEvent);
   }
 
   @override
   void detach() {
-    GestureBinding.instance.pointerRouter
-        .removeGlobalRoute(_handleGlobalPointerEvent);
+    GestureBinding.instance.pointerRouter.removeGlobalRoute(_handleGlobalPointerEvent);
     _gestureRecognizer.reset();
     super.detach();
   }
@@ -450,8 +440,8 @@ class RenderHtmlView extends RenderBox {
   /// Creates a render object for an HTML view.
   RenderHtmlView({
     @required HtmlViewController viewController,
-  })  : assert(viewController != null),
-        _viewController = viewController {
+  }) : assert(viewController != null),
+       _viewController = viewController {
     _viewController.addOnPlatformViewCreatedListener(_onPlatformViewCreated);
   }
 
@@ -467,7 +457,8 @@ class RenderHtmlView extends RenderBox {
   set viewController(HtmlViewController viewController) {
     assert(_viewController != null);
     assert(viewController != null);
-    if (_viewController == viewController) return;
+    if (_viewController == viewController)
+      return;
     _viewController.removeOnPlatformViewCreatedListener(_onPlatformViewCreated);
     _viewController = viewController;
     _sizePlatformView();
@@ -526,7 +517,7 @@ class RenderHtmlView extends RenderBox {
   }
 
   @override
-  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+  void describeSemanticsConfiguration (SemanticsConfiguration config) {
     super.describeSemanticsConfiguration(config);
 
     config.isSemanticBoundary = true;
@@ -557,6 +548,7 @@ class _UiKitViewGestureRecognizer extends OneSequenceGestureRecognizer {
     ).toSet();
   }
 
+
   // We use OneSequenceGestureRecognizers as they support gesture arena teams.
   // TODO(amirh): get a list of GestureRecognizers here.
   // https://github.com/flutter/flutter/issues/20953
@@ -567,7 +559,7 @@ class _UiKitViewGestureRecognizer extends OneSequenceGestureRecognizer {
 
   @override
   void addAllowedPointer(PointerDownEvent event) {
-    startTrackingPointer(event.pointer);
+    startTrackingPointer(event.pointer, event.transform);
     for (OneSequenceGestureRecognizer recognizer in _gestureRecognizers) {
       recognizer.addPointer(event);
     }
@@ -577,7 +569,7 @@ class _UiKitViewGestureRecognizer extends OneSequenceGestureRecognizer {
   String get debugDescription => 'UIKit view';
 
   @override
-  void didStopTrackingLastPointer(int pointer) {}
+  void didStopTrackingLastPointer(int pointer) { }
 
   @override
   void handleEvent(PointerEvent event) {
@@ -640,7 +632,7 @@ class _AndroidViewGestureRecognizer extends OneSequenceGestureRecognizer {
 
   @override
   void addAllowedPointer(PointerDownEvent event) {
-    startTrackingPointer(event.pointer);
+    startTrackingPointer(event.pointer, event.transform);
     for (OneSequenceGestureRecognizer recognizer in _gestureRecognizers) {
       recognizer.addPointer(event);
     }
@@ -650,7 +642,7 @@ class _AndroidViewGestureRecognizer extends OneSequenceGestureRecognizer {
   String get debugDescription => 'Android view';
 
   @override
-  void didStopTrackingLastPointer(int pointer) {}
+  void didStopTrackingLastPointer(int pointer) { }
 
   @override
   void handleEvent(PointerEvent event) {
@@ -676,7 +668,7 @@ class _AndroidViewGestureRecognizer extends OneSequenceGestureRecognizer {
 
   void cacheEvent(PointerEvent event) {
     if (!cachedEvents.containsKey(event.pointer)) {
-      cachedEvents[event.pointer] = <PointerEvent>[];
+      cachedEvents[event.pointer] = <PointerEvent> [];
     }
     cachedEvents[event.pointer].add(event);
   }
@@ -707,10 +699,8 @@ typedef _GlobalToLocal = Offset Function(Offset point);
 class _MotionEventsDispatcher {
   _MotionEventsDispatcher(this.globalToLocal, this.viewController);
 
-  final Map<int, AndroidPointerCoords> pointerPositions =
-      <int, AndroidPointerCoords>{};
-  final Map<int, AndroidPointerProperties> pointerProperties =
-      <int, AndroidPointerProperties>{};
+  final Map<int, AndroidPointerCoords> pointerPositions = <int, AndroidPointerCoords>{};
+  final Map<int, AndroidPointerProperties> pointerProperties = <int, AndroidPointerProperties>{};
   final _GlobalToLocal globalToLocal;
   final AndroidViewController viewController;
 
@@ -719,7 +709,8 @@ class _MotionEventsDispatcher {
 
   void handlePointerEvent(PointerEvent event) {
     if (event is PointerDownEvent) {
-      if (nextPointerId == 0) downTimeMillis = event.timeStamp.inMilliseconds;
+      if (nextPointerId == 0)
+        downTimeMillis = event.timeStamp.inMilliseconds;
       pointerProperties[event.pointer] = propertiesFor(event, nextPointerId++);
     }
     pointerPositions[event.pointer] = coordsFor(event);
@@ -757,21 +748,18 @@ class _MotionEventsDispatcher {
     // as we get PointerEvents, and only send it to the embedded Android view when
     // we see the last pointer. This way we achieve the same batching as Android.
     if (event.platformData == kPointerDataFlagBatched ||
-        (isSinglePointerAction(event) && pointerIdx < numPointers - 1)) return;
+        (isSinglePointerAction(event) && pointerIdx < numPointers - 1))
+      return;
 
     int action;
     switch (event.runtimeType) {
       case PointerDownEvent:
-        action = numPointers == 1
-            ? AndroidViewController.kActionDown
-            : AndroidViewController.pointerAction(
-                pointerIdx, AndroidViewController.kActionPointerDown);
+        action = numPointers == 1 ? AndroidViewController.kActionDown
+            : AndroidViewController.pointerAction(pointerIdx, AndroidViewController.kActionPointerDown);
         break;
       case PointerUpEvent:
-        action = numPointers == 1
-            ? AndroidViewController.kActionUp
-            : AndroidViewController.pointerAction(
-                pointerIdx, AndroidViewController.kActionPointerUp);
+        action = numPointers == 1 ? AndroidViewController.kActionUp
+            : AndroidViewController.pointerAction(pointerIdx, AndroidViewController.kActionPointerUp);
         break;
       case PointerMoveEvent:
         action = AndroidViewController.kActionMove;
@@ -784,24 +772,20 @@ class _MotionEventsDispatcher {
     }
 
     final AndroidMotionEvent androidMotionEvent = AndroidMotionEvent(
-      downTime: downTimeMillis,
-      eventTime: event.timeStamp.inMilliseconds,
-      action: action,
-      pointerCount: pointerPositions.length,
-      pointerProperties: pointers
-          .map<AndroidPointerProperties>((int i) => pointerProperties[i])
-          .toList(),
-      pointerCoords: pointers
-          .map<AndroidPointerCoords>((int i) => pointerPositions[i])
-          .toList(),
-      metaState: 0,
-      buttonState: 0,
-      xPrecision: 1.0,
-      yPrecision: 1.0,
-      deviceId: 0,
-      edgeFlags: 0,
-      source: 0,
-      flags: 0,
+        downTime: downTimeMillis,
+        eventTime: event.timeStamp.inMilliseconds,
+        action: action,
+        pointerCount: pointerPositions.length,
+        pointerProperties: pointers.map<AndroidPointerProperties>((int i) => pointerProperties[i]).toList(),
+        pointerCoords: pointers.map<AndroidPointerCoords>((int i) => pointerPositions[i]).toList(),
+        metaState: 0,
+        buttonState: 0,
+        xPrecision: 1.0,
+        yPrecision: 1.0,
+        deviceId: 0,
+        edgeFlags: 0,
+        source: 0,
+        flags: 0,
     );
     viewController.sendMotionEvent(androidMotionEvent);
   }
@@ -809,21 +793,21 @@ class _MotionEventsDispatcher {
   AndroidPointerCoords coordsFor(PointerEvent event) {
     final Offset position = globalToLocal(event.position);
     return AndroidPointerCoords(
-      orientation: event.orientation,
-      pressure: event.pressure,
-      size: event.size,
-      toolMajor: event.radiusMajor,
-      toolMinor: event.radiusMinor,
-      touchMajor: event.radiusMajor,
-      touchMinor: event.radiusMinor,
-      x: position.dx,
-      y: position.dy,
+        orientation: event.orientation,
+        pressure: event.pressure,
+        size: event.size,
+        toolMajor: event.radiusMajor,
+        toolMinor: event.radiusMinor,
+        touchMajor: event.radiusMajor,
+        touchMinor: event.radiusMinor,
+        x: position.dx,
+        y: position.dy,
     );
   }
 
   AndroidPointerProperties propertiesFor(PointerEvent event, int pointerId) {
     int toolType = AndroidPointerProperties.kToolTypeUnknown;
-    switch (event.kind) {
+    switch(event.kind) {
       case PointerDeviceKind.touch:
         toolType = AndroidPointerProperties.kToolTypeFinger;
         break;

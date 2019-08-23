@@ -8,8 +8,7 @@ import 'package:flutter_web/gestures.dart';
 import '../flutter_test_alternative.dart';
 
 void main() {
-  test('wrpped HitTestResult gets HitTestEntry added to wrapping HitTestResult',
-      () async {
+  test('wrpped HitTestResult gets HitTestEntry added to wrapping HitTestResult', () async {
     final HitTestEntry entry1 = HitTestEntry(_DummyHitTestTarget());
     final HitTestEntry entry2 = HitTestEntry(_DummyHitTestTarget());
     final HitTestEntry entry3 = HitTestEntry(_DummyHitTestTarget());

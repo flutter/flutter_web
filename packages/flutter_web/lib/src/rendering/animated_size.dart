@@ -82,19 +82,19 @@ class RenderAnimatedSize extends RenderAligningShiftedBox {
     AlignmentGeometry alignment = Alignment.center,
     TextDirection textDirection,
     RenderBox child,
-  })  : assert(vsync != null),
-        assert(duration != null),
-        assert(curve != null),
-        _vsync = vsync,
-        super(
-            child: child, alignment: alignment, textDirection: textDirection) {
+  }) : assert(vsync != null),
+       assert(duration != null),
+       assert(curve != null),
+       _vsync = vsync,
+       super(child: child, alignment: alignment, textDirection: textDirection) {
     _controller = AnimationController(
       vsync: vsync,
       duration: duration,
       reverseDuration: reverseDuration,
     )..addListener(() {
-        if (_controller.value != _lastValue) markNeedsLayout();
-      });
+      if (_controller.value != _lastValue)
+        markNeedsLayout();
+    });
     _animation = CurvedAnimation(
       parent: _controller,
       curve: curve,
@@ -118,14 +118,16 @@ class RenderAnimatedSize extends RenderAligningShiftedBox {
   Duration get duration => _controller.duration;
   set duration(Duration value) {
     assert(value != null);
-    if (value == _controller.duration) return;
+    if (value == _controller.duration)
+      return;
     _controller.duration = value;
   }
 
   /// The duration of the animation when running in reverse.
   Duration get reverseDuration => _controller.reverseDuration;
   set reverseDuration(Duration value) {
-    if (value == _controller.reverseDuration) return;
+    if (value == _controller.reverseDuration)
+      return;
     _controller.reverseDuration = value;
   }
 
@@ -133,7 +135,8 @@ class RenderAnimatedSize extends RenderAligningShiftedBox {
   Curve get curve => _animation.curve;
   set curve(Curve value) {
     assert(value != null);
-    if (value == _animation.curve) return;
+    if (value == _animation.curve)
+      return;
     _animation.curve = value;
   }
 
@@ -148,7 +151,8 @@ class RenderAnimatedSize extends RenderAligningShiftedBox {
   TickerProvider _vsync;
   set vsync(TickerProvider value) {
     assert(value != null);
-    if (value == _vsync) return;
+    if (value == _vsync)
+      return;
     _vsync = value;
     _controller.resync(vsync);
   }
@@ -198,7 +202,8 @@ class RenderAnimatedSize extends RenderAligningShiftedBox {
     alignChild();
 
     if (size.width < _sizeTween.end.width ||
-        size.height < _sizeTween.end.height) _hasVisualOverflow = true;
+        size.height < _sizeTween.end.height)
+      _hasVisualOverflow = true;
   }
 
   void _restartAnimation() {

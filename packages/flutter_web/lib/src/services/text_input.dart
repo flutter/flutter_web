@@ -1,19 +1,22 @@
 // Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// Synced. * Contains Web DELTA *
 
 import 'dart:async';
 import 'package:flutter_web/io.dart' show Platform;
 import 'package:flutter_web_ui/ui.dart' show TextAffinity, hashValues, Offset;
 
 import 'package:flutter_web/foundation.dart';
+import 'package:flutter_web/painting.dart';
+import 'package:vector_math/vector_math_64.dart';
 
 import 'message_codec.dart';
 import 'system_channels.dart';
 import 'system_chrome.dart';
 import 'text_editing.dart';
 
-export 'package:flutter_web_ui/ui.dart' show TextAffinity;
+export 'package:flutter_web_ui/ui.dart' show Rect, TextAffinity;
 
 /// The type of information for which to optimize the text input control.
 ///
@@ -589,6 +592,18 @@ abstract class TextSelectionDelegate {
   /// Brings the provided [TextPosition] into the visible area of the text
   /// input.
   void bringIntoView(TextPosition position);
+
+  /// Whether cut is enabled, must not be null.
+  bool get cutEnabled => true;
+
+  /// Whether copy is enabled, must not be null.
+  bool get copyEnabled => true;
+
+  /// Whether paste is enabled, must not be null.
+  bool get pasteEnabled => true;
+
+  /// Whether select all is enabled, must not be null.
+  bool get selectAllEnabled => true;
 }
 
 /// An interface to receive information from [TextInput].
@@ -641,6 +656,63 @@ class TextInputConnection {
     SystemChannels.textInput.invokeMethod(
       'TextInput.setEditingState',
       value.toJSON(),
+    );
+  }
+
+  /// Send the size of the editable text to engine.
+  ///
+  /// These are calculated using matrix for transform to global coordinates and
+  /// size of the render box. Therefore values being send (top-left,
+  /// bottom-right) are absolute. Meaning they are calculated converting the
+  /// local coordinates to global coordinates. These numbers are in logical
+  /// pixels. [RenderObject.applyPaintTransform] should be used to get the
+  /// physical coordinates.
+  ///
+  /// The values are taken from the size of the render box.
+  ///
+  /// 1. renderBoxSize: size of the render box.
+  ///
+  /// 2. transformToGlobal: a matrix that maps the local paint coordinate system
+  /// to the [PipelineOwner.rootNode]
+  void setEditingLocationSize(Size renderBoxSize, Matrix4 transformToGlobal) {
+    // TODO(nturgut): Send web engine transform instead of topLeft-bottomRight.
+    Offset topLeft = MatrixUtils.transformPoint(transformToGlobal, Offset.zero);
+    Offset bottomRight = MatrixUtils.transformPoint(
+        transformToGlobal, renderBoxSize.bottomRight(Offset.zero)
+    );
+
+    double height = bottomRight.dy - topLeft.dy;
+    double width = bottomRight.dx - topLeft.dx;
+
+    SystemChannels.textInput.invokeMethod(
+      'TextInput.setEditingLocationSize',
+      <String, dynamic>{
+        'top': topLeft.dy,
+        'left': topLeft.dx,
+        'width': width,
+        'height': height,
+      },
+    );
+  }
+
+  /// Send text styling information.
+  ///
+  /// This information is used by the Flutter Web Engine to change the style
+  /// of the hidden native input's content. Hence, the content size will match
+  /// to the size of the editable widget's content.
+  void setStyle(
+      TextStyle textStyle, TextDirection textDirection, TextAlign textAlign) {
+    assert(attached);
+
+    SystemChannels.textInput.invokeMethod(
+      'TextInput.setStyle',
+      <String, dynamic>{
+        'fontFamily': textStyle.fontFamily,
+        'fontSize': textStyle.fontSize,
+        'fontWeightValue': textStyle.fontWeight?.index,
+        'textAlignIndex': textAlign.index,
+        if (textDirection != null) 'textDirection': textDirection,
+      },
     );
   }
 
@@ -826,15 +898,11 @@ class TextInput {
       TextInputAction inputAction) {
     assert(() {
       if (Platform.isIOS) {
-        assert(
-          _iOSSupportedInputActions.contains(inputAction),
-          'The requested TextInputAction "$inputAction" is not supported on iOS.',
-        );
+        assert(_iOSSupportedInputActions.contains(inputAction),
+            'The requested TextInputAction "$inputAction" is not supported on iOS.',);
       } else if (Platform.isAndroid) {
-        assert(
-          _androidSupportedInputActions.contains(inputAction),
-          'The requested TextInputAction "$inputAction" is not supported on Android.',
-        );
+        assert(_androidSupportedInputActions.contains(inputAction),
+            'The requested TextInputAction "$inputAction" is not supported on Android.',);
       }
       return true;
     }());

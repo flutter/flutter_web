@@ -14,7 +14,7 @@ Iterable<int> range(int start, int end) sync* {
     yieldCount += 1;
     yield index;
   }
-}
+ }
 
 void main() {
   setUp(() {
@@ -84,8 +84,7 @@ void main() {
     expect(secondTwo, equals(<int>[2, 3]));
     expect(yieldCount, equals(3));
 
-    final Iterable<int> result =
-        integers.takeWhile((int i) => i < 4).skipWhile((int i) => i < 3);
+    final Iterable<int> result = integers.takeWhile((int i) => i < 4).skipWhile((int i) => i < 3);
 
     expect(result, equals(<int>[3]));
     expect(yieldCount, equals(4));
@@ -97,15 +96,13 @@ void main() {
     final Iterable<int> integers = CachingIterable<int>(range(1, 5).iterator);
     expect(yieldCount, equals(0));
 
-    final Iterable<int> expanded1 =
-        integers.expand<int>((int i) => <int>[i, i]);
+    final Iterable<int> expanded1 = integers.expand<int>((int i) => <int>[i, i]);
 
     expect(yieldCount, equals(0));
     expect(expanded1, equals(<int>[1, 1, 2, 2, 3, 3, 4, 4, 5, 5]));
     expect(yieldCount, equals(5));
 
-    final Iterable<int> expanded2 =
-        integers.expand<int>((int i) => <int>[i, i]);
+    final Iterable<int> expanded2 = integers.expand<int>((int i) => <int>[i, i]);
 
     expect(yieldCount, equals(5));
     expect(expanded2, equals(<int>[1, 1, 2, 2, 3, 3, 4, 4, 5, 5]));
